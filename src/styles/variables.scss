@@ -1,0 +1,38 @@
+// Background
+$bg-grayDark: #F1F2F4; // System background
+$bg-blocks: #F9FAFC; // Blocks on background
+$bg-fields: #F5F6F8; // Text fields (+ messages)
+$bg-menu: #FFFFFF; // Dropdown lists and menus
+$bg-light: #FFFFFF; // White blocks / modal window background
+$bg-blue: #EFFAFF; // Accent blocks
+$bg-border: rgba(0, 0, 0, 0.05); // Block borders, 1px
+$divider: #E0E0E0; // Dividers
+
+// Text
+$text-primary: #242424; // Titles, headings
+$text-text: #5E5E5E; // Primary text
+$text-secondary: #7E7E7E; // Secondary text
+$text-service: #B0B0B0; // Placeholder text, paths
+$link: #005BD1; // Links
+$link-visited: #528FDF; // Visited links
+
+// Special
+$active-blue: #16A4E3; // Active system color
+$green: #1BBA69;
+$red: #CE0000;
+$orange: #FF9000;
+$white: #FFFFFF;
+
+// Errors
+$bug-blocked: #FF0000; // Blocking system actions
+$bug-critical: #A90C26; // Application function is unavailable or blocked
+$bug-major: #ED4E4E; // Normal operation of part of the system is disrupted
+$bug-minor: #FF7002; // Minor error that does not affect the functionality of the application
+$bug-trivial: #B0B0B0; // Typos, imprecise wording, poorly reproducible errors
+
+// Shadows
+$new-shdw-card: rgba(38, 58, 91, 0.05); // For white elements, cards, messages
+$shdw-modal-1: rgba(0, 7, 62, 0.05); // For modal windows 5%
+$shdw-modal-2: rgba(0, 7, 62, 0.08); // For modal windows 8%
+$shdw-menu-1: rgba(0, 7, 62, 0.05); // For dropdowns, three-dot menu 5%
+$shdw-menu-2: rgba(0, 7, 62, 0.10); // For dropdowns, three-dot menu 10%

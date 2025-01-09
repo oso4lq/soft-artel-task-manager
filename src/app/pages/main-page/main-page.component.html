@@ -1,0 +1,85 @@
+<!-- main-page.component.html -->
+
+<div class="wrapper">
+
+    <!-- Header menu -->
+    <header class="header">
+        <div class="header__left-group">
+            <ul class="header__tabs">
+                <li class="header__tab active">Главная</li>
+                <li class="header__tab">Проекты</li>
+                <li class="header__tab">Команда</li>
+                <li class="header__tab">Канбан</li>
+                <li class="header__tab">Итерации</li>
+            </ul>
+            <button class="header__create-btn">Создать</button>
+        </div>
+        <div class="header__right-group">
+            <div class="header__time">12:00</div>
+            <!-- Не отображается текст "Пока нет вопросов", если Заказчик откроет Вопросы по процедуре, в которой нет ни одного вопроса если Заказчик откроет Вопросы по процедуре, в которой нет ни одного вопроса -->
+            <div class="header__last-task">
+                Последняя задача: #12345
+            </div>
+            <button class="header__notifications">Уведомления</button>
+            <div class="header__user-avatar"></div>
+        </div>
+    </header>
+
+    <!-- Current date -->
+    <h1 class="main-date">Вторник, 27 Октября</h1>
+
+    <!-- Dropdown menu filters -->
+    <div class="dropdown-filters">
+        <div class="dropdown-filters__item">Все продукты</div>
+        <div class="dropdown-filters__item">Все задачи</div>
+    </div>
+
+    <!-- Task columns -->
+    <div class="columns">
+        <!-- Column 1 -->
+        <div class="columns__col1">
+            <div class="status-filters">
+                <span class="status-filters__item">На согласование:</span>
+                <span class="status-filters__item">На ревью:</span>
+                <span class="status-filters__item">Для работы:</span>
+                <span class="status-filters__item">Черновики:</span>
+            </div>
+
+            <div class="tasks-block">
+                <div class="tasks-block__title" (click)="toggleCollapsible('myTasks')">
+                    Мои:
+                </div>
+                <!-- *ngIf="!collapsed.myTasks" -->
+                <div class="tasks-block__body tasks-block__body_collapsible">
+                    <!-- task list -->
+                </div>
+            </div>
+
+            <div class="tasks-block">
+                <div class="tasks-block__title">
+                    Не назначенные:
+                </div>
+                <div class="tasks-block__body tasks-block__body_collapsible">
+                    <!-- task list -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="columns__col2">
+            <div class="tasks-block">
+                <div class="tasks-block__title">В работе:</div>
+                <div class="tasks-block__body">
+                    <!-- task list -->
+                </div>
+            </div>
+            <div class="tasks-block">
+                <div class="tasks-block__title">На паузе:</div>
+                <div class="tasks-block__body">
+                    <!-- task list -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

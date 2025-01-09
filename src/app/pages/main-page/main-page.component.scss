@@ -1,0 +1,166 @@
+@import '../../../styles/variables.scss';
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 4px);
+    padding: 0 40px;
+    border-top: $active-blue 4px solid;
+}
+
+// Header menu
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    height: 30px;
+    gap: 24px;
+    // padding: 16px 0 12px 0;
+    // border-top: $active-blue 4px solid;
+
+    &__left-group {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+
+        .header__tabs {
+            display: flex;
+            list-style: none;
+            gap: 24px;
+
+            .header__tab {
+                padding: 8px 12px; // change
+                color: $text-secondary;
+                cursor: pointer;
+
+                &.active {
+                    color: $active-blue;
+                    border-bottom: 2px solid $active-blue;
+                }
+            }
+        }
+
+        .header__create-btn {
+            padding: 8px 16px;
+            color: $active-blue;
+            border: $active-blue 1px solid;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    }
+
+    &__right-group {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+
+        .header__time {
+            display: flex;
+            background: $active-blue;
+            color: $white;
+            border-radius: 4px;
+        }
+
+        .header__last-task {
+            display: flex;
+            background: $bg-light;
+            color: $text-text;
+            border-radius: 4px;
+        }
+
+        // .header__time,
+        // .header__last-task {
+        //     margin-right: 16px;
+        // }
+
+        .header__notifications {
+            margin-right: 16px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: relative;
+        }
+
+        .header__user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: $divider;
+            border-radius: 50%;
+        }
+    }
+}
+
+.main-date {
+    color: $text-primary;
+    margin: 16px 0;
+}
+
+// Dropdown filters
+.dropdown-filters {
+    display: flex;
+    gap: 16px;
+
+    &__item {
+        background-color: $bg-menu;
+        padding: 8px 16px;
+        border: 1px solid $divider;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+}
+
+// Columns
+.columns {
+    display: flex;
+    flex-grow: 1;
+    // height: calc(100vh - 200px); // пример, чтобы колонки занимали почти весь экран
+
+    &__col1,
+    &__col2 {
+        flex: 1;
+        margin-right: 16px;
+        background-color: $bg_blocks;
+        border: 1px solid $bg-border;
+        overflow-y: auto;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+// Status filters
+.status-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+
+    &__item {
+        background-color: $bg-fields;
+        padding: 8px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+}
+
+// Task list blocks
+.tasks-block {
+    border-top: 1px solid $divider;
+    padding: 8px;
+
+    &__title {
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    // &__body {
+    // wrap by default?
+    // }
+}
+
+.columns__col1,
+.columns__col2 {
+    overflow-y: auto;
+}

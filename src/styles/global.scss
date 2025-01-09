@@ -1,0 +1,17 @@
+@import './variables.scss';
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    background: $bg-grayDark;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", serif;
+}
