@@ -16,12 +16,14 @@
         </div>
         <div class="header__right-group">
 
-            <!-- Animate the clock to display the current time -->
-            <div class="header__time">12:00</div>
+            <!-- Current time -->
+            <div class="header__time">
+                {{ currentTimeStr() }}
+            </div>
 
-            <!-- Create logic to sort out the latest created task and display its text here cropped by 47 symbols and ending with "..." -->
+            <!-- Sort out the latest created task and display its cropped name or a default message -->
             <div class="header__last-task">
-                Последняя задача: #12345
+                *{{ shortLastTaskName() || 'задачи отсутствуют' }}
             </div>
 
             <button class="header__notifications">Уведомления</button>
@@ -30,21 +32,23 @@
     </header>
 
     <!-- Current date -->
-    <!-- Animate the date to display the current date formatted in RU format -->
-    <h1 class="main-date">Вторник, 27 Октября</h1>
+    <h1 class="main-date">
+        {{ currentDateStr() }}
+    </h1>
 
     <!-- Dropdown menu filters -->
     <div class="dropdown-filters">
         <select class="dropdown-filters__select" [(ngModel)]="selectedProduct"
             (ngModelChange)="onProductFilterChange($event)">
             <option value="all">Все продукты</option>
-            <option value="option 1">Название 1</option>
-            <option value="option 2">Название 2</option>
-            <option value="option 3">Название 3</option>
+            <!-- List of unique projectName options -->
+            <option *ngFor="let product of allProjects()" [value]="product">
+                {{ product }}
+            </option>
         </select>
 
         <select class="dropdown-filters__select" [(ngModel)]="selectedCategory"
-            (ngModelChange)="onProductFilterChange($event)">
+            (ngModelChange)="onCategoryFilterChange($event)">
             <option value="all">Все задачи</option>
             <option value="common">Общие</option>
             <option value="development">Разработка</option>
@@ -57,11 +61,26 @@
     <div class="columns">
         <!-- Column 1 -->
         <div class="columns__col1">
+
             <div class="status-filters">
-                <span class="status-filters__item">На согласование:</span>
-                <span class="status-filters__item">На ревью:</span>
-                <span class="status-filters__item">Для работы:</span>
-                <span class="status-filters__item">Черновики:</span>
+                <label>
+                    <input type="radio" name="leftColumnStatus" [value]="'approval'"
+                        [(ngModel)]="selectedStatusFilter" />
+                    На согласование
+                </label>
+                <label>
+                    <input type="radio" name="leftColumnStatus" [value]="'review'" [(ngModel)]="selectedStatusFilter" />
+                    На ревью
+                </label>
+                <label>
+                    <input type="radio" name="leftColumnStatus" [value]="'execution'"
+                        [(ngModel)]="selectedStatusFilter" />
+                    Для работы
+                </label>
+                <label>
+                    <input type="radio" name="leftColumnStatus" [value]="'draft'" [(ngModel)]="selectedStatusFilter" />
+                    Черновики
+                </label>
             </div>
 
             <div class="tasks-block">
@@ -72,20 +91,22 @@
                 <div class="tasks-block__body tasks-block__body_collapsible">
 
                     <!-- task list -->
-                    <app-task-card *ngFor="let t of tasks()" [task]="t"> </app-task-card>
+                    <app-task-card *ngFor="let t of myTasksFiltered()" [task]="t">
+                    </app-task-card>
 
                 </div>
             </div>
 
             <div class="tasks-block">
                 <div class="tasks-block__title" (click)="toggleCollapsible('unassigned')">
-                    Не назначенные:
+                    Неназначенные:
                 </div>
                 <!-- *ngIf="!collapsed.unassigned" -->
                 <div class="tasks-block__body tasks-block__body_collapsible">
 
                     <!-- task list -->
-                    <app-task-card *ngFor="let t of tasks()" [task]="t"> </app-task-card>
+                    <app-task-card *ngFor="let t of unassignedFiltered()" [task]="t">
+                    </app-task-card>
 
                 </div>
             </div>
@@ -98,7 +119,8 @@
                 <div class="tasks-block__body">
 
                     <!-- task list -->
-                    <app-task-card *ngFor="let t of tasks()" [task]="t"> </app-task-card>
+                    <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t">
+                    </app-task-card>
 
                 </div>
             </div>
@@ -107,7 +129,8 @@
                 <div class="tasks-block__body">
 
                     <!-- task list -->
-                    <app-task-card *ngFor="let t of tasks()" [task]="t"> </app-task-card>
+                    <app-task-card *ngFor="let t of pauseFiltered()" [task]="t">
+                    </app-task-card>
 
                 </div>
             </div>

@@ -1,7 +1,7 @@
 [
     {
         "taskPath": {
-            "projectName": "Проект A",
+            "projectName": "Проект 1",
             "productName": "WebApp",
             "version": 1,
             "feature": "Авторизация"
@@ -14,11 +14,12 @@
         "taskTime": {
             "spent": "2h",
             "planned": "4h"
-        }
+        },
+        "createdAt": "2025-01-10T17:20:00Z"
     },
     {
         "taskPath": {
-            "projectName": "Проект B",
+            "projectName": "Проект 2",
             "productName": "iOS",
             "version": 2,
             "feature": "Главный экран"
@@ -27,14 +28,16 @@
         "taskType": "Frontend",
         "taskKey": "TR-002",
         "taskStatus": "Согласование",
+        "performerId": "user-123",
         "taskTime": {
             "spent": "0h",
             "planned": "6h"
-        }
+        },
+        "createdAt": "2025-01-10T15:14:00Z"
     },
     {
         "taskPath": {
-            "projectName": "Проект X",
+            "projectName": "Проект 3",
             "productName": "BackEnd",
             "version": 1,
             "feature": "API"
@@ -43,10 +46,317 @@
         "taskType": "Ошибка блокирующая",
         "taskKey": "BUG-101",
         "taskStatus": "Деплой",
-        "performerId": "",
+        "performerId": "user-123",
         "taskTime": {
             "spent": "3h",
             "planned": "3h"
-        }
+        },
+        "createdAt": "2025-01-10T16:55:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 1",
+            "productName": "WebApp",
+            "version": 1,
+            "feature": "Профиль пользователя"
+        },
+        "taskName": "Редактирование профиля",
+        "taskType": "Frontend",
+        "taskKey": "TR-003",
+        "taskStatus": "Ревью",
+        "performerId": "user-321",
+        "taskTime": {
+            "spent": "5h",
+            "planned": "5h"
+        },
+        "createdAt": "2025-01-09T10:30:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 2",
+            "productName": "iOS",
+            "version": 2,
+            "feature": "Поиск"
+        },
+        "taskName": "Интеграция поиска",
+        "taskType": "Backend",
+        "taskKey": "TR-004",
+        "taskStatus": "Тестирование",
+        "performerId": "user-321",
+        "taskTime": {
+            "spent": "7h",
+            "planned": "8h"
+        },
+        "createdAt": "2025-01-10T12:00:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 3",
+            "productName": "BackEnd",
+            "version": 1,
+            "feature": "API"
+        },
+        "taskName": "Добавление логирования",
+        "taskType": "Backend",
+        "taskKey": "TR-005",
+        "taskStatus": "В работе",
+        "performerId": null,
+        "taskTime": {
+            "spent": "0h",
+            "planned": "3h"
+        },
+        "createdAt": "2025-01-09T09:00:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 1",
+            "productName": "WebApp",
+            "version": 1,
+            "feature": "Дизайн"
+        },
+        "taskName": "Создание макета",
+        "taskType": "Дизайн",
+        "taskKey": "TR-006",
+        "taskStatus": "Черновик",
+        "performerId": "user-123",
+        "taskTime": {
+            "spent": "1h",
+            "planned": "5h"
+        },
+        "createdAt": "2025-01-08T14:20:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 2",
+            "productName": "iOS",
+            "version": 2,
+            "feature": "Настройки"
+        },
+        "taskName": "Добавление новой опции",
+        "taskType": "Frontend",
+        "taskKey": "TR-007",
+        "taskStatus": "Исполнение",
+        "performerId": "user-123",
+        "taskTime": {
+            "spent": "2h",
+            "planned": "4h"
+        },
+        "createdAt": "2025-01-09T17:15:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 3",
+            "productName": "BackEnd",
+            "version": 1,
+            "feature": "База данных"
+        },
+        "taskName": "Оптимизация запросов",
+        "taskType": "Аналитика",
+        "taskKey": "TR-008",
+        "taskStatus": "В работе",
+        "performerId": "user-321",
+        "taskTime": {
+            "spent": "4h",
+            "planned": "6h"
+        },
+        "createdAt": "2025-01-07T13:40:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 1",
+            "productName": "WebApp",
+            "version": 1,
+            "feature": "Чат"
+        },
+        "taskName": "Фикс багов",
+        "taskType": "Ошибка критическая",
+        "taskKey": "BUG-102",
+        "taskStatus": "Тестирование",
+        "performerId": null,
+        "taskTime": {
+            "spent": "0h",
+            "planned": "5h"
+        },
+        "createdAt": "2025-01-06T11:45:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 2",
+            "productName": "iOS",
+            "version": 2,
+            "feature": "Авторизация"
+        },
+        "taskName": "Добавление двухфакторной аутентификации",
+        "taskType": "Backend",
+        "taskKey": "TR-009",
+        "taskStatus": "Согласование",
+        "performerId": "user-321",
+        "taskTime": {
+            "spent": "3h",
+            "planned": "7h"
+        },
+        "createdAt": "2025-01-05T09:15:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 3",
+            "productName": "BackEnd",
+            "version": 1,
+            "feature": "Мониторинг"
+        },
+        "taskName": "Добавление метрик",
+        "taskType": "Backend",
+        "taskKey": "TR-010",
+        "taskStatus": "В работе",
+        "performerId": "user-123",
+        "taskTime": {
+            "spent": "1h",
+            "planned": "3h"
+        },
+        "createdAt": "2025-01-07T16:00:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 1",
+            "productName": "WebApp",
+            "version": 1,
+            "feature": "Уведомления"
+        },
+        "taskName": "Добавление push-уведомлений",
+        "taskType": "Frontend",
+        "taskKey": "TR-011",
+        "taskStatus": "Черновик",
+        "performerId": "user-321",
+        "taskTime": {
+            "spent": "0h",
+            "planned": "4h"
+        },
+        "createdAt": "2025-01-08T10:00:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 2",
+            "productName": "iOS",
+            "version": 2,
+            "feature": "Мессенджер"
+        },
+        "taskName": "Исправление задержки сообщений",
+        "taskType": "Ошибка значительная",
+        "taskKey": "BUG-103",
+        "taskStatus": "Исполнение",
+        "performerId": null,
+        "taskTime": {
+            "spent": "2h",
+            "planned": "6h"
+        },
+        "createdAt": "2025-01-06T18:30:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 3",
+            "productName": "BackEnd",
+            "version": 1,
+            "feature": "Авторизация"
+        },
+        "taskName": "Фикс багов OAuth",
+        "taskType": "Ошибка тривиальная",
+        "taskKey": "BUG-104",
+        "taskStatus": "Тестирование",
+        "performerId": "user-123",
+        "taskTime": {
+            "spent": "1h",
+            "planned": "3h"
+        },
+        "createdAt": "2025-01-05T15:50:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 1",
+            "productName": "WebApp",
+            "version": 1,
+            "feature": "Платежная система"
+        },
+        "taskName": "Добавление интеграции с PayPal",
+        "taskType": "Backend",
+        "taskKey": "TR-012",
+        "taskStatus": "Пауза",
+        "performerId": "user-123",
+        "taskTime": {
+            "spent": "2h",
+            "planned": "5h"
+        },
+        "createdAt": "2025-01-09T11:20:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 2",
+            "productName": "iOS",
+            "version": 2,
+            "feature": "Главный экран"
+        },
+        "taskName": "Оптимизация анимации загрузки",
+        "taskType": "Frontend",
+        "taskKey": "TR-013",
+        "taskStatus": "Ревью",
+        "performerId": "user-123",
+        "taskTime": {
+            "spent": "3h",
+            "planned": "4h"
+        },
+        "createdAt": "2025-01-08T16:10:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 3",
+            "productName": "BackEnd",
+            "version": 1,
+            "feature": "Логи"
+        },
+        "taskName": "Добавление логирования ошибок",
+        "taskType": "Backend",
+        "taskKey": "TR-014",
+        "taskStatus": "Ревью",
+        "performerId": "user-321",
+        "taskTime": {
+            "spent": "4h",
+            "planned": "6h"
+        },
+        "createdAt": "2025-01-10T13:00:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 1",
+            "productName": "WebApp",
+            "version": 1,
+            "feature": "Уведомления"
+        },
+        "taskName": "Реализация централизованного управления уведомлениями",
+        "taskType": "Аналитика",
+        "taskKey": "TR-015",
+        "taskStatus": "Пауза",
+        "performerId": "user-123",
+        "taskTime": {
+            "spent": "1h",
+            "planned": "5h"
+        },
+        "createdAt": "2025-01-07T10:30:00Z"
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект 2",
+            "productName": "iOS",
+            "version": 2,
+            "feature": "Профиль пользователя"
+        },
+        "taskName": "Реализация проверки изменения данных",
+        "taskType": "Тестирование",
+        "taskKey": "TR-016",
+        "taskStatus": "Ревью",
+        "performerId": "user-321",
+        "taskTime": {
+            "spent": "2h",
+            "planned": "4h"
+        },
+        "createdAt": "2025-01-06T15:45:00Z"
     }
 ]

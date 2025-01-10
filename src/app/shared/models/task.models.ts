@@ -8,6 +8,7 @@ export interface TaskCard {
     taskStatus: TaskStatus;
     performerId?: string;
     taskTime: TaskTime;
+    createdAt: string;
 }
 
 export interface TaskPath {
@@ -40,12 +41,15 @@ export enum TaskType {
 }
 
 export enum TaskStatus {
+    Draft = 'Черновик',
     Approval = 'Согласование',
     Execution = 'Исполнение',
     Review = 'Ревью',
     Deploy = 'Деплой',
     Testing = 'Тестирование',
     Closed = 'Закрыто',
+    InProgress = 'В работе',
+    Pause = 'Пауза',
 }
 
 export interface TaskTime {
