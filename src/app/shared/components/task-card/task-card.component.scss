@@ -1,0 +1,62 @@
+@import '../../../../styles/variables.scss';
+
+.task-card {
+    border: 1px solid $divider;
+    border-radius: 8px;
+    background: $bg-light;
+    margin-bottom: 16px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &__top {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__path {
+        font-size: 0.9rem;
+        color: $text-service; // сероватый
+    }
+
+    &__title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .task-card__type-icon {
+            color: $orange; // к примеру, цвет по типу задачи
+            font-weight: bold;
+        }
+    }
+
+    &__bottom {
+        position: relative; // для расположения кнопок сверху
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__progress-bar {
+        // Примерная стилизация
+        display: flex;
+        gap: 6px;
+        height: 2px;
+    }
+
+    &__info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 0.85rem;
+    }
+
+    &__actions {
+        // Кнопки "Исправить", "В работу", "Принять"
+        display: flex;
+        gap: 8px;
+        margin-top: 8px; // пример
+    }
+}

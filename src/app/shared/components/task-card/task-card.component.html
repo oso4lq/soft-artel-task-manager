@@ -1,0 +1,57 @@
+<!-- task-card.component.html -->
+
+<div class="task-card">
+
+    <!-- Top Card Part -->
+    <div class="task-card__top" (mouseenter)="onTopHover(true)" (mouseleave)="onTopHover(false)">
+
+        <!-- Path (if hoveredTop() === true) -->
+        <div class="task-card__path" *ngIf="hoveredTop()">
+            {{ task.taskPath.projectName }} /
+            {{ task.taskPath.productName }} /
+            v.{{ task.taskPath.version }} /
+            {{ task.taskPath.feature }}
+        </div>
+
+        <div class="task-card__title">
+            <span class="task-card__type-icon">
+                {{ task.taskType }}
+            </span>
+            <span class="task-card__name">
+                {{ task.taskName }}
+                ({{ task.taskKey }})
+            </span>
+        </div>
+    </div>
+
+    <!-- Bottom Card Part -->
+    <div class="task-card__bottom" (mouseenter)="onBottomHover(true)" (mouseleave)="onBottomHover(false)">
+
+        <!-- Progress bar -->
+        <div class="task-card__progress-bar">
+            Progress bar here...
+        </div>
+
+        <!-- Status, performer, time -->
+        <div class="task-card__info">
+            <span class="task-card__status-icon">
+                {{ task.taskStatus }}
+            </span>
+            <!-- GET performerId NAME -->
+            <span class="task-card__performer">
+                {{ task.performerId ? 'User ID: ' + task.performerId : 'Нет исполнителя' }}
+            </span>
+            <span class="task-card__time">
+                Затрачено: {{ task.taskTime.spent }} / План: {{ task.taskTime.planned }}
+            </span>
+        </div>
+
+        <!-- Control buttons (if hoveredBottom() === true) -->
+        <div class="task-card__actions" *ngIf="hoveredBottom()">
+            <button>Исправить</button>
+            <button>В работу</button>
+            <button>Принять</button>
+        </div>
+    </div>
+
+</div>

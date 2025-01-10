@@ -1,0 +1,52 @@
+[
+    {
+        "taskPath": {
+            "projectName": "Проект A",
+            "productName": "WebApp",
+            "version": 1,
+            "feature": "Авторизация"
+        },
+        "taskName": "Регистрация пользователей",
+        "taskType": "Backend",
+        "taskKey": "TR-001",
+        "taskStatus": "Исполнение",
+        "performerId": "user-123",
+        "taskTime": {
+            "spent": "2h",
+            "planned": "4h"
+        }
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект B",
+            "productName": "iOS",
+            "version": 2,
+            "feature": "Главный экран"
+        },
+        "taskName": "Отрисовка меню",
+        "taskType": "Frontend",
+        "taskKey": "TR-002",
+        "taskStatus": "Согласование",
+        "taskTime": {
+            "spent": "0h",
+            "planned": "6h"
+        }
+    },
+    {
+        "taskPath": {
+            "projectName": "Проект X",
+            "productName": "BackEnd",
+            "version": 1,
+            "feature": "API"
+        },
+        "taskName": "Ошибка при логине",
+        "taskType": "Ошибка блокирующая",
+        "taskKey": "BUG-101",
+        "taskStatus": "Деплой",
+        "performerId": "",
+        "taskTime": {
+            "spent": "3h",
+            "planned": "3h"
+        }
+    }
+]

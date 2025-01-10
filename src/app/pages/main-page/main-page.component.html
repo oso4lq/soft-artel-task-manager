@@ -15,23 +15,42 @@
             <button class="header__create-btn">Создать</button>
         </div>
         <div class="header__right-group">
+
+            <!-- Animate the clock to display the current time -->
             <div class="header__time">12:00</div>
-            <!-- Не отображается текст "Пока нет вопросов", если Заказчик откроет Вопросы по процедуре, в которой нет ни одного вопроса если Заказчик откроет Вопросы по процедуре, в которой нет ни одного вопроса -->
+
+            <!-- Create logic to sort out the latest created task and display its text here cropped by 47 symbols and ending with "..." -->
             <div class="header__last-task">
                 Последняя задача: #12345
             </div>
+
             <button class="header__notifications">Уведомления</button>
             <div class="header__user-avatar"></div>
         </div>
     </header>
 
     <!-- Current date -->
+    <!-- Animate the date to display the current date formatted in RU format -->
     <h1 class="main-date">Вторник, 27 Октября</h1>
 
     <!-- Dropdown menu filters -->
     <div class="dropdown-filters">
-        <div class="dropdown-filters__item">Все продукты</div>
-        <div class="dropdown-filters__item">Все задачи</div>
+        <select class="dropdown-filters__select" [(ngModel)]="selectedProduct"
+            (ngModelChange)="onProductFilterChange($event)">
+            <option value="all">Все продукты</option>
+            <option value="option 1">Название 1</option>
+            <option value="option 2">Название 2</option>
+            <option value="option 3">Название 3</option>
+        </select>
+
+        <select class="dropdown-filters__select" [(ngModel)]="selectedCategory"
+            (ngModelChange)="onProductFilterChange($event)">
+            <option value="all">Все задачи</option>
+            <option value="common">Общие</option>
+            <option value="development">Разработка</option>
+            <option value="testing">Тестирование</option>
+            <option value="errors">Ошибки</option>
+        </select>
     </div>
 
     <!-- Task columns -->
@@ -51,16 +70,23 @@
                 </div>
                 <!-- *ngIf="!collapsed.myTasks" -->
                 <div class="tasks-block__body tasks-block__body_collapsible">
+
                     <!-- task list -->
+                    <app-task-card *ngFor="let t of tasks()" [task]="t"> </app-task-card>
+
                 </div>
             </div>
 
             <div class="tasks-block">
-                <div class="tasks-block__title">
+                <div class="tasks-block__title" (click)="toggleCollapsible('unassigned')">
                     Не назначенные:
                 </div>
+                <!-- *ngIf="!collapsed.unassigned" -->
                 <div class="tasks-block__body tasks-block__body_collapsible">
+
                     <!-- task list -->
+                    <app-task-card *ngFor="let t of tasks()" [task]="t"> </app-task-card>
+
                 </div>
             </div>
         </div>
@@ -70,13 +96,19 @@
             <div class="tasks-block">
                 <div class="tasks-block__title">В работе:</div>
                 <div class="tasks-block__body">
+
                     <!-- task list -->
+                    <app-task-card *ngFor="let t of tasks()" [task]="t"> </app-task-card>
+
                 </div>
             </div>
             <div class="tasks-block">
                 <div class="tasks-block__title">На паузе:</div>
                 <div class="tasks-block__body">
+
                     <!-- task list -->
+                    <app-task-card *ngFor="let t of tasks()" [task]="t"> </app-task-card>
+
                 </div>
             </div>
         </div>

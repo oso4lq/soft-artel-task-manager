@@ -16,8 +16,6 @@
     padding: 12px 0;
     height: 30px;
     gap: 24px;
-    // padding: 16px 0 12px 0;
-    // border-top: $active-blue 4px solid;
 
     &__left-group {
         display: flex;
@@ -69,11 +67,6 @@
             border-radius: 4px;
         }
 
-        // .header__time,
-        // .header__last-task {
-        //     margin-right: 16px;
-        // }
-
         .header__notifications {
             margin-right: 16px;
             cursor: pointer;
@@ -114,7 +107,6 @@
 .columns {
     display: flex;
     flex-grow: 1;
-    // height: calc(100vh - 200px); // пример, чтобы колонки занимали почти весь экран
 
     &__col1,
     &__col2 {
