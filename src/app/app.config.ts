@@ -26,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     // NgRx
     provideStore({
       // tasks: tasksReducer,
-      // auth: authReducer, ...
+      // auth: authReducer,
     }),
     provideEffects([
       // TasksEffects
