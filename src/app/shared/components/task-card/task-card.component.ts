@@ -10,7 +10,9 @@ import { TaskCard } from '../../models/task.models';
 @Component({
   selector: 'app-task-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+  ],
   templateUrl: './task-card.component.html',
   styleUrls: ['./task-card.component.scss']
 })
