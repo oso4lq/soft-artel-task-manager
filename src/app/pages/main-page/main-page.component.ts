@@ -6,6 +6,9 @@ import { TaskCard } from '../../shared/models/task.models';
 import { TasksService } from '../../core/services/tasks.service';
 import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from '../../shared/components/task-card/task-card.component';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 
 // Temporary solution to store current user's performerId
 export const USER_SESSION_ID = 'user-123';
@@ -29,6 +32,12 @@ export class MainPageComponent implements OnInit {
   selectedCategory = signal('all');
   // Radio button status filter (execution by default)
   selectedStatusFilter = signal<'approval' | 'review' | 'execution' | 'draft'>('execution');
+
+  // Store user
+  user: User | null = null;
+
+  // User popup
+  isUserPopupOpen = false;
 
   // Signal for collapsible task lists
   collapsed = signal({
@@ -86,9 +95,16 @@ export class MainPageComponent implements OnInit {
 
   constructor(
     private tasksService: TasksService,
+    private authService: AuthService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
+
+    // Subscribe on user$
+    this.authService.user$.subscribe(currentUser => {
+      this.user = currentUser;
+    });
 
     // Refresh date and time
     setInterval(() => {
@@ -110,6 +126,24 @@ export class MainPageComponent implements OnInit {
       this.tasks.set(data);
       console.log('Данные получены:', this.tasks());
     });
+  }
+
+  toggleUserPopup() {
+    this.isUserPopupOpen = !this.isUserPopupOpen;
+  }
+
+  logout() {
+    this.authService.logout().then(() => {
+      // Можно сделать дополнительный редирект, если нужно
+      this.authService.logout();
+      this.router.navigate(['/login']);
+    });
+  }
+
+  goToLogin() {
+    // Можно переходить на страницу логина или другую
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   toggleCollapsible(listName: 'myTasks' | 'unassigned') {

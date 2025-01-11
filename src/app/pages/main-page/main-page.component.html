@@ -14,8 +14,8 @@
             </ul>
             <button class="header__create-btn">Создать</button>
         </div>
-        <div class="header__right-group">
 
+        <div class="header__right-group">
             <!-- Current time -->
             <div class="header__time">
                 {{ currentTimeStr() }}
@@ -26,8 +26,28 @@
                 *{{ shortLastTaskName() || 'задачи отсутствуют' }}
             </div>
 
+            <!-- Notifications section -->
             <button class="header__notifications">Уведомления</button>
-            <div class="header__user-avatar"></div>
+
+            <!-- User img section to open the popup -->
+            <div class="header__user-avatar" (click)="toggleUserPopup()"></div>
+
+            <!-- Popup -->
+            <div class="user-popup" *ngIf="isUserPopupOpen">
+                <!-- Signed user -->
+                <ng-container *ngIf="user && !user.isAnonymous; else anonymousInfo">
+                    <p>Имя: {{ user.displayName || 'Имя не задано' }}</p>
+                    <p>Email: {{ user.email }}</p>
+                    <p>Telegram: </p>
+                    <button (click)="logout()">Выйти</button>
+                </ng-container>
+
+                <!-- Anonymous session -->
+                <ng-template #anonymousInfo>
+                    <p>Анонимная сессия</p>
+                    <button (click)="goToLogin()">Войти / Зарегистрироваться</button>
+                </ng-template>
+            </div>
         </div>
     </header>
 

@@ -1,0 +1,26 @@
+<!-- src/app/auth/register/register.component.html -->
+
+<div class="auth-container">
+    <h2>Регистрация</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <label for="email">Email:</label>
+        <input id="email" formControlName="email" type="email" required />
+
+        <label for="password">Пароль:</label>
+        <input id="password" formControlName="password" type="password" required />
+
+        <label for="confirmPassword">Подтвердите пароль:</label>
+        <input id="confirmPassword" formControlName="confirmPassword" type="password" required />
+
+        <button type="submit" [disabled]="registerForm.invalid">Зарегистрироваться</button>
+    </form>
+    <div *ngIf="errorMessage" class="error">
+        {{ errorMessage }}
+    </div>    
+
+    <p>Уже есть аккаунт? <button (click)="goToLoginPage()">Войти</button></p>
+    <p>Или</p>
+    <button (click)="signInAnonymously()">продолжить без учётной записи</button>
+    <p>(ограниченный функционал)</p>
+
+</div>

@@ -80,7 +80,27 @@
             height: 32px;
             background-color: $divider;
             border-radius: 50%;
+            transition: transform 0.3s ease;
         }
+
+        .header__user-avatar:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .user-popup {
+            position: absolute;
+            top: 60px;
+            right: 40px;
+            background: #e0e0e0;
+            height: 200px;
+            z-index: 10;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
     }
 }
 
