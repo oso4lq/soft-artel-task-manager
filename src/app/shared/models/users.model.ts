@@ -1,6 +1,6 @@
 export interface UserData {
     id: string | number;
-    name: string;
+    username: string;
     img: string;
     email: string;
     telegram: string;

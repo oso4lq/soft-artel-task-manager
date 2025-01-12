@@ -1,0 +1,48 @@
+<!-- Header menu -->
+<header class="header">
+    <div class="header__left-group">
+        <ul class="header__tabs">
+            <li class="header__tab active">Главная</li>
+            <li class="header__tab">Проекты</li>
+            <li class="header__tab">Команда</li>
+            <li class="header__tab">Канбан</li>
+            <li class="header__tab">Итерации</li>
+        </ul>
+        <button class="header__create-btn">Создать</button>
+    </div>
+
+    <div class="header__right-group">
+        <!-- Current time -->
+        <div class="header__time">
+            {{ currentTimeStr }}
+        </div>
+
+        <!-- Sort out the latest created task and display its cropped name or a default message -->
+        <div class="header__last-task">
+            *{{ shortLastTaskName || 'задачи отсутствуют' }}
+        </div>
+
+        <!-- Notifications section -->
+        <button class="header__notifications">Уведомления</button>
+
+        <!-- User img section to open the popup -->
+        <div class="header__user-avatar" (click)="toggleUserPopup()"></div>
+
+        <!-- Popup -->
+        <div class="user-popup" *ngIf="isUserPopupOpen">
+            <!-- Signed user -->
+            <ng-container *ngIf="user && !user.isAnonymous; else anonymousInfo">
+                <p>Имя: {{ user.displayName || 'Имя не задано' }}</p>
+                <p>Email: {{ user.email }}</p>
+                <p>Telegram: </p>
+                <button (click)="logout()">Выйти</button>
+            </ng-container>
+
+            <!-- Anonymous session -->
+            <ng-template #anonymousInfo>
+                <p>Анонимная сессия</p>
+                <button (click)="goToLogin()">Войти / Зарегистрироваться</button>
+            </ng-template>
+        </div>
+    </div>
+</header>

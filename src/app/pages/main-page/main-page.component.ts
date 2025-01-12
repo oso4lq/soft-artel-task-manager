@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { loadAuthFromIndexedDb } from '../../core/store/auth/auth.actions';
 import { loadTasks } from '../../core/store/tasks/tasks.actions';
 import { Store } from '@ngrx/store';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 
 // Temporary solution to store current user's performerId
 export const USER_SESSION_ID = 'user-123';
@@ -23,6 +24,7 @@ export const USER_SESSION_ID = 'user-123';
     CommonModule,
     FormsModule,
     TaskCardComponent,
+    HeaderComponent,
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
@@ -38,9 +40,6 @@ export class MainPageComponent implements OnInit {
 
   // Store user
   user: User | null = null;
-
-  // User popup
-  isUserPopupOpen = false;
 
   // Signal for collapsible task lists
   collapsed = signal({
@@ -105,11 +104,10 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // 1) Сначала загружаем Auth из IndexedDB
+    // Load Auth from the IndexedDB
     this.store.dispatch(loadAuthFromIndexedDb());
-    // 2) А после можем загрузить Tasks из Firestore (или из IndexedDB), на ваше усмотрение
+    // Load tasks from the IndexedDB
     this.store.dispatch(loadTasks());
-    // Или, если мы хотим оффлайн-режим, можно сначала check offline => loadTasksFromIndexedDb()
 
     // Subscribe on user$
     this.authService.user$.subscribe(currentUser => {
@@ -128,34 +126,15 @@ export class MainPageComponent implements OnInit {
       }
     }, 1000);
 
+    // Load tasks from the Firesore
     this.loadTasks();
   }
 
   loadTasks(): void {
-    // this.tasksService.getTasks().subscribe((data) => {
     this.tasksService.getTasksFromFirestore().subscribe((data) => {
       this.tasks.set(data);
       console.log('Данные получены:', this.tasks());
     });
-  }
-
-  toggleUserPopup() {
-    this.isUserPopupOpen = !this.isUserPopupOpen;
-  }
-
-  logout() {
-    this.authService.logout()
-    // .then(() => {
-    //   // Можно сделать дополнительный редирект, если нужно
-    //   this.authService.logout();
-    //   this.router.navigate(['/login']);
-    // });
-  }
-
-  goToLogin() {
-    // Можно переходить на страницу логина или другую
-    this.authService.logout();
-    this.router.navigate(['/login']);
   }
 
   toggleCollapsible(listName: 'myTasks' | 'unassigned') {

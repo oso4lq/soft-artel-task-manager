@@ -1,0 +1,97 @@
+@import '../../../../styles/variables.scss';
+
+// Header menu
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    height: 30px;
+    gap: 24px;
+
+    &__left-group {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+
+        .header__tabs {
+            display: flex;
+            list-style: none;
+            gap: 24px;
+
+            .header__tab {
+                padding: 8px 12px; // change
+                color: $text-secondary;
+                cursor: pointer;
+
+                &.active {
+                    color: $active-blue;
+                    border-bottom: 2px solid $active-blue;
+                }
+            }
+        }
+
+        .header__create-btn {
+            padding: 8px 16px;
+            color: $active-blue;
+            border: $active-blue 1px solid;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    }
+
+    &__right-group {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+
+        .header__time {
+            display: flex;
+            background: $active-blue;
+            color: $white;
+            border-radius: 4px;
+        }
+
+        .header__last-task {
+            display: flex;
+            background: $bg-light;
+            color: $text-text;
+            border-radius: 4px;
+        }
+
+        .header__notifications {
+            margin-right: 16px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: relative;
+        }
+
+        .header__user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: $divider;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .header__user-avatar:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .user-popup {
+            position: absolute;
+            top: 60px;
+            right: 40px;
+            background: #e0e0e0;
+            height: 200px;
+            z-index: 10;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+    }
+}

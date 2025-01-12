@@ -21,14 +21,13 @@ export class TasksEffects {
         private tasksService: TasksService,
         private indexedDbService: IndexedDbService,
     ) {
-        // 1) Загрузка из Firestore
+        // Load from Firestore
         this.loadTasks$ = createEffect(() =>
             this.actions$.pipe(
                 ofType(TasksActions.loadTasks),
                 switchMap(() =>
                     this.tasksService.getTasksFromFirestore().pipe(
                         map((tasks: TaskCard[]) => {
-                            // Успешно получили
                             return TasksActions.loadTasksSuccess({ tasks });
                         }),
                         catchError((error) => of(TasksActions.loadTasksFailure({ error })))
@@ -37,7 +36,7 @@ export class TasksEffects {
             )
         );
 
-        // 2) При удачной загрузке из Firestore — сохраняем в IndexedDB
+        // If loaded from Firestore, then save to IndexedDB
         this.saveTasksAfterLoad$ = createEffect(() =>
             this.actions$.pipe(
                 ofType(TasksActions.loadTasksSuccess),
@@ -45,12 +44,11 @@ export class TasksEffects {
             )
         );
 
-        // 3) Собственно сохранение в IndexedDB
+        // Save to IndexedDB
         this.saveTasksToIndexedDb$ = createEffect(() =>
             this.actions$.pipe(
                 ofType(TasksActions.saveTasksToIndexedDb),
                 switchMap(({ tasks }) =>
-                    // Сохраняем все задачи в IndexedDB
                     this.indexedDbService.bulkPutTasks(tasks).then(
                         () => TasksActions.saveTasksToIndexedDbSuccess(),
                         (error) => TasksActions.saveTasksToIndexedDbFailure({ error })
@@ -59,7 +57,7 @@ export class TasksEffects {
             )
         );
 
-        // 4) Загрузка задач из IndexedDB (например, при оффлайне)
+        // Load from IndexedDB (offline cache)
         this.loadTasksFromIndexedDb$ = createEffect(() =>
             this.actions$.pipe(
                 ofType(TasksActions.loadTasksFromIndexedDb),
@@ -73,61 +71,3 @@ export class TasksEffects {
         );
     }
 }
-
-// // 1) Загрузка из Firestore
-// loadTasks$ = createEffect(() =>
-//     this.actions$.pipe(
-//         ofType(TasksActions.loadTasks),
-//         switchMap(() =>
-//             this.tasksService.getTasksFromFirestore().pipe(
-//                 map((tasks: TaskCard[]) => {
-//                     // Успешно получили
-//                     return TasksActions.loadTasksSuccess({ tasks });
-//                 }),
-//                 catchError((error) => of(TasksActions.loadTasksFailure({ error })))
-//             )
-//         )
-//     )
-// );
-
-// // 2) При удачной загрузке из Firestore — сохраняем в IndexedDB
-// saveTasksAfterLoad$ = createEffect(() =>
-//     this.actions$.pipe(
-//         ofType(TasksActions.loadTasksSuccess),
-//         map(({ tasks }) => TasksActions.saveTasksToIndexedDb({ tasks }))
-//     )
-// );
-
-// // 3) Собственно сохранение в IndexedDB
-// saveTasksToIndexedDb$ = createEffect(() =>
-//     this.actions$.pipe(
-//         ofType(TasksActions.saveTasksToIndexedDb),
-//         switchMap(({ tasks }) =>
-//             // Сохраняем все задачи в IndexedDB
-//             this.indexedDbService.bulkPutTasks(tasks).then(
-//                 () => TasksActions.saveTasksToIndexedDbSuccess(),
-//                 (error) => TasksActions.saveTasksToIndexedDbFailure({ error })
-//             )
-//         )
-//     )
-// );
-
-// // 4) Загрузка задач из IndexedDB (например, при оффлайне)
-// loadTasksFromIndexedDb$ = createEffect(() =>
-//     this.actions$.pipe(
-//         ofType(TasksActions.loadTasksFromIndexedDb),
-//         switchMap(() =>
-//             this.indexedDbService.getAllTasks().then(
-//                 (tasks) => TasksActions.loadTasksFromIndexedDbSuccess({ tasks }),
-//                 (error) => TasksActions.loadTasksFromIndexedDbFailure({ error })
-//             )
-//         )
-//     )
-// );
-
-// constructor(
-//     private actions$: Actions,
-//     private tasksService: TasksService,
-//     private indexedDbService: IndexedDbService,
-// ) { }
-// }

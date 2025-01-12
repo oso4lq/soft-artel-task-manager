@@ -1,10 +1,11 @@
 // task.models.ts
 
 export interface TaskCard {
+    id: string | number; // Task service ID
     taskPath: TaskPath;
     taskName: string;
     taskType: TaskType;
-    taskKey: string; // Task ID
+    taskKey: string; // Task production ID
     taskStatus: TaskStatus;
     performerId?: string;
     taskTime: TaskTime;

@@ -80,11 +80,11 @@ export class MyDexie extends Dexie {
 
     constructor() {
         super('TaskManagerDB');
-        this.version(1).stores({
-            tasks: 'taskKey, taskName, taskStatus, performerId',
-        });
+        // this.version(1).stores({
+        //     tasks: 'taskKey, taskName, taskStatus, performerId',
+        // });
         this.version(2).stores({
-            tasks: 'taskKey, taskName, taskStatus, performerId',
+            tasks: 'id, taskPath, taskName, taskType, taskKey, taskStatus, performerId, taskTime, createdAt',
             auth: '',
         });
     }

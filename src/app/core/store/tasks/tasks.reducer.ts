@@ -36,7 +36,7 @@ export const tasksReducer = createReducer(
         error,
     })),
 
-    // Загрузка из IndexedDB
+    // Load from IndexedDB
     on(TasksActions.loadTasksFromIndexedDb, (state) => ({
         ...state,
         loading: true,
@@ -53,10 +53,10 @@ export const tasksReducer = createReducer(
         error,
     })),
 
-    // Сохранение в IndexedDB
+    // Save to IndexedDB
     on(TasksActions.saveTasksToIndexedDb, (state) => ({
         ...state,
-        // можно выставить loading=true, если нужно
+        // loading=true
     })),
     on(TasksActions.saveTasksToIndexedDbSuccess, (state) => ({
         ...state,
