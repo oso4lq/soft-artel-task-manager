@@ -9,6 +9,9 @@ import { TaskCardComponent } from '../../shared/components/task-card/task-card.c
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { loadAuthFromIndexedDb } from '../../core/store/auth/auth.actions';
+import { loadTasks } from '../../core/store/tasks/tasks.actions';
+import { Store } from '@ngrx/store';
 
 // Temporary solution to store current user's performerId
 export const USER_SESSION_ID = 'user-123';
@@ -97,9 +100,16 @@ export class MainPageComponent implements OnInit {
     private tasksService: TasksService,
     private authService: AuthService,
     private router: Router,
+    private store: Store,
   ) { }
 
   ngOnInit(): void {
+
+    // 1) Сначала загружаем Auth из IndexedDB
+    this.store.dispatch(loadAuthFromIndexedDb());
+    // 2) А после можем загрузить Tasks из Firestore (или из IndexedDB), на ваше усмотрение
+    this.store.dispatch(loadTasks());
+    // Или, если мы хотим оффлайн-режим, можно сначала check offline => loadTasksFromIndexedDb()
 
     // Subscribe on user$
     this.authService.user$.subscribe(currentUser => {
@@ -122,7 +132,8 @@ export class MainPageComponent implements OnInit {
   }
 
   loadTasks(): void {
-    this.tasksService.getTasks().subscribe((data) => {
+    // this.tasksService.getTasks().subscribe((data) => {
+    this.tasksService.getTasksFromFirestore().subscribe((data) => {
       this.tasks.set(data);
       console.log('Данные получены:', this.tasks());
     });
@@ -133,11 +144,12 @@ export class MainPageComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout().then(() => {
-      // Можно сделать дополнительный редирект, если нужно
-      this.authService.logout();
-      this.router.navigate(['/login']);
-    });
+    this.authService.logout()
+    // .then(() => {
+    //   // Можно сделать дополнительный редирект, если нужно
+    //   this.authService.logout();
+    //   this.router.navigate(['/login']);
+    // });
   }
 
   goToLogin() {

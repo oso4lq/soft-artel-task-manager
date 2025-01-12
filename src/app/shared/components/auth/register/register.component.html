@@ -3,6 +3,10 @@
 <div class="auth-container">
     <h2>Регистрация</h2>
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <label for="username">Имя:</label>
+        <input id="username" formControlName="username" type="text" required />
+
         <label for="email">Email:</label>
         <input id="email" formControlName="email" type="email" required />
 
@@ -16,7 +20,7 @@
     </form>
     <div *ngIf="errorMessage" class="error">
         {{ errorMessage }}
-    </div>    
+    </div>
 
     <p>Уже есть аккаунт? <button (click)="goToLoginPage()">Войти</button></p>
     <p>Или</p>
