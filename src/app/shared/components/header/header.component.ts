@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, Input, Signal } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from 'firebase/auth';
+import { UserData } from '../../models/users.model';
 
 @Component({
   selector: 'app-header',
@@ -17,28 +18,32 @@ export class HeaderComponent {
 
   @Input() currentTimeStr!: string;
   @Input() shortLastTaskName!: string | null;
-  @Input() user!: User | null;
+  // @Input() user!: User | null | undefined;
+  // @Input() user!: Signal<User | null | undefined> 
+  // = computed(() => this.authService.currentUserSig()); // track the current user
 
-// User popup
-isUserPopupOpen = false;
+  // Signals
+  currentUser: Signal<User | null | undefined> = computed(() => this.authService.currentUserSig()); // track the current user
+  currentUserData: Signal<UserData | null> = computed(() => this.authService.currentUserDataSig()); // track the current user data
 
-constructor(
-  // private tasksService: TasksService,
-  private authService: AuthService,
-  private router: Router,
-  // private store: Store,
-) { }
+  // User popup
+  isUserPopupOpen = false;
 
-toggleUserPopup() {
-  this.isUserPopupOpen = !this.isUserPopupOpen
-}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) { }
 
-logout() {
-  this.authService.logout()
-}
+  toggleUserPopup() {
+    this.isUserPopupOpen = !this.isUserPopupOpen
+  }
 
-goToLogin() {
-  this.authService.logout();
-  this.router.navigate(['/login']);
-}
+  logout() {
+    this.authService.logout()
+  }
+
+  goToLogin() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

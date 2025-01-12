@@ -1,9 +1,10 @@
 // tasks.service.ts
 
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { TaskCard } from '../../shared/models/task.models';
 import { Observable } from 'rxjs';
 import { addDoc, collection, collectionData, deleteDoc, doc, DocumentReference, Firestore, updateDoc } from '@angular/fire/firestore';
+import { TasksFirebaseService } from './tasks-firebase.service';
 
 @Injectable({
     providedIn: 'root',
@@ -11,32 +12,52 @@ import { addDoc, collection, collectionData, deleteDoc, doc, DocumentReference, 
 
 export class TasksService {
 
-    firestore = inject(Firestore);
-    tasksCollection = collection(this.firestore, 'tasks');
+    // Signal to hold the tasks list
+    tasksSig = signal<TaskCard[]>([]);
 
-    // Get the list of tasks from Firebase
-    public getTasksFromFirestore(): Observable<TaskCard[]> {
-        console.log('getTasksFromFirestore');
-        return collectionData(this.tasksCollection, {
-            idField: 'id',
-        }) as Observable<TaskCard[]>;
+    constructor(
+        private tasksFirebaseService: TasksFirebaseService,
+    ) { }
+
+    // Fetch the tasks from Firebase and set them in the signal
+    loadTasks(): void {
+        this.tasksFirebaseService.getTasks().subscribe((tasks: TaskCard[]) => {
+            console.log('loadTasks ', tasks);
+            this.tasksSig.set(tasks);
+        })
     }
 
-    // Add a new task to Firebase and return the document reference
+    // Add a new task, update the signal, and return the document reference with the auto-generated ID
     addTask(newTask: TaskCard): Promise<DocumentReference> {
-        return addDoc(this.tasksCollection, newTask);
+        console.log('addTask', newTask);
+        return this.tasksFirebaseService.addTask(newTask).then((docRef) => {
+            // Set the generated ID in the newTask object
+            newTask.id = docRef.id;
+
+            // Update the tasks signal
+            this.tasksSig.update((tasks) => [...tasks, newTask]);
+
+            // Return the document reference
+            return docRef;
+        });
     }
 
-    // Update an existing task in Firebase
-    updateTask(updatedTask: TaskCard): Promise<void> {
-        const taskDoc = doc(this.firestore, `tasks/${updatedTask.id}`);
-        return updateDoc(taskDoc, { ...updatedTask });
+    // Update a task (local and to Firebase)
+    updateTask(updatedTask: TaskCard): void {
+        console.log('updateTask', updatedTask);
+        this.tasksFirebaseService.updateTask(updatedTask).then(() => {
+            this.tasksSig.update((tasks) =>
+                tasks.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+            );
+        });
     }
 
-    // Delete a task from Firebase
-    deleteTask(taskId: string | number): Promise<void> {
-        const taskDoc = doc(this.firestore, `tasks/${taskId}`);
-        return deleteDoc(taskDoc);
+    // Delete a task (local and from Firebase)
+    deleteTask(taskId: string | number): void {
+        console.log('deleteTask', taskId);
+        this.tasksFirebaseService.deleteTask(taskId).then(() => {
+            this.tasksSig.update((tasks) => tasks.filter((t) => t.id !== taskId));
+        });
     }
 
 }

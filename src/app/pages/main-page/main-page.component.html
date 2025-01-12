@@ -3,8 +3,7 @@
 <div class="wrapper">
 
     <!-- Header menu -->
-    <app-header [currentTimeStr]="currentTimeStr()" [shortLastTaskName]="shortLastTaskName()"
-        [user]="user"></app-header>
+    <app-header [currentTimeStr]="currentTimeStr()" [shortLastTaskName]="shortLastTaskName()"></app-header>
 
     <!-- Current date -->
     <h1 class="main-date">
@@ -66,8 +65,22 @@
                 <div class="tasks-block__body tasks-block__body_collapsible">
 
                     <!-- task list -->
-                    <app-task-card *ngFor="let t of myTasksFiltered()" [task]="t">
-                    </app-task-card>
+                    <!-- Check if user exists -->
+                    <ng-container *ngIf="userData; else showLoginMessage">
+                        <!-- Check if the user has tasks -->
+                        <ng-container *ngIf="myTasksFiltered().length > 0; else showNoTasksMessage">
+                            <app-task-card *ngFor="let t of myTasksFiltered()" [task]="t"></app-task-card>
+                        </ng-container>
+                        <!-- Message when no tasks -->
+                        <ng-template #showNoTasksMessage>
+                            <p>У вас нет задач.</p>
+                        </ng-template>
+                    </ng-container>
+
+                    <!-- Message for anonymous user -->
+                    <ng-template #showLoginMessage>
+                        <p>Войдите в свой аккаунт, чтобы просмотреть свои задачи.</p>
+                    </ng-template>
 
                 </div>
             </div>

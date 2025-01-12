@@ -25,7 +25,9 @@ export class AuthService {
     // sigma
     private usersFirebaseService: UsersFirebaseService,
     private router: Router,
-  ) { }
+  ) {
+    this.monitorAuthState();
+  }
 
   // Monitor Firebase Authentication state
   monitorAuthState(): void {
@@ -43,10 +45,12 @@ export class AuthService {
           }
 
           // Subscribe to getUserById for the current user
-          this.userDataSubscription = this.usersFirebaseService.getUserById(firebaseUser.uid).subscribe(userData => {
-            this.currentUserDataSig.set(userData);
-            console.log('User data fetched: ', this.currentUserDataSig());
-          });
+          this.userDataSubscription = this.usersFirebaseService
+            .getUserById(firebaseUser.uid)
+            .subscribe(userData => {
+              this.currentUserDataSig.set(userData);
+              console.log('User data fetched: ', this.currentUserDataSig());
+            });
         }
         // If no authenticated user, set to null user and userData
       } else {
@@ -54,7 +58,6 @@ export class AuthService {
       }
     });
   }
-
 
   setUserDataNull() {
     this.currentUserSig.set(null);

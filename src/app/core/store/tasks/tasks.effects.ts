@@ -7,6 +7,7 @@ import { switchMap, map, catchError, of, tap } from 'rxjs';
 import { TasksService } from '../../services/tasks.service';
 import { IndexedDbService } from '../../services/indexed-db.service';
 import { TaskCard } from '../../../shared/models/task.models';
+import { TasksFirebaseService } from '../../services/tasks-firebase.service';
 
 @Injectable()
 export class TasksEffects {
@@ -20,13 +21,14 @@ export class TasksEffects {
         private actions$: Actions,
         private tasksService: TasksService,
         private indexedDbService: IndexedDbService,
+        private tasksFirebaseService: TasksFirebaseService,
     ) {
         // Load from Firestore
         this.loadTasks$ = createEffect(() =>
             this.actions$.pipe(
                 ofType(TasksActions.loadTasks),
                 switchMap(() =>
-                    this.tasksService.getTasksFromFirestore().pipe(
+                    this.tasksFirebaseService.getTasks().pipe(
                         map((tasks: TaskCard[]) => {
                             return TasksActions.loadTasksSuccess({ tasks });
                         }),

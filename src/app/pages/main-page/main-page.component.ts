@@ -1,7 +1,7 @@
 // main-page.component.ts
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, Signal, effect } from '@angular/core';
 import { TaskCard } from '../../shared/models/task.models';
 import { TasksService } from '../../core/services/tasks.service';
 import { FormsModule } from '@angular/forms';
@@ -13,9 +13,10 @@ import { loadAuthFromIndexedDb } from '../../core/store/auth/auth.actions';
 import { loadTasks } from '../../core/store/tasks/tasks.actions';
 import { Store } from '@ngrx/store';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { UserData } from '../../shared/models/users.model';
 
 // Temporary solution to store current user's performerId
-export const USER_SESSION_ID = 'user-123';
+// export const USER_SESSION_ID = 'user-123';
 
 @Component({
   selector: 'app-main-page',
@@ -31,15 +32,18 @@ export const USER_SESSION_ID = 'user-123';
 })
 export class MainPageComponent implements OnInit {
 
-  // Filter by product (all by default)
-  selectedProduct = signal('all');
-  // Filter by category (all by default)
-  selectedCategory = signal('all');
-  // Radio button status filter (execution by default)
-  selectedStatusFilter = signal<'approval' | 'review' | 'execution' | 'draft'>('execution');
+  // State
+  userData: UserData | null = null; // Store the fetched user data
 
-  // Store user
-  user: User | null = null;
+  // Signals
+  currentUser: Signal<User | null | undefined> = computed(() => this.authService.currentUserSig()); // track the current user
+  currentUserData: Signal<UserData | null> = computed(() => this.authService.currentUserDataSig()); // track the current user data
+  tasks: Signal<TaskCard[]> = computed(() => this.tasksService.tasksSig()); // track the tasks array
+
+  // Filter signals
+  selectedProduct = signal('all');
+  selectedCategory = signal('all');
+  selectedStatusFilter = signal<'approval' | 'review' | 'execution' | 'draft'>('execution');
 
   // Signal for collapsible task lists
   collapsed = signal({
@@ -47,8 +51,22 @@ export class MainPageComponent implements OnInit {
     unassigned: false
   });
 
-  // Store loaded tasks in a signal
-  tasks = signal<TaskCard[]>([]);
+  constructor(
+    private tasksService: TasksService,
+    private authService: AuthService,
+    private router: Router,
+    private store: Store,
+  ) {
+    // Use effect to watch for changes in currentUserData
+    effect(() => {
+      const data = this.currentUserData();
+      if (data) {
+        this.userData = data;
+      } else {
+        this.userData = null;
+      }
+    });
+  }
 
   // Make a list of developing products
   allProjects = computed(() => {
@@ -95,24 +113,15 @@ export class MainPageComponent implements OnInit {
     return formatted.charAt(0).toUpperCase() + formatted.slice(1);
   });
 
-  constructor(
-    private tasksService: TasksService,
-    private authService: AuthService,
-    private router: Router,
-    private store: Store,
-  ) { }
-
   ngOnInit(): void {
-
-    // Load Auth from the IndexedDB
+    // Load Auth from the IndexedDB cache
     this.store.dispatch(loadAuthFromIndexedDb());
-    // Load tasks from the IndexedDB
+    // Load tasks from the IndexedDB cache
     this.store.dispatch(loadTasks());
-
-    // Subscribe on user$
-    this.authService.user$.subscribe(currentUser => {
-      this.user = currentUser;
-    });
+    // Load tasks from the Firestore
+    this.tasksService.loadTasks();
+    // Load and set locally current user's data
+    this.userData = this.currentUserData();
 
     // Refresh date and time
     setInterval(() => {
@@ -125,18 +134,9 @@ export class MainPageComponent implements OnInit {
         this.dateSignal.set(newValue);
       }
     }, 1000);
-
-    // Load tasks from the Firesore
-    this.loadTasks();
   }
 
-  loadTasks(): void {
-    this.tasksService.getTasksFromFirestore().subscribe((data) => {
-      this.tasks.set(data);
-      console.log('Данные получены:', this.tasks());
-    });
-  }
-
+  // Wrap / Unwrap task lists in MY and UNASSIGNED blocks
   toggleCollapsible(listName: 'myTasks' | 'unassigned') {
     this.collapsed.update((prev) => ({
       ...prev,
@@ -190,27 +190,44 @@ export class MainPageComponent implements OnInit {
   }
 
   private matchLeftColumnStatus(task: TaskCard): boolean {
+    // performerId === current user's UID
+    const userData = this.authService.currentUserDataSig();
+    const currentUserUid = userData?.id; // UID from Firestore
+
     switch (this.selectedStatusFilter()) {
       case 'approval':
-        return (task.taskStatus === 'Согласование' && task.performerId === USER_SESSION_ID);
+        return (task.taskStatus === 'Согласование' && task.performerId === currentUserUid);
       case 'review':
-        return (task.taskStatus === 'Ревью' && task.performerId === USER_SESSION_ID);
+        return (task.taskStatus === 'Ревью' && task.performerId === currentUserUid);
       case 'execution':
         return (
           task.taskStatus === 'Исполнение'
-          && (!task.performerId || task.performerId === USER_SESSION_ID)
+          && (!task.performerId || task.performerId === currentUserUid)
         );
       case 'draft':
-        return (task.taskStatus === 'Черновик' && task.performerId === USER_SESSION_ID);
+        return (task.taskStatus === 'Черновик' && task.performerId === currentUserUid);
     }
   }
 
-  private matchMy(task: TaskCard): boolean {
-    return task.performerId === USER_SESSION_ID;
+  // private matchMy(task: TaskCard): boolean {
+  //   return task.performerId === USER_SESSION_ID;
+  // }
+
+  // private matchUnassigned(task: TaskCard): boolean {
+  //   return !task.performerId; // task.performerId === '' / undefined / null
+  // }
+
+  // If the user is anonymous, do not check performerId
+  private isCurrentUser(task: TaskCard): boolean {
+    const userData = this.authService.currentUserDataSig();
+    console.log('userData.id:', userData?.id);
+    if (!userData) return false;
+    console.log('userData.id:', userData.id);
+    return task.performerId === userData.id;
   }
 
-  private matchUnassigned(task: TaskCard): boolean {
-    return !task.performerId; // task.performerId === '' / undefined / null
+  private isUnassigned(task: TaskCard): boolean {
+    return !task.performerId;
   }
 
   private matchInProgress(task: TaskCard): boolean {
@@ -233,7 +250,7 @@ export class MainPageComponent implements OnInit {
       // 3 - radio-status (because it is in the left column)
       if (!this.matchLeftColumnStatus(t)) return false;
       // 4 - performerId = user
-      if (!this.matchMy(t)) return false;
+      if (!this.isCurrentUser(t)) return false;
 
       return true;
     });
@@ -248,7 +265,7 @@ export class MainPageComponent implements OnInit {
       // 3 - radio-status (because it is in the left column)
       if (!this.matchLeftColumnStatus(t)) return false;
       // 4 - performerId = undefined/null
-      if (!this.matchUnassigned(t)) return false;
+      if (!this.isUnassigned(t)) return false;
 
       return true;
     });

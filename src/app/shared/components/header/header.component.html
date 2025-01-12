@@ -31,10 +31,10 @@
         <!-- Popup -->
         <div class="user-popup" *ngIf="isUserPopupOpen">
             <!-- Signed user -->
-            <ng-container *ngIf="user && !user.isAnonymous; else anonymousInfo">
-                <p>Имя: {{ user.displayName || 'Имя не задано' }}</p>
-                <p>Email: {{ user.email }}</p>
-                <p>Telegram: </p>
+            <ng-container *ngIf="currentUserData; else anonymousInfo">
+                <p>Имя: {{ currentUserData()?.username }}</p>
+                <p>Email: {{ currentUserData()?.email }}</p>
+                <p>Telegram: {{ currentUserData()?.telegram}}</p>
                 <button (click)="logout()">Выйти</button>
             </ng-container>
 
