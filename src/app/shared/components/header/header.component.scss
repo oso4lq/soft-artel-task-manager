@@ -68,15 +68,19 @@
         }
 
         .header__user-avatar {
-            width: 32px;
-            height: 32px;
-            background-color: $divider;
-            border-radius: 50%;
             transition: transform 0.3s ease;
         }
 
         .header__user-avatar:hover {
             transform: scale(1.1) rotate(10deg);
+            
+        }
+
+        .header__user-img {
+            width: 40px;
+            height: 40px;
+            background-color: $divider;
+            border-radius: 50%;
         }
 
         .user-popup {
