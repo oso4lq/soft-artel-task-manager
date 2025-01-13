@@ -196,16 +196,16 @@ export class MainPageComponent implements OnInit {
 
     switch (this.selectedStatusFilter()) {
       case 'approval':
-        return (task.taskStatus === 'Согласование' && task.performerId === currentUserUid);
+        return (task.currentTaskStatus === 'Согласование' && task.performerId === currentUserUid);
       case 'review':
-        return (task.taskStatus === 'Ревью' && task.performerId === currentUserUid);
+        return (task.currentTaskStatus === 'Ревью' && task.performerId === currentUserUid);
       case 'execution':
         return (
-          task.taskStatus === 'Исполнение'
+          task.currentTaskStatus === 'Исполнение'
           && (!task.performerId || task.performerId === currentUserUid)
         );
       case 'draft':
-        return (task.taskStatus === 'Черновик' && task.performerId === currentUserUid);
+        return (task.currentTaskStatus === 'Черновик' && task.performerId === currentUserUid);
     }
   }
 
@@ -231,11 +231,11 @@ export class MainPageComponent implements OnInit {
   }
 
   private matchInProgress(task: TaskCard): boolean {
-    return task.taskStatus === 'В работе';
+    return task.inProgress === true;
   }
 
   private matchPause(task: TaskCard): boolean {
-    return task.taskStatus === 'Пауза';
+    return task.inProgress === false;
   }
   // Helper methods end
 

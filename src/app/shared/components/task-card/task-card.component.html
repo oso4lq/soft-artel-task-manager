@@ -5,7 +5,7 @@
     <!-- Top Card Part -->
     <div class="task-card__top" (mouseenter)="onTopHover(true)" (mouseleave)="onTopHover(false)">
 
-        <!-- Path (if hoveredTop() === true) -->
+        <!-- Show path (if hoveredTop() === true) -->
         <div class="task-card__path" *ngIf="hoveredTop()">
             {{ task.taskPath.projectName }} /
             {{ task.taskPath.productName }} /
@@ -29,24 +29,27 @@
 
         <!-- Progress bar -->
         <div class="task-card__progress-bar">
-            Progress bar here...
+            <!-- Progress bar here... -->
+            <ng-container *ngFor="let status of task.taskStatuses; let i = index">
+                <div class="progress-block" [ngClass]="getProgressBlockClass(i)"></div>
+            </ng-container>
         </div>
 
         <!-- Status, performer, time -->
         <div class="task-card__info">
             <span class="task-card__status-icon">
-                {{ task.taskStatus }}
+                {{ task.currentTaskStatus }}
             </span>
-            <!-- GET performerId NAME -->
+            <!-- Get this task assignee name -->
             <span class="task-card__performer">
-                {{ task.performerId ? 'User ID: ' + task.performerId : 'Нет исполнителя' }}
+                {{ taskPerformerName() }}
             </span>
             <span class="task-card__time">
                 Затрачено: {{ task.taskTime.spent }} / План: {{ task.taskTime.planned }}
             </span>
         </div>
 
-        <!-- Control buttons (if hoveredBottom() === true) -->
+        <!-- Show control buttons (if hoveredBottom() === true) -->
         <div class="task-card__actions" *ngIf="hoveredBottom()">
             <button>Исправить</button>
             <button>В работу</button>

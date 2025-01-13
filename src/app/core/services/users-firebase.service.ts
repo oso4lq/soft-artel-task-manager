@@ -1,6 +1,6 @@
-// src/app/core/services/users-firebase.service.ts
+// users-firebase.service.ts
 
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { UserData } from '../../shared/models/users.model';

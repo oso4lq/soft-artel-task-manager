@@ -1,3 +1,5 @@
+<!-- header.component.html -->
+
 <!-- Header menu -->
 <header class="header">
     <div class="header__left-group">
@@ -8,7 +10,9 @@
             <li class="header__tab">Канбан</li>
             <li class="header__tab">Итерации</li>
         </ul>
-        <button class="header__create-btn">Создать</button>
+
+        <!-- Open model window to create a new task -->
+        <button class="header__create-btn" (click)="openModal()">Создать</button>
     </div>
 
     <div class="header__right-group">
@@ -27,12 +31,13 @@
 
         <!-- User img section to open the popup -->
         <div class="header__user-avatar" (click)="toggleUserPopup()">
-            <img [src]="currentUserData()?.img || 'assets/placeholder.png'" alt="user img" class="header__user-img">
+            <img [src]="currentUserData()?.img || 'https://res.cloudinary.com/dxunxtt1u/image/upload/userAvatarPlaceholder_ox0tj4.png'"
+                alt="user img" class="header__user-img">
         </div>
 
         <!-- Popup -->
         <div class="user-popup" *ngIf="isUserPopupOpen">
-            <!-- Signed user -->
+            <!-- Logged in user data -->
             <ng-container *ngIf="currentUserData; else anonymousInfo">
                 <p>Имя: {{ currentUserData()?.username }}</p>
                 <p>Email: {{ currentUserData()?.email }}</p>
@@ -47,4 +52,8 @@
             </ng-template>
         </div>
     </div>
+
+    <app-modal [isOpen]="isModalOpen" (closed)="onModalClosed()">
+        <app-new-task (closed)="onModalClosed()"></app-new-task>
+    </app-modal>
 </header>

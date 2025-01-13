@@ -1,3 +1,5 @@
+// users.service.ts
+
 import { Injectable, signal } from '@angular/core';
 import { UsersFirebaseService } from './users-firebase.service';
 import { UserData } from '../../shared/models/users.model';

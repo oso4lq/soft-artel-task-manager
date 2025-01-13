@@ -60,3 +60,30 @@
         margin-top: 8px; // пример
     }
 }
+
+.task-card__progress-bar {
+    display: flex;
+    gap: 4px;
+
+    .progress-block {
+        width: 100%;
+        height: 2px;
+        background-color: $divider;
+
+        &--green {
+            background-color: $green;
+        }
+
+        &--active-blue {
+            background-color: $active-blue;
+        }
+
+        &--text-secondary {
+            background-color: $text-secondary;
+        }
+
+        &--divider {
+            background-color: $divider;
+        }
+    }
+}

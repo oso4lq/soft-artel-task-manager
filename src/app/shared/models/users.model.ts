@@ -1,7 +1,7 @@
 // task.models.ts
 
 export interface UserData {
-    id: string | number;
+    id: string | null | undefined;
     username: string;
     img: string;
     email: string;

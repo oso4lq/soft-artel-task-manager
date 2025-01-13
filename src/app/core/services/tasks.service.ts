@@ -1,9 +1,8 @@
 // tasks.service.ts
 
-import { inject, Injectable, signal } from '@angular/core';
-import { TaskCard } from '../../shared/models/task.models';
-import { Observable } from 'rxjs';
-import { addDoc, collection, collectionData, deleteDoc, doc, DocumentReference, Firestore, updateDoc } from '@angular/fire/firestore';
+import { Injectable, signal } from '@angular/core';
+import { CounterDoc, TaskCard, TaskType } from '../../shared/models/task.models';
+import { doc, DocumentReference, Firestore, runTransaction } from '@angular/fire/firestore';
 import { TasksFirebaseService } from './tasks-firebase.service';
 
 @Injectable({
@@ -15,8 +14,23 @@ export class TasksService {
     // Signal to hold the tasks list
     tasksSig = signal<TaskCard[]>([]);
 
+    // Map of prefixes for task types
+    private readonly taskTypePrefixMap: { [key in TaskType]: string } = {
+        [TaskType.Design]: 'COM',
+        [TaskType.Analytics]: 'COM',
+        [TaskType.Frontend]: 'DEV',
+        [TaskType.Backend]: 'DEV',
+        [TaskType.Testing]: 'TEST',
+        [TaskType.BlockingBug]: 'BUG',
+        [TaskType.CriticalBug]: 'BUG',
+        [TaskType.MajorBug]: 'BUG',
+        [TaskType.MinorBug]: 'BUG',
+        [TaskType.TrivialBug]: 'BUG',
+    };
+
     constructor(
         private tasksFirebaseService: TasksFirebaseService,
+        private firestore: Firestore,
     ) { }
 
     // Fetch the tasks from Firebase and set them in the signal
@@ -58,6 +72,43 @@ export class TasksService {
         this.tasksFirebaseService.deleteTask(taskId).then(() => {
             this.tasksSig.update((tasks) => tasks.filter((t) => t.id !== taskId));
         });
+    }
+
+    // Generate a unique taskKey based on TaskType. Returns a Promise with a generated taskKey
+    async generateTaskKey(taskType: TaskType): Promise<string> {
+        const prefix = this.taskTypePrefixMap[taskType];
+        if (!prefix) {
+            throw new Error(`Неизвестный TaskType: ${taskType}`);
+        }
+
+        const counterDocRef = doc(this.firestore, `counters/${prefix}`);
+
+        try {
+            const taskKey = await runTransaction(this.firestore, async (transaction) => {
+                const counterDocSnap = await transaction.get(counterDocRef);
+                let nextNumber: number;
+
+                if (!counterDocSnap.exists()) {
+                    // If no document, initiate it
+                    nextNumber = 1;
+                    const newCounter: CounterDoc = { group: prefix, nextNumber: nextNumber + 1 };
+                    transaction.set(counterDocRef, newCounter);
+                } else {
+                    const counterData = counterDocSnap.data() as CounterDoc;
+                    nextNumber = counterData.nextNumber;
+                    transaction.update(counterDocRef, { nextNumber: nextNumber + 1 });
+                }
+
+                // Format task number to XXX format
+                const formattedNumber = String(nextNumber).padStart(3, '0');
+                return `${prefix}-${formattedNumber}`;
+            });
+
+            return taskKey;
+        } catch (error) {
+            console.error('Ошибка при генерации taskKey:', error);
+            throw new Error('Не удалось сгенерировать taskKey.');
+        }
     }
 
 }
