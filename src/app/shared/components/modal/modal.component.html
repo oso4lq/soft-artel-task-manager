@@ -1,7 +1,9 @@
-<div class="modal__overlay" *ngIf="isOpen" (click)="close()">
+<!-- modal.component.html -->
+
+<div class="modal__overlay" *ngIf="isOpen" (click)="onOverlayClick()">
     <div class="modal__window" (click)="$event.stopPropagation()">
 
-        <button class="modal__close" (click)="close()">×</button>
+        <button class="modal__close" (click)="onCloseButtonClick()">×</button>
 
         <!-- Component to open in this modal -->
         <ng-content></ng-content>

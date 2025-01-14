@@ -2,7 +2,7 @@
 
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal, computed, Signal, effect } from '@angular/core';
-import { TaskCard } from '../../shared/models/task.models';
+import { TaskCard, TaskStatus, TaskType } from '../../shared/models/task.models';
 import { TasksService } from '../../core/services/tasks.service';
 import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from '../../shared/components/task-card/task-card.component';
@@ -34,6 +34,8 @@ export class MainPageComponent implements OnInit {
 
   // State
   userData: UserData | null = null; // Store the fetched user data
+  public TaskStatus = TaskStatus;
+  public TaskType = TaskType;
 
   // Signals
   currentUser: Signal<User | null | undefined> = computed(() => this.authService.currentUserSig()); // track the current user
@@ -43,7 +45,7 @@ export class MainPageComponent implements OnInit {
   // Filter signals
   selectedProduct = signal('all');
   selectedCategory = signal('all');
-  selectedStatusFilter = signal<'approval' | 'review' | 'execution' | 'draft'>('execution');
+  selectedStatusFilter = signal<TaskStatus.Approval | TaskStatus.Review | TaskStatus.Execution | TaskStatus.Draft>(TaskStatus.Execution);
 
   // Signal for collapsible task lists
   collapsed = signal({
@@ -54,10 +56,9 @@ export class MainPageComponent implements OnInit {
   constructor(
     private tasksService: TasksService,
     private authService: AuthService,
-    private router: Router,
     private store: Store,
   ) {
-    // Use effect to watch for changes in currentUserData
+    // Effect to watch for changes in currentUserData
     effect(() => {
       const data = this.currentUserData();
       if (data) {
@@ -70,20 +71,27 @@ export class MainPageComponent implements OnInit {
 
   // Make a list of developing products
   allProjects = computed(() => {
-    // Extract projectNames from tasks()
-    const names = this.tasks().map(t => t.taskPath.projectName);
+    const names = this.tasks().map(t => t.taskPath.projectName); // Extract projectNames from tasks()
     const unique = Array.from(new Set(names));
     return unique; // Unique projectNames
   });
 
+  // Arrange the tasks by their date (new first)
+  arrangedTasks = computed(() => {
+    const all = this.tasks();
+    return [...all].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+  });
+
   // Find the latest task
   private lastTask = computed(() => {
-    const all = this.tasks();
+    // Exclude drafts from the task list
+    const all = this.arrangedTasks().filter(t => t.currentTaskStatus !== TaskStatus.Draft);
+
     if (!all.length) {
       return null;
     }
-    const sorted = [...all].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
-    return sorted[0];
+
+    return all[0];
   });
 
   // Compile a short version of the latest task name
@@ -120,8 +128,9 @@ export class MainPageComponent implements OnInit {
     this.store.dispatch(loadTasks());
     // Load tasks from the Firestore
     this.tasksService.loadTasks();
+
     // Load and set locally current user's data
-    this.userData = this.currentUserData();
+    // this.userData = this.currentUserData();
 
     // Refresh date and time
     setInterval(() => {
@@ -155,7 +164,7 @@ export class MainPageComponent implements OnInit {
   }
 
   // Select the filter from the Status radio buttons
-  onStatusFilterChange(value: 'approval' | 'review' | 'execution' | 'draft') {
+  onStatusFilterChange(value: TaskStatus.Approval | TaskStatus.Review | TaskStatus.Execution | TaskStatus.Draft) {
     this.selectedStatusFilter.set(value);
   }
 
@@ -171,18 +180,18 @@ export class MainPageComponent implements OnInit {
       case 'all':
         return true;
       case 'common':
-        return (task.taskType === 'Дизайн' || task.taskType === 'Аналитика');
+        return (task.taskType === TaskType.Design || task.taskType === TaskType.Analytics);
       case 'development':
-        return (task.taskType === 'Frontend' || task.taskType === 'Backend');
+        return (task.taskType === TaskType.Frontend || task.taskType === TaskType.Backend);
       case 'testing':
-        return (task.taskType === 'Тестирование');
+        return (task.taskType === TaskType.Testing);
       case 'errors':
         return (
-          task.taskType === 'Ошибка блокирующая'
-          || task.taskType === 'Ошибка критическая'
-          || task.taskType === 'Ошибка значительная'
-          || task.taskType === 'Ошибка незначительная'
-          || task.taskType === 'Ошибка тривиальная'
+          task.taskType === TaskType.BlockingBug
+          || task.taskType === TaskType.CriticalBug
+          || task.taskType === TaskType.MajorBug
+          || task.taskType === TaskType.MinorBug
+          || task.taskType === TaskType.TrivialBug
         );
       default:
         return true;
@@ -190,32 +199,24 @@ export class MainPageComponent implements OnInit {
   }
 
   private matchLeftColumnStatus(task: TaskCard): boolean {
-    // performerId === current user's UID
-    const userData = this.authService.currentUserDataSig();
+
+    const userData = this.authService.currentUserDataSig(); // performerId === current user's UID
     const currentUserUid = userData?.id; // UID from Firestore
 
     switch (this.selectedStatusFilter()) {
-      case 'approval':
-        return (task.currentTaskStatus === 'Согласование' && task.performerId === currentUserUid);
-      case 'review':
-        return (task.currentTaskStatus === 'Ревью' && task.performerId === currentUserUid);
-      case 'execution':
+      case TaskStatus.Approval:
+        return (task.currentTaskStatus === TaskStatus.Approval && task.performerId === currentUserUid);
+      case TaskStatus.Review:
+        return (task.currentTaskStatus === TaskStatus.Review && task.performerId === currentUserUid);
+      case TaskStatus.Execution:
         return (
-          task.currentTaskStatus === 'Исполнение'
+          task.currentTaskStatus === TaskStatus.Execution
           && (!task.performerId || task.performerId === currentUserUid)
         );
-      case 'draft':
-        return (task.currentTaskStatus === 'Черновик' && task.performerId === currentUserUid);
+      case TaskStatus.Draft:
+        return (task.currentTaskStatus === TaskStatus.Draft && task.performerId === currentUserUid);
     }
   }
-
-  // private matchMy(task: TaskCard): boolean {
-  //   return task.performerId === USER_SESSION_ID;
-  // }
-
-  // private matchUnassigned(task: TaskCard): boolean {
-  //   return !task.performerId; // task.performerId === '' / undefined / null
-  // }
 
   // If the user is anonymous, do not check performerId
   private isCurrentUser(task: TaskCard): boolean {
@@ -242,7 +243,7 @@ export class MainPageComponent implements OnInit {
 
   // Sort the tasks for each block using different filters
   myTasksFiltered = computed(() => {
-    return this.tasks().filter((t) => {
+    return this.arrangedTasks().filter((t) => {
       // 1 - product
       if (!this.matchProduct(t)) return false;
       // 2 - category
@@ -257,7 +258,7 @@ export class MainPageComponent implements OnInit {
   });
 
   unassignedFiltered = computed(() => {
-    return this.tasks().filter((t) => {
+    return this.arrangedTasks().filter((t) => {
       // 1 - product
       if (!this.matchProduct(t)) return false;
       // 2 - category
@@ -272,7 +273,7 @@ export class MainPageComponent implements OnInit {
   });
 
   inProgressFiltered = computed(() => {
-    return this.tasks().filter((t) => {
+    return this.arrangedTasks().filter((t) => {
       // 1 - product
       if (!this.matchProduct(t)) return false;
       // 2 - category
@@ -285,7 +286,7 @@ export class MainPageComponent implements OnInit {
   });
 
   pauseFiltered = computed(() => {
-    return this.tasks().filter((t) => {
+    return this.arrangedTasks().filter((t) => {
       // 1 - product
       if (!this.matchProduct(t)) return false;
       // 2 - category

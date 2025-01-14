@@ -38,21 +38,21 @@
 
             <div class="status-filters">
                 <label>
-                    <input type="radio" name="leftColumnStatus" [value]="'approval'"
+                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Approval"
                         [(ngModel)]="selectedStatusFilter" />
                     На согласование
                 </label>
                 <label>
-                    <input type="radio" name="leftColumnStatus" [value]="'review'" [(ngModel)]="selectedStatusFilter" />
+                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Review" [(ngModel)]="selectedStatusFilter" />
                     На ревью
                 </label>
                 <label>
-                    <input type="radio" name="leftColumnStatus" [value]="'execution'"
+                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Execution"
                         [(ngModel)]="selectedStatusFilter" />
                     Для работы
                 </label>
                 <label>
-                    <input type="radio" name="leftColumnStatus" [value]="'draft'" [(ngModel)]="selectedStatusFilter" />
+                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Draft" [(ngModel)]="selectedStatusFilter" />
                     Черновики
                 </label>
             </div>

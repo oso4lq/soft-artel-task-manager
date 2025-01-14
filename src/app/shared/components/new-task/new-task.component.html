@@ -67,12 +67,28 @@
         </div>
     </div>
 
+    <!-- performerId -->
+    <div>
+        <label>Выберите исполнителя</label>
+        <select [(ngModel)]="task.performerId" name="performerId">
+            <option [ngValue]="null">-- Не выбрано --</option>
+            <option *ngFor="let user of userDatas()" [ngValue]="user.id">
+                {{ user.username }}
+            </option>
+        </select>
+    </div>
+
     <!-- taskTime -->
     <div>
         <label for="taskTimeSpent">Введите ожидаемое время выполнения задачи</label>
         <input type="text" id="taskTimeSpent" [(ngModel)]="task.taskTime.spent" name="taskTimeSpent" required
             readonly />
         <input type="text" id="taskTimePlanned" [(ngModel)]="task.taskTime.planned" name="taskTimePlanned" required />
+    </div>
+
+    <!-- Box for errors -->
+    <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
     </div>
 
     <button type="submit">Сформировать задачу</button>

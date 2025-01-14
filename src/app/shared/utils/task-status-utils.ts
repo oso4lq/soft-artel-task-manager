@@ -13,8 +13,6 @@ export const TaskStatusOrder: { [key in TaskStatus]: number } = {
     [TaskStatus.Deploy]: 5,
     [TaskStatus.Testing]: 6,
     [TaskStatus.Closed]: 7,
-    // [TaskStatus.InProgress]: 8,
-    // [TaskStatus.Pause]: 9,
 };
 
 export function sortTaskStatuses(statuses: TaskStatus[]): TaskStatus[] {
