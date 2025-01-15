@@ -161,7 +161,7 @@ export class NewTaskComponent implements OnInit {
   }
 
   // Find userData with a specific userId, add a new docId to userData/tasks, update
-  private appendTaskToUser(userId: string | number, taskId: string) {
+  private appendTaskToUser(userId: string | null | undefined, taskId: string) {
     // Find userId in userList
     const foundUser = this.userDatas().find(u => u.id === userId);
     if (!foundUser) {
@@ -201,7 +201,7 @@ export class NewTaskComponent implements OnInit {
   }
 
   private isFormModified(): boolean {
-    
+
     // 1 - Save current performerId before the check
     const savedPerformerId = this.task.performerId;
     // 2 - Null performerId before the check (===initialvalue)
@@ -255,6 +255,11 @@ export class NewTaskComponent implements OnInit {
     if (selectedStatusesCount < 1) {
       missing.push('хотя бы 1 статус');
     }
+    
+    // if (!this.task.performerId) {
+    //   missing.push('имя исполнителя');
+    // }
+
     if (!this.task.taskTime.planned.trim()) {
       missing.push('ожидаемое время выполнения задачи');
     }

@@ -199,22 +199,15 @@ export class MainPageComponent implements OnInit {
   }
 
   private matchLeftColumnStatus(task: TaskCard): boolean {
-
-    const userData = this.authService.currentUserDataSig(); // performerId === current user's UID
-    const currentUserUid = userData?.id; // UID from Firestore
-
     switch (this.selectedStatusFilter()) {
       case TaskStatus.Approval:
-        return (task.currentTaskStatus === TaskStatus.Approval && task.performerId === currentUserUid);
+        return (task.currentTaskStatus === TaskStatus.Approval);
       case TaskStatus.Review:
-        return (task.currentTaskStatus === TaskStatus.Review && task.performerId === currentUserUid);
+        return (task.currentTaskStatus === TaskStatus.Review);
       case TaskStatus.Execution:
-        return (
-          task.currentTaskStatus === TaskStatus.Execution
-          && (!task.performerId || task.performerId === currentUserUid)
-        );
+        return (task.currentTaskStatus === TaskStatus.Execution);
       case TaskStatus.Draft:
-        return (task.currentTaskStatus === TaskStatus.Draft && task.performerId === currentUserUid);
+        return (task.currentTaskStatus === TaskStatus.Draft);
     }
   }
 
@@ -254,7 +247,7 @@ export class MainPageComponent implements OnInit {
       if (!this.matchCategory(t)) return false;
       // 3 - radio-status (because it is in the left column)
       if (!this.matchLeftColumnStatus(t)) return false;
-      // 4 - performerId = user
+      // 4 - performerId === currentUser.id
       if (!this.isCurrentUser(t)) return false;
       // 5 - inProgress === null
       if (!this.matchNullProgress(t)) return false;
@@ -271,7 +264,7 @@ export class MainPageComponent implements OnInit {
       if (!this.matchCategory(t)) return false;
       // 3 - radio-status (because it is in the left column)
       if (!this.matchLeftColumnStatus(t)) return false;
-      // 4 - performerId = undefined/null
+      // 4 - performerId === undefined/null
       if (!this.isUnassigned(t)) return false;
       // 5 - inProgress === null
       if (!this.matchNullProgress(t)) return false;
