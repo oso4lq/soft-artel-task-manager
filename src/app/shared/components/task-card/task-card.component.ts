@@ -139,32 +139,34 @@ export class TaskCardComponent implements OnInit {
     this.showEditModal.set(true);
   }
 
+  // Work: apply inProgress===true
   onInWorkClick(): void {
-    // «В работу» => inProgress = true
     this.task.inProgress = true;
     this.tasksService.updateTask(this.task);
   }
 
+  // Accept: apply next status and null assignee
   onAcceptClick(): void {
-    // «Принять» => присвоить следующий статус
     const nextStatus = getNextTaskStatus(this.task);
     if (nextStatus) {
       this.task.currentTaskStatus = nextStatus;
+      this.task.performerId = null;
       this.tasksService.updateTask(this.task);
     }
   }
 
+  // Pause: apply inProgress===false
   onPauseClick(): void {
-    // «На паузу» => inProgress = false
     this.task.inProgress = false;
     this.tasksService.updateTask(this.task);
   }
 
+  // Done: apply next status and null assignee
   onDoneClick(): void {
-    // «Готово» => аналогично «Принять» (берём следующий статус)
     const nextStatus = getNextTaskStatus(this.task);
     if (nextStatus) {
       this.task.currentTaskStatus = nextStatus;
+      this.task.performerId = null;
       this.tasksService.updateTask(this.task);
     }
   }

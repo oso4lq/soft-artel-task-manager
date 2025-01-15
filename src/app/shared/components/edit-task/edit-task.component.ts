@@ -201,4 +201,16 @@ export class EditTaskComponent implements OnInit {
       this.errorMessage = '';
     }, 3000);
   }
+
+  // Collect selected statuses and update task.taskStatuses
+  onCheckboxChange(): void {
+    const selected: TaskStatus[] = [];
+    for (const [statusKey, checked] of Object.entries(this.statusesCheckbox)) {
+      if (checked) {
+        selected.push(statusKey as TaskStatus);
+      }
+    }
+    this.task.taskStatuses = sortTaskStatuses(selected);
+  }
+
 }

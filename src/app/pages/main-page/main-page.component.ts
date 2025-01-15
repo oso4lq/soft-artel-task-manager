@@ -218,6 +218,10 @@ export class MainPageComponent implements OnInit {
     }
   }
 
+  private matchNullProgress(task: TaskCard): boolean {
+    return task.inProgress === null;
+  }
+
   // If the user is anonymous, do not check performerId
   private isCurrentUser(task: TaskCard): boolean {
     const userData = this.authService.currentUserDataSig();
@@ -252,6 +256,8 @@ export class MainPageComponent implements OnInit {
       if (!this.matchLeftColumnStatus(t)) return false;
       // 4 - performerId = user
       if (!this.isCurrentUser(t)) return false;
+      // 5 - inProgress === null
+      if (!this.matchNullProgress(t)) return false;
 
       return true;
     });
@@ -267,6 +273,8 @@ export class MainPageComponent implements OnInit {
       if (!this.matchLeftColumnStatus(t)) return false;
       // 4 - performerId = undefined/null
       if (!this.isUnassigned(t)) return false;
+      // 5 - inProgress === null
+      if (!this.matchNullProgress(t)) return false;
 
       return true;
     });

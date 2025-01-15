@@ -184,8 +184,11 @@ export class NewTaskComponent implements OnInit {
   // Reset the form to its initial state after "submit" or "closeModal"
   private resetForm(): void {
     console.log('resetForm');
+
     // Reset the task fields
-    this.task = { ...this.initialTaskState };
+    // this.task = { ...this.initialTaskState };
+    // Deep reset the task fields
+    this.task = JSON.parse(JSON.stringify(this.initialTaskState));
 
     // Reset the checkboxes
     this.statusesCheckbox = {
@@ -198,9 +201,9 @@ export class NewTaskComponent implements OnInit {
   }
 
   private isFormModified(): boolean {
+    
     // 1 - Save current performerId before the check
     const savedPerformerId = this.task.performerId;
-
     // 2 - Null performerId before the check (===initialvalue)
     this.task.performerId = null;
 

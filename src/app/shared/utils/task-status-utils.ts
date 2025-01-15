@@ -20,7 +20,6 @@ export function sortTaskStatuses(statuses: TaskStatus[]): TaskStatus[] {
     return statuses.sort((a, b) => TaskStatusOrder[a] - TaskStatusOrder[b]);
 }
 
-// REFINE THIS LOGIC. MAY APPLY NON-EXISTING STATUSES
 // Find next TaskStatus inside the TaskCard.taskStatuses array
 export function getNextTaskStatus(task: TaskCard): TaskStatus | null {
     // Find currentTaskStatus index using TaskStatusOrder

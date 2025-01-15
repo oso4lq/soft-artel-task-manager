@@ -46,27 +46,32 @@
         <label>Выберите, какие статусы будут у задачи (от 1 до 5)</label>
         <div>
             <label>
-                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Approval]" name="approval" />
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Approval]" name="approval"
+                    (change)="onCheckboxChange()" />
                 {{ 'Согласование' }}
             </label>
 
             <label>
-                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Execution]" name="execution" />
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Execution]" name="execution"
+                    (change)="onCheckboxChange()" />
                 {{ 'Исполнение' }}
             </label>
 
             <label>
-                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Review]" name="review" />
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Review]" name="review"
+                    (change)="onCheckboxChange()" />
                 {{ 'Ревью' }}
             </label>
 
             <label>
-                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Deploy]" name="deploy" />
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Deploy]" name="deploy"
+                    (change)="onCheckboxChange()" />
                 {{ 'Деплой' }}
             </label>
 
             <label>
-                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Testing]" name="testing" />
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Testing]" name="testing"
+                    (change)="onCheckboxChange()" />
                 {{ 'Тестирование' }}
             </label>
         </div>
