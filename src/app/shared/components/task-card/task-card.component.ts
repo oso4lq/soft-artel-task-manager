@@ -1,25 +1,21 @@
 // task-card.component.ts
 
-import { Component, computed, Input, OnInit, Signal, signal } from '@angular/core';
+import { Component, computed, Input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { TaskCard, TaskStatus } from '../../models/task.models';
-import { UserData } from '../../models/users.model';
 import { UsersService } from '../../../core/services/users.service';
 import { TasksService } from '../../../core/services/tasks.service';
 import { getNextTaskStatus } from '../../utils/task-status-utils';
-import { ModalComponent } from '../modal/modal.component';
-import { EditTaskComponent } from '../edit-task/edit-task.component';
 import { AuthService } from '../../../core/services/auth.service';
+import { AppComponent } from '../../../app.component';
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
   imports: [
     CommonModule,
-    ModalComponent,
-    EditTaskComponent,
   ],
   templateUrl: './task-card.component.html',
   styleUrls: ['./task-card.component.scss']
@@ -32,13 +28,9 @@ export class TaskCardComponent implements OnInit {
 
   public TaskStatus = TaskStatus;
 
-  // Signals
-  userDatas: Signal<UserData[]> = computed(() => this.usersService.userDatasSig()); // track the userDatas array
-
   // Signals for UI
   hoveredTop = signal(false);
   hoveredBottom = signal(false);
-  showEditModal = signal(false);
 
   // For debounce effect
   private hoverTopSubject = new Subject<boolean>();
@@ -58,11 +50,10 @@ export class TaskCardComponent implements OnInit {
   });
 
   taskPerformerName = computed(() => {
-    console.log(this.task.performerId);
     if (!this.task.performerId) {
       return 'Любой сотрудник';
     }
-    const users = this.userDatas();
+    const users = this.usersService.userDatasSig();
     console.log(users);
     const foundUser = users.find(u => u.id === this.task.performerId);
     console.log(foundUser);
@@ -73,6 +64,7 @@ export class TaskCardComponent implements OnInit {
     private authService: AuthService,
     private usersService: UsersService,
     private tasksService: TasksService,
+    private parent: AppComponent,
   ) { }
 
   ngOnInit(): void {
@@ -89,8 +81,6 @@ export class TaskCardComponent implements OnInit {
       .subscribe((value) => {
         this.hoveredBottom.set(value);
       });
-
-    this.usersService.loadUserDatas();
   }
 
   // mouseenter / mouseleave for the Top Card Part
@@ -136,11 +126,7 @@ export class TaskCardComponent implements OnInit {
 
   // Button handlers
   onEditClick(): void {
-    // «Исправить» => открыть модалку
-    // Один из вариантов — локально (через <app-modal> в шаблоне),
-    // либо генерировать Output() и реагировать в родителе.
-    // Ниже — пример локального открытия:
-    this.showEditModal.set(true);
+    this.parent.openEditTaskModal(this.task);
   }
 
   // Work: apply inProgress===true
@@ -155,11 +141,8 @@ export class TaskCardComponent implements OnInit {
     const nextStatus = getNextTaskStatus(this.task);
     if (nextStatus) {
       this.task.currentTaskStatus = nextStatus;
-      // this.task.performerId = null;
-      // this.tasksService.updateTask(this.task);
     } else {
       this.task.currentTaskStatus = TaskStatus.Closed;
-      // this.tasksService.updateTask(this.task);
     }
     this.task.inProgress = null;
     this.task.performerId = null;
@@ -178,11 +161,8 @@ export class TaskCardComponent implements OnInit {
     const nextStatus = getNextTaskStatus(this.task);
     if (nextStatus) {
       this.task.currentTaskStatus = nextStatus;
-      // this.task.performerId = null;
-      // this.tasksService.updateTask(this.task);
     } else {
       this.task.currentTaskStatus = TaskStatus.Closed;
-      // this.tasksService.updateTask(this.task);
     }
     this.task.inProgress = null;
     this.task.performerId = null;

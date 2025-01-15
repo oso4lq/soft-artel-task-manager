@@ -1,33 +1,28 @@
 // header.component.ts
 
-import { Component, computed, Input, Signal } from '@angular/core';
+import { Component, computed, Input, OnInit, Signal } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { User } from 'firebase/auth';
 import { UserData } from '../../models/users.model';
-import { ModalComponent } from '../modal/modal.component';
-import { NewTaskComponent } from '../new-task/new-task.component';
+import { AppComponent } from '../../../app.component';
+import { TimeService } from '../../../core/services/time.service';
+import { TasksService } from '../../../core/services/tasks.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
     CommonModule,
-    ModalComponent,
-    NewTaskComponent,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
-
-  @Input() currentTimeStr!: string;
-  @Input() shortLastTaskName!: string | null;
+export class HeaderComponent implements OnInit {
 
   // Signals
-  currentUser: Signal<User | null | undefined> = computed(() => this.authService.currentUserSig()); // track the current user
   currentUserData: Signal<UserData | null> = computed(() => this.authService.currentUserDataSig()); // track the current user data
+  currentTimeStr: Signal<string> = computed(() => this.timeService.currentTimeStrSig()); // track current time
+  shortLastTaskName: Signal<string | null> = computed(() => this.tasksService.shortLastTaskNameSig()); // track latest task
 
   // User popup
   isUserPopupOpen = false;
@@ -36,28 +31,33 @@ export class HeaderComponent {
   isModalOpen = false;
 
   constructor(
+    private tasksService: TasksService,
     private authService: AuthService,
-    private router: Router,
+    private timeService: TimeService,
+    private parent: AppComponent,
   ) { }
+
+  ngOnInit(): void { }
 
   toggleUserPopup() {
     this.isUserPopupOpen = !this.isUserPopupOpen
   }
 
-  logout() {
-    this.authService.logout()
-  }
-
-  goToLogin() {
+  onLogoutClick() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.parent.openLoginModal();
   }
 
-  openModal() {
-    this.isModalOpen = true;
+  onLoginClick() {
+    this.authService.logout();
+    this.parent.openLoginModal();
   }
 
-  onModalClosed() {
-    this.isModalOpen = false;
+  newTask() {
+    if (this.currentUserData()) {
+      this.parent.openNewTaskModal();
+    } else {
+      this.parent.openLoginModal();
+    }
   }
 }

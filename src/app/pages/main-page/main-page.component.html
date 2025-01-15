@@ -1,131 +1,122 @@
-<!-- main-page.component.html -->
+<!-- Current date -->
+<h1 class="main-date">
+    {{ currentDateStr() }}
+</h1>
 
-<div class="wrapper">
+<!-- Dropdown menu filters -->
+<div class="dropdown-filters">
+    <select class="dropdown-filters__select" [(ngModel)]="selectedProduct"
+        (ngModelChange)="onProductFilterChange($event)">
+        <option value="all">Все продукты</option>
+        <!-- List of unique projectName options -->
+        <option *ngFor="let product of allProjects()" [value]="product">
+            {{ product }}
+        </option>
+    </select>
 
-    <!-- Header menu -->
-    <app-header [currentTimeStr]="currentTimeStr()" [shortLastTaskName]="shortLastTaskName()"></app-header>
+    <select class="dropdown-filters__select" [(ngModel)]="selectedCategory"
+        (ngModelChange)="onCategoryFilterChange($event)">
+        <option value="all">Все задачи</option>
+        <option value="common">Общие</option>
+        <option value="development">Разработка</option>
+        <option value="testing">Тестирование</option>
+        <option value="errors">Ошибки</option>
+    </select>
+</div>
 
-    <!-- Current date -->
-    <h1 class="main-date">
-        {{ currentDateStr() }}
-    </h1>
+<!-- Task columns -->
+<div class="columns">
+    <!-- Column 1 -->
+    <div class="columns__col1">
 
-    <!-- Dropdown menu filters -->
-    <div class="dropdown-filters">
-        <select class="dropdown-filters__select" [(ngModel)]="selectedProduct"
-            (ngModelChange)="onProductFilterChange($event)">
-            <option value="all">Все продукты</option>
-            <!-- List of unique projectName options -->
-            <option *ngFor="let product of allProjects()" [value]="product">
-                {{ product }}
-            </option>
-        </select>
+        <div class="status-filters">
+            <label>
+                <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Approval"
+                    [(ngModel)]="selectedStatusFilter" />
+                На согласование
+            </label>
+            <label>
+                <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Review"
+                    [(ngModel)]="selectedStatusFilter" />
+                На ревью
+            </label>
+            <label>
+                <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Execution"
+                    [(ngModel)]="selectedStatusFilter" />
+                Для работы
+            </label>
+            <label>
+                <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Draft"
+                    [(ngModel)]="selectedStatusFilter" />
+                Черновики
+            </label>
+        </div>
 
-        <select class="dropdown-filters__select" [(ngModel)]="selectedCategory"
-            (ngModelChange)="onCategoryFilterChange($event)">
-            <option value="all">Все задачи</option>
-            <option value="common">Общие</option>
-            <option value="development">Разработка</option>
-            <option value="testing">Тестирование</option>
-            <option value="errors">Ошибки</option>
-        </select>
-    </div>
-
-    <!-- Task columns -->
-    <div class="columns">
-        <!-- Column 1 -->
-        <div class="columns__col1">
-
-            <div class="status-filters">
-                <label>
-                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Approval"
-                        [(ngModel)]="selectedStatusFilter" />
-                    На согласование
-                </label>
-                <label>
-                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Review"
-                        [(ngModel)]="selectedStatusFilter" />
-                    На ревью
-                </label>
-                <label>
-                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Execution"
-                        [(ngModel)]="selectedStatusFilter" />
-                    Для работы
-                </label>
-                <label>
-                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Draft"
-                        [(ngModel)]="selectedStatusFilter" />
-                    Черновики
-                </label>
+        <div class="tasks-block">
+            <div class="tasks-block__title" (click)="toggleCollapsible('myTasks')">
+                Мои:
             </div>
+            <!-- *ngIf="!collapsed.myTasks" -->
+            <div class="tasks-block__body tasks-block__body_collapsible">
 
-            <div class="tasks-block">
-                <div class="tasks-block__title" (click)="toggleCollapsible('myTasks')">
-                    Мои:
-                </div>
-                <!-- *ngIf="!collapsed.myTasks" -->
-                <div class="tasks-block__body tasks-block__body_collapsible">
-
-                    <!-- task list -->
-                    <!-- Check if user exists -->
-                    <ng-container *ngIf="userData; else showLoginMessage">
-                        <!-- Check if the user has tasks -->
-                        <ng-container *ngIf="myTasksFiltered().length > 0; else showNoTasksMessage">
-                            <app-task-card *ngFor="let t of myTasksFiltered()" [task]="t"
-                                [isInProgress]="false"></app-task-card>
-                        </ng-container>
-                        <!-- Message when no tasks -->
-                        <ng-template #showNoTasksMessage>
-                            <p>У вас нет задач.</p>
-                        </ng-template>
+                <!-- task list -->
+                <!-- Check if user exists -->
+                <ng-container *ngIf="userData; else showLoginMessage">
+                    <!-- Check if the user has tasks -->
+                    <ng-container *ngIf="myTasksFiltered().length > 0; else showNoTasksMessage">
+                        <app-task-card *ngFor="let t of myTasksFiltered()" [task]="t"
+                            [isInProgress]="false"></app-task-card>
                     </ng-container>
-
-                    <!-- Message for anonymous user -->
-                    <ng-template #showLoginMessage>
-                        <p>Войдите в свой аккаунт, чтобы просмотреть свои задачи.</p>
+                    <!-- Message when no tasks -->
+                    <ng-template #showNoTasksMessage>
+                        <p>У вас нет задач.</p>
                     </ng-template>
+                </ng-container>
 
-                </div>
-            </div>
+                <!-- Message for anonymous user -->
+                <ng-template #showLoginMessage>
+                    <p>Войдите в свой аккаунт, чтобы просмотреть свои задачи.</p>
+                </ng-template>
 
-            <div class="tasks-block">
-                <div class="tasks-block__title" (click)="toggleCollapsible('unassigned')">
-                    Неназначенные:
-                </div>
-                <!-- *ngIf="!collapsed.unassigned" -->
-                <div class="tasks-block__body tasks-block__body_collapsible">
-
-                    <!-- task list -->
-                    <app-task-card *ngFor="let t of unassignedFiltered()" [task]="t" [isInProgress]="false">
-                    </app-task-card>
-
-                </div>
             </div>
         </div>
 
-        <!-- Column 2 -->
-        <div class="columns__col2">
-            <div class="tasks-block">
-                <div class="tasks-block__title">В работе:</div>
-                <div class="tasks-block__body">
-
-                    <!-- task list -->
-                    <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t" [isInProgress]="true">
-                    </app-task-card>
-
-                </div>
+        <div class="tasks-block">
+            <div class="tasks-block__title" (click)="toggleCollapsible('unassigned')">
+                Неназначенные:
             </div>
-            <div class="tasks-block">
-                <div class="tasks-block__title">На паузе:</div>
-                <div class="tasks-block__body">
+            <!-- *ngIf="!collapsed.unassigned" -->
+            <div class="tasks-block__body tasks-block__body_collapsible">
 
-                    <!-- task list -->
-                    <app-task-card *ngFor="let t of pauseFiltered()" [task]="t" [isInProgress]="false">
-                    </app-task-card>
+                <!-- task list -->
+                <app-task-card *ngFor="let t of unassignedFiltered()" [task]="t" [isInProgress]="false">
+                </app-task-card>
 
-                </div>
             </div>
         </div>
     </div>
 
+    <!-- Column 2 -->
+    <div class="columns__col2">
+        <div class="tasks-block">
+            <div class="tasks-block__title">В работе:</div>
+            <div class="tasks-block__body">
+
+                <!-- task list -->
+                <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t" [isInProgress]="true">
+                </app-task-card>
+
+            </div>
+        </div>
+        <div class="tasks-block">
+            <div class="tasks-block__title">На паузе:</div>
+            <div class="tasks-block__body">
+
+                <!-- task list -->
+                <app-task-card *ngFor="let t of pauseFiltered()" [task]="t" [isInProgress]="false">
+                </app-task-card>
+
+            </div>
+        </div>
+    </div>
 </div>

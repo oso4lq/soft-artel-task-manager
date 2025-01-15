@@ -108,7 +108,10 @@ export class AuthService {
     const promise = signOut(this.firebaseAuth)
       .then(() => {
         this.setUserDataNull();
-        this.router.navigate(['/login']);
+        return this.signInAnonymouslyUser();
+      })
+      .then(() => {
+        this.router.navigate(['/main']);
       })
       .catch((error) => {
         console.error('Ошибка выхода:', error);
@@ -118,7 +121,6 @@ export class AuthService {
     return from(promise);
   }
 
-  // MAYBE REFACTOR IT?
   // Sign in anonymously
   signInAnonymouslyUser(): Promise<void> {
     console.log('signInAnonymouslyUser', this.auth);

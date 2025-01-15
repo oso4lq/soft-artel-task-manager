@@ -1,10 +1,12 @@
 // login.component.ts
 
-import { Component, computed } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { AppComponent } from '../../../../app.component';
+import { User } from 'firebase/auth';
 
 @Component({
   selector: 'app-login',
@@ -19,18 +21,18 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
 
+  // State
   loginForm: FormGroup;
   errorMessage: string | null = null;
 
-  // isSubmitted for waiting for response
-  isSubmitted = false;
-  // submitSuccess for received positive response
-  submitSuccess = false;
+  // Signals
+  currentUser: Signal<User | null | undefined> = computed(() => this.authService.currentUserSig()); // track the current User
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private parent: AppComponent,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -38,11 +40,8 @@ export class LoginComponent {
     });
   }
 
-  currentUser = computed(() => this.authService.currentUserSig());
-
   // Form submission
   onSubmit() {
-
     const login = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
 
@@ -55,38 +54,32 @@ export class LoginComponent {
     }
 
     if (this.loginForm.valid) {
-      this.errorMessage = '';
-      this.isSubmitted = true;
-      // this.currentFormState = FormLoginState.Submit;
-
-      this.authService
-        .login(login, password)
-        .subscribe({
-          next: () => {
-            // this.currentFormState = FormLoginState.Success;
-            // setTimeout(() => this.closeDialogAndNavigate(), 300);
-          },
-          error: (err) => {
-            // this.currentFormState = FormLoginState.Error;
-            this.errorMessage = 'Error occurred: ' + err.code;
-            setTimeout(() => this.errorMessage = null, 3000);
-          }
-        })
+      this.errorMessage = null;
+      this.authService.login(login, password).subscribe({
+        next: () => this.parent.closeModal(),
+        error: (err) => {
+          this.showErrorMessage(err);
+        },
+      });
     }
   }
 
-  private showErrorMessage(message: string) {
-    this.errorMessage = message;
-    setTimeout(() => (this.errorMessage = ''), 5000);
+  private showErrorMessage(msg: string) {
+    this.errorMessage = msg;
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 3000);
   }
 
-  goToRegisterPage() {
-    this.router.navigate(['/register']);
+  goToRegister() {
+    this.parent.closeModal();
+    this.parent.openRegisterModal();
   }
 
   signInAnonymously() {
     this.authService.signInAnonymouslyUser()
       .then(() => {
+        this.parent.closeModal();
         this.router.navigate(['/main']);
       })
       .catch(error => {

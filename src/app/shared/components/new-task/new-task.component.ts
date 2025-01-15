@@ -1,6 +1,6 @@
 // new-task.component.ts
 
-import { Component, EventEmitter, Output, OnInit, Signal, computed } from '@angular/core';
+import { Component, OnInit, Signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductType, TaskCard, TaskStatus, TaskType } from '../../models/task.models';
@@ -9,6 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { sortTaskStatuses } from '../../utils/task-status-utils';
 import { UserData } from '../../models/users.model';
 import { UsersService } from '../../../core/services/users.service';
+import { AppComponent } from '../../../app.component';
 
 @Component({
   selector: 'app-new-task',
@@ -21,8 +22,6 @@ import { UsersService } from '../../../core/services/users.service';
   styleUrls: ['./new-task.component.scss'],
 })
 export class NewTaskComponent implements OnInit {
-
-  @Output() closed = new EventEmitter<void>();
 
   // State
   public TaskStatus = TaskStatus;
@@ -75,6 +74,7 @@ export class NewTaskComponent implements OnInit {
     private tasksService: TasksService,
     private usersService: UsersService,
     private authService: AuthService,
+    private parent: AppComponent,
   ) { }
 
   ngOnInit(): void {
@@ -83,18 +83,15 @@ export class NewTaskComponent implements OnInit {
 
   // If closed by clicking on "Close" button or clicking outside modal, save this task as a draft
   public async closeModal() {
-
     const isFormModified = this.isFormModified();
 
-    if (!isFormModified) {
+    if (isFormModified) {
+      await this.createTask(true);
+    } else {
       console.log('Форма не изменена. Не сохраняем черновик.');
-      this.closed.emit();
-      this.resetForm();
-      return;
     }
 
-    await this.createTask(true);
-    this.closed.emit();
+    this.parent.closeModal();
     this.resetForm();
   }
 
@@ -109,7 +106,7 @@ export class NewTaskComponent implements OnInit {
     }
 
     await this.createTask(false);
-    this.closed.emit();
+    this.parent.closeModal();
     this.resetForm();
   }
 
@@ -255,7 +252,7 @@ export class NewTaskComponent implements OnInit {
     if (selectedStatusesCount < 1) {
       missing.push('хотя бы 1 статус');
     }
-    
+
     // if (!this.task.performerId) {
     //   missing.push('имя исполнителя');
     // }

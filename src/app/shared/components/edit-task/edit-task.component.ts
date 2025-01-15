@@ -1,6 +1,6 @@
 // edit-task.component.ts
 
-import { Component, EventEmitter, Output, OnInit, Input, Signal, computed } from '@angular/core';
+import { Component, OnInit, Input, Signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductType, TaskCard, TaskStatus, TaskType } from '../../models/task.models';
@@ -9,6 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { sortTaskStatuses } from '../../utils/task-status-utils';
 import { UserData } from '../../models/users.model';
 import { UsersService } from '../../../core/services/users.service';
+import { AppComponent } from '../../../app.component';
 
 @Component({
   selector: 'app-edit-task',
@@ -23,7 +24,6 @@ import { UsersService } from '../../../core/services/users.service';
 export class EditTaskComponent implements OnInit {
 
   @Input() taskInput!: TaskCard;
-  @Output() closed = new EventEmitter<void>();
 
   public TaskStatus = TaskStatus;
   errorMessage: string = '';
@@ -74,6 +74,7 @@ export class EditTaskComponent implements OnInit {
     private tasksService: TasksService,
     private usersService: UsersService,
     private authService: AuthService,
+    private parent: AppComponent,
   ) { }
 
   ngOnInit(): void {
@@ -102,11 +103,6 @@ export class EditTaskComponent implements OnInit {
         this.statusesCheckbox[st] = true;
       }
     });
-  }
-
-  // Close without saving
-  public closeModal(): void {
-    this.closed.emit();
   }
 
   // Update task in Firestore
@@ -138,7 +134,7 @@ export class EditTaskComponent implements OnInit {
     }
 
     // 4 - Close
-    this.closed.emit();
+    this.parent.closeModal();
   }
 
   // Delete task
@@ -156,7 +152,7 @@ export class EditTaskComponent implements OnInit {
     }
 
     // Close
-    this.closed.emit();
+    this.parent.closeModal();
   }
 
   // Validation

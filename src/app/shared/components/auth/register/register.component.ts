@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { AppComponent } from '../../../../app.component';
 
 @Component({
   selector: 'app-register',
@@ -19,18 +20,15 @@ import { CommonModule } from '@angular/common';
 })
 export class RegisterComponent {
 
+  // State
   registerForm: FormGroup;
   errorMessage: string | null = null;
-
-  // isSubmitted for waiting for response
-  isSubmitted = false;
-  // submitSuccess for received positive response
-  submitSuccess = false;
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private parent: AppComponent,
   ) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required]],
@@ -62,38 +60,32 @@ export class RegisterComponent {
     }
 
     if (this.registerForm.valid) {
-      this.errorMessage = '';
-      this.isSubmitted = true;
-      // this.currentFormState = FormLoginState.Submit;
-
-      this.authService
-        .login(login, password)
-        .subscribe({
-          next: () => {
-            // this.currentFormState = FormLoginState.Success;
-            // setTimeout(() => this.closeDialogAndNavigate(), 300);
-          },
-          error: (err) => {
-            // this.currentFormState = FormLoginState.Error;
-            this.errorMessage = 'Error occurred: ' + err.code;
-            setTimeout(() => this.errorMessage = null, 3000);
-          }
-        })
+      this.errorMessage = null;
+      this.authService.login(login, password).subscribe({
+        next: () => this.parent.closeModal(),
+        error: (err) => {
+          this.showErrorMessage(err);
+        },
+      });
     }
   }
 
-  private showErrorMessage(message: string) {
-    this.errorMessage = message;
-    setTimeout(() => (this.errorMessage = ''), 5000);
+  private showErrorMessage(msg: string) {
+    this.errorMessage = msg;
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 3000);
   }
 
-  goToLoginPage() {
-    this.router.navigate(['/register']);
+  goToLogin() {
+    this.parent.closeModal();
+    this.parent.openLoginModal();
   }
 
   signInAnonymously() {
     this.authService.signInAnonymouslyUser()
       .then(() => {
+        this.parent.closeModal();
         this.router.navigate(['/main']);
       })
       .catch(error => {

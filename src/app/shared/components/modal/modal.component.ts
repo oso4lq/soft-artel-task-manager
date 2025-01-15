@@ -13,35 +13,22 @@ import { NewTaskComponent } from '../new-task/new-task.component';
 })
 export class ModalComponent {
 
-  @Input() isOpen = false;
-
-  // @Output() closed = new EventEmitter<void>();
-
-  // Emit the close reason
-  @Output() closed = new EventEmitter<'overlay' | 'closeButton'>();
-
-  // Find NewTaskComponent in <ng-content>
-  @ContentChild(NewTaskComponent) newTaskCmp!: NewTaskComponent | undefined;
+  @Input() isOpen = false; // Receive flag to open/close modal
+  @Output() closed = new EventEmitter<void>(); // Emit close trigger
+  @ContentChild(NewTaskComponent) newTaskCmp!: NewTaskComponent | undefined; // Find NewTaskComponent in <ng-content>
 
   close() {
+    if (this.newTaskCmp) {
+      this.newTaskCmp.closeModal(); // Check form changes
+    }
     this.closed.emit();
   }
 
   onOverlayClick() {
-
-    // this.closed.emit('overlay');
-
-    if (this.newTaskCmp) {
-      // closeModal() from newTaskCmp
-      // this.newTaskCmp.closeModalFromOutside();
-      this.newTaskCmp.closeModal();
-    } else {
-      // If nothing found, just close
-      this.close();
-    }
+    this.close();
   }
 
   onCloseButtonClick() {
-    this.closed.emit('closeButton');
+    this.close();
   }
 }

@@ -7,16 +7,8 @@ import { TasksService } from '../../core/services/tasks.service';
 import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from '../../shared/components/task-card/task-card.component';
 import { AuthService } from '../../core/services/auth.service';
-import { User } from '@angular/fire/auth';
-import { Router } from '@angular/router';
-import { loadAuthFromIndexedDb } from '../../core/store/auth/auth.actions';
-import { loadTasks } from '../../core/store/tasks/tasks.actions';
-import { Store } from '@ngrx/store';
-import { HeaderComponent } from '../../shared/components/header/header.component';
 import { UserData } from '../../shared/models/users.model';
-
-// Temporary solution to store current user's performerId
-// export const USER_SESSION_ID = 'user-123';
+import { TimeService } from '../../core/services/time.service';
 
 @Component({
   selector: 'app-main-page',
@@ -25,7 +17,6 @@ import { UserData } from '../../shared/models/users.model';
     CommonModule,
     FormsModule,
     TaskCardComponent,
-    HeaderComponent,
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
@@ -35,12 +26,10 @@ export class MainPageComponent implements OnInit {
   // State
   userData: UserData | null = null; // Store the fetched user data
   public TaskStatus = TaskStatus;
-  public TaskType = TaskType;
 
   // Signals
-  currentUser: Signal<User | null | undefined> = computed(() => this.authService.currentUserSig()); // track the current user
-  currentUserData: Signal<UserData | null> = computed(() => this.authService.currentUserDataSig()); // track the current user data
-  tasks: Signal<TaskCard[]> = computed(() => this.tasksService.tasksSig()); // track the tasks array
+  arrangedTasks: Signal<TaskCard[]> = computed(() => this.tasksService.arrangedTasksSig()); // track the tasks array
+  currentDateStr: Signal<string> = computed(() => this.timeService.currentDateStrSig()); // track current date
 
   // Filter signals
   selectedProduct = signal('all');
@@ -56,11 +45,11 @@ export class MainPageComponent implements OnInit {
   constructor(
     private tasksService: TasksService,
     private authService: AuthService,
-    private store: Store,
+    private timeService: TimeService,
   ) {
     // Effect to watch for changes in currentUserData
     effect(() => {
-      const data = this.currentUserData();
+      const data = this.authService.currentUserDataSig();
       if (data) {
         this.userData = data;
       } else {
@@ -71,79 +60,11 @@ export class MainPageComponent implements OnInit {
 
   // Make a list of developing products
   allProjects = computed(() => {
-    const names = this.tasks().map(t => t.taskPath.projectName); // Extract projectNames from tasks()
+    const names = this.arrangedTasks().map(t => t.taskPath.projectName); // Extract projectNames from tasks()
     const unique = Array.from(new Set(names));
     return unique; // Unique projectNames
   });
-
-  // Arrange the tasks by their date (new first)
-  arrangedTasks = computed(() => {
-    const all = this.tasks();
-    return [...all].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
-  });
-
-  // Find the latest task
-  private lastTask = computed(() => {
-    // Exclude drafts from the task list
-    const all = this.arrangedTasks().filter(t => t.currentTaskStatus !== TaskStatus.Draft);
-
-    if (!all.length) {
-      return null;
-    }
-
-    return all[0];
-  });
-
-  // Compile a short version of the latest task name
-  shortLastTaskName = computed(() => {
-    const task = this.lastTask();
-    if (!task) return null;
-    const name = task.taskName;
-    return name.length > 47 ? name.slice(0, 47) + '...' : name;
-  });
-
-  // Date and time
-  private timeSignal = signal(new Date());
-  currentTimeStr = computed(() => {
-    return this.timeSignal().toLocaleTimeString('ru-RU', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  });
-  private dateSignal = signal(new Date());
-  currentDateStr = computed(() => {
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long'
-    };
-    const formatted = new Intl.DateTimeFormat('ru-RU', options).format(this.dateSignal());
-    return formatted.charAt(0).toUpperCase() + formatted.slice(1);
-  });
-
-  ngOnInit(): void {
-    // Load Auth from the IndexedDB cache
-    this.store.dispatch(loadAuthFromIndexedDb());
-    // Load tasks from the IndexedDB cache
-    this.store.dispatch(loadTasks());
-    // Load tasks from the Firestore
-    this.tasksService.loadTasks();
-
-    // Load and set locally current user's data
-    // this.userData = this.currentUserData();
-
-    // Refresh date and time
-    setInterval(() => {
-      const oldValue = this.timeSignal();
-      const newValue = new Date();
-      this.timeSignal.set(newValue);
-
-      // Check calendar day
-      if (oldValue.getDate() !== newValue.getDate()) {
-        this.dateSignal.set(newValue);
-      }
-    }, 1000);
-  }
+  ngOnInit(): void { }
 
   // Wrap / Unwrap task lists in MY and UNASSIGNED blocks
   toggleCollapsible(listName: 'myTasks' | 'unassigned') {

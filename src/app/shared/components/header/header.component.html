@@ -12,18 +12,18 @@
         </ul>
 
         <!-- Open model window to create a new task -->
-        <button class="header__create-btn" (click)="openModal()">Создать</button>
+        <button class="header__create-btn" (click)="newTask()">Создать</button>
     </div>
 
     <div class="header__right-group">
         <!-- Current time -->
         <div class="header__time">
-            {{ currentTimeStr }}
+            {{ currentTimeStr() }}
         </div>
 
         <!-- Sort out the latest created task and display its cropped name or a default message -->
         <div class="header__last-task">
-            *{{ shortLastTaskName || 'задачи отсутствуют' }}
+            *{{ shortLastTaskName() || 'задачи отсутствуют' }}
         </div>
 
         <!-- Notifications section -->
@@ -37,23 +37,21 @@
 
         <!-- Popup -->
         <div class="user-popup" *ngIf="isUserPopupOpen">
+
             <!-- Logged in user data -->
-            <ng-container *ngIf="currentUserData; else anonymousInfo">
-                <p>Имя: {{ currentUserData()?.username }}</p>
-                <p>Email: {{ currentUserData()?.email }}</p>
-                <p>Telegram: {{ currentUserData()?.telegram}}</p>
-                <button (click)="logout()">Выйти</button>
+            <ng-container *ngIf="currentUserData() as user; else anonymousInfo">
+                <p>Имя: {{ user.username }}</p>
+                <p>Email: {{ user.email }}</p>
+                <p>Telegram: {{ user.telegram}}</p>
+                <button (click)="onLogoutClick()">Выйти</button>
             </ng-container>
 
             <!-- Anonymous session -->
             <ng-template #anonymousInfo>
                 <p>Анонимная сессия</p>
-                <button (click)="goToLogin()">Войти / Зарегистрироваться</button>
+                <button (click)="onLoginClick()">Войти / Зарегистрироваться</button>
             </ng-template>
+
         </div>
     </div>
-
-    <app-modal [isOpen]="isModalOpen" (closed)="onModalClosed()">
-        <app-new-task (closed)="onModalClosed()"></app-new-task>
-    </app-modal>
 </header>

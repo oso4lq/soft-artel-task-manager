@@ -1,7 +1,7 @@
 // tasks.service.ts
 
-import { Injectable, signal } from '@angular/core';
-import { CounterDoc, TaskCard, TaskType } from '../../shared/models/task.models';
+import { computed, Injectable, signal } from '@angular/core';
+import { CounterDoc, TaskCard, TaskStatus, TaskType } from '../../shared/models/task.models';
 import { doc, DocumentReference, Firestore, runTransaction } from '@angular/fire/firestore';
 import { TasksFirebaseService } from './tasks-firebase.service';
 
@@ -11,8 +11,36 @@ import { TasksFirebaseService } from './tasks-firebase.service';
 
 export class TasksService {
 
+    public TaskStatus = TaskStatus;
+
     // Signal to hold the tasks list
     tasksSig = signal<TaskCard[]>([]);
+
+    // Arrange the tasks by their date (new first)
+    arrangedTasksSig = computed(() => {
+        const all = this.tasksSig();
+        return [...all].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+    });
+
+    // Find the latest task
+    lastTaskSig = computed(() => {
+        // Exclude drafts from the task list
+        const all = this.arrangedTasksSig().filter(t => t.currentTaskStatus !== TaskStatus.Draft);
+
+        if (!all.length) {
+            return null;
+        }
+
+        return all[0];
+    });
+
+    // Compile a short version of the latest task name
+    shortLastTaskNameSig = computed(() => {
+        const task = this.lastTaskSig();
+        if (!task) return null;
+        const name = task.taskName;
+        return name.length > 47 ? name.slice(0, 47) + '...' : name;
+    });
 
     // Map of prefixes for task types
     private readonly taskTypePrefixMap: { [key in TaskType]: string } = {
