@@ -1,3 +1,5 @@
+// header.component.scss
+
 @import '../../../../styles/variables.scss';
 
 // Header menu
@@ -31,12 +33,54 @@
             }
         }
 
-        .header__create-btn {
-            padding: 8px 16px;
-            color: $active-blue;
-            border: $active-blue 1px solid;
-            border-radius: 4px;
-            cursor: pointer;
+        // .header__create-btn {
+        //     padding: 8px 16px;
+        //     color: $active-blue;
+        //     border: $active-blue 1px solid;
+        //     border-radius: 4px;
+        //     cursor: pointer;
+        // }
+        .header__create-container {
+            position: relative;
+
+            .header__create-btn {
+                padding: 8px 16px;
+                color: $active-blue;
+                border: $active-blue 1px solid;
+                border-radius: 4px;
+                cursor: pointer;
+                background: none;
+                transition: background 0.3s;
+
+                &:hover {
+                    background: rgba($active-blue, 0.1);
+                }
+            }
+
+            .create-popup {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background: $bg-light;
+                border: 1px solid $divider;
+                border-radius: 6px;
+                box-shadow: 0 2px 5px $shdw-menu-1;
+                // margin-top: 8px;
+                width: 150px;
+                z-index: 20;
+                display: flex;
+                flex-direction: column;
+
+                .create-popup__option {
+                    padding: 10px 16px;
+                    cursor: pointer;
+                    transition: background 0.2s;
+
+                    &:hover {
+                        background: $bg-light;
+                    }
+                }
+            }
         }
     }
 
@@ -50,21 +94,74 @@
             background: $active-blue;
             color: $white;
             border-radius: 4px;
+            padding: 8px 12px;
+            font-weight: bold;
         }
 
         .header__last-task {
             display: flex;
-            background: $bg-light;
+            // background: $bg-light;
             color: $text-text;
-            border-radius: 4px;
+            // border-radius: 4px;
+            padding: 8px 12px;
+            // font-style: italic;
+
+            // position: absolute;
+            // top: 100%;
+            // left: 0;
+            background: $bg-light;
+            border: 1px solid $divider 4%;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px $shdw-menu-1;
+            // margin-top: 8px;
+            min-width: 100px;
+            max-width: 150px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
         }
 
         .header__notifications {
-            margin-right: 16px;
-            cursor: pointer;
-            background: none;
-            border: none;
+            // margin-right: 16px;
+            // cursor: pointer;
+            // background: none;
+            // border: none;
+            display: flex;
             position: relative;
+            padding: 8px 12px;
+
+            background: $bg-light;
+            border: 1px solid $divider 4%;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px $shdw-menu-1;
+            // margin-top: 8px;
+            min-width: 100px;
+            max-width: 150px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+
+            cursor: pointer;
+            // background: none;
+            // border: none;
+            // position: relative;
+            // font-size: 16px;
+
+            .notifications__count {
+                position: absolute;
+                top: -5px;
+                right: -10px;
+                background: red;
+                color: white;
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: bold;
+            }
         }
 
         .header__user-avatar {
@@ -73,7 +170,7 @@
 
         .header__user-avatar:hover {
             transform: scale(1.1) rotate(10deg);
-            
+
         }
 
         .header__user-img {

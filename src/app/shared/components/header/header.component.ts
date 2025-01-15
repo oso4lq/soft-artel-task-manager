@@ -1,12 +1,13 @@
 // header.component.ts
 
-import { Component, computed, Input, OnInit, Signal } from '@angular/core';
+import { Component, computed, ElementRef, OnInit, Signal, ViewChild } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { UserData } from '../../models/users.model';
 import { AppComponent } from '../../../app.component';
 import { TimeService } from '../../../core/services/time.service';
 import { TasksService } from '../../../core/services/tasks.service';
+import { fromEvent, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -24,11 +25,22 @@ export class HeaderComponent implements OnInit {
   currentTimeStr: Signal<string> = computed(() => this.timeService.currentTimeStrSig()); // track current time
   shortLastTaskName: Signal<string | null> = computed(() => this.tasksService.shortLastTaskNameSig()); // track latest task
 
-  // User popup
-  isUserPopupOpen = false;
+  // State
+  showUserPopup = false;
+  showCreatePopup = false;
 
-  // Modal window
-  isModalOpen = false;
+  // Subscriptions
+  private clickOutsideSubscription!: Subscription;
+
+  // References to elements
+  @ViewChild('userPopup') userPopup!: ElementRef;
+  @ViewChild('userAvatar') userAvatar!: ElementRef;
+  @ViewChild('createBtn') createBtn!: ElementRef;
+
+  get unreadMessagesCount(): number {
+    // We temporarily access UserData.tasks because message counter may be added later
+    return this.currentUserData()?.tasks?.length || 0;
+  }
 
   constructor(
     private tasksService: TasksService,
@@ -39,8 +51,68 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  toggleUserPopup() {
-    this.isUserPopupOpen = !this.isUserPopupOpen
+  ngOnDestroy(): void {
+    this.unsubscribeClickOutside();
+  }
+
+  // Create button and related
+  newTask() {
+    if (this.currentUserData()) {
+      this.parent.openNewTaskModal();
+    } else {
+      this.parent.openLoginModal();
+    }
+  }
+
+  // Handlers for create button hover
+  onCreateMouseEnter(): void {
+    this.showCreatePopup = true;
+  }
+
+  onCreateMouseLeave(): void {
+    this.showCreatePopup = false;
+  }
+
+  onCreateTaskClick(): void {
+    this.newTask();
+    this.showCreatePopup = false;
+  }
+
+  onCreateProjectClick(): void {
+    console.log('Эта функция ещё не разработана');
+    this.showCreatePopup = false;
+  }
+
+
+  // User popup and related
+  toggleUserPopup(): void {
+    this.showUserPopup = !this.showUserPopup;
+    if (this.showUserPopup) {
+      this.subscribeClickOutside();
+    } else {
+      this.unsubscribeClickOutside();
+    }
+  }
+
+  // Handlers for create button hover
+  subscribeClickOutside(): void {
+    this.clickOutsideSubscription = fromEvent(document, 'click').subscribe((event: Event) => {
+      const target = event.target as HTMLElement;
+      if (this.userPopup && this.userAvatar) {
+        const clickedInsidePopup = this.userPopup.nativeElement.contains(target);
+        const clickedOnAvatar = this.userAvatar.nativeElement.contains(target);
+        if (!clickedInsidePopup && !clickedOnAvatar) {
+          this.showUserPopup = false;
+          this.unsubscribeClickOutside();
+        }
+      }
+    });
+  }
+
+  unsubscribeClickOutside(): void {
+    if (this.clickOutsideSubscription) {
+      this.clickOutsideSubscription.unsubscribe();
+    }
   }
 
   onLogoutClick() {
@@ -53,11 +125,4 @@ export class HeaderComponent implements OnInit {
     this.parent.openLoginModal();
   }
 
-  newTask() {
-    if (this.currentUserData()) {
-      this.parent.openNewTaskModal();
-    } else {
-      this.parent.openLoginModal();
-    }
-  }
 }

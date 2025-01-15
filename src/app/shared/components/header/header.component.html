@@ -12,7 +12,14 @@
         </ul>
 
         <!-- Open model window to create a new task -->
-        <button class="header__create-btn" (click)="newTask()">Создать</button>
+        <div class="header__create-container" (mouseenter)="onCreateMouseEnter()" (mouseleave)="onCreateMouseLeave()"
+            #createBtn>
+            <button class="header__create-btn" (click)="newTask()">Создать</button>
+            <div class="create-popup" *ngIf="showCreatePopup">
+                <div class="create-popup__option" (click)="onCreateTaskClick()">Задачу</div>
+                <div class="create-popup__option" (click)="onCreateProjectClick()">Проект</div>
+            </div>
+        </div>
     </div>
 
     <div class="header__right-group">
@@ -27,16 +34,21 @@
         </div>
 
         <!-- Notifications section -->
-        <button class="header__notifications">Уведомления</button>
+        <button class="header__notifications">
+            Уведомления
+            <div class="notifications__count" *ngIf="unreadMessagesCount > 0">
+                {{ unreadMessagesCount }}
+            </div>
+        </button>
 
         <!-- User img section to open the popup -->
-        <div class="header__user-avatar" (click)="toggleUserPopup()">
+        <div class="header__user-avatar" (click)="toggleUserPopup()" #userAvatar>
             <img [src]="currentUserData()?.img || 'https://res.cloudinary.com/dxunxtt1u/image/upload/userAvatarPlaceholder_ox0tj4.png'"
                 alt="user img" class="header__user-img">
         </div>
 
         <!-- Popup -->
-        <div class="user-popup" *ngIf="isUserPopupOpen">
+        <div class="user-popup" *ngIf="showUserPopup" #userPopup>
 
             <!-- Logged in user data -->
             <ng-container *ngIf="currentUserData() as user; else anonymousInfo">
