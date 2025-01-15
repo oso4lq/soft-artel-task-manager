@@ -1,54 +1,53 @@
 <!-- header.component.html -->
 
-<!-- Header menu -->
-<header class="header">
-    <div class="header__left-group">
-        <ul class="header__tabs">
-            <li class="header__tab active">Главная</li>
-            <li class="header__tab">Проекты</li>
-            <li class="header__tab">Команда</li>
-            <li class="header__tab">Канбан</li>
-            <li class="header__tab">Итерации</li>
+<header class="header flex-row center-row">
+    <div class="header__group h-100 flex-row center-row">
+        <ul class="tabs h-100 flex-row center-row">
+            <li class="tabs__item tabs__item_active">Главная</li>
+            <li class="tabs__item">Проекты</li>
+            <li class="tabs__item">Команда</li>
+            <li class="tabs__item">Канбан</li>
+            <li class="tabs__item">Итерации</li>
         </ul>
 
         <!-- Open model window to create a new task -->
-        <div class="header__create-container" (mouseenter)="onCreateMouseEnter()" (mouseleave)="onCreateMouseLeave()"
-            #createBtn>
-            <button class="header__create-btn" (click)="newTask()">Создать</button>
-            <div class="create-popup" *ngIf="showCreatePopup">
-                <div class="create-popup__option" (click)="onCreateTaskClick()">Задачу</div>
-                <div class="create-popup__option" (click)="onCreateProjectClick()">Проект</div>
+        <div class="create h-100 flex-row center-row" (mouseenter)="onCreateMouseEnter()"
+            (mouseleave)="onCreateMouseLeave()" #createBtn>
+            <button class="create__btn h-100" (click)="newTask()">Создать</button>
+            <div class="create__popup flex-col" *ngIf="showCreatePopup">
+                <div class="create__option" (click)="onCreateTaskClick()">Задачу</div>
+                <div class="create__option" (click)="onCreateProjectClick()">Проект</div>
             </div>
         </div>
     </div>
 
-    <div class="header__right-group">
+    <div class="header__group h-100 flex-row center-row">
         <!-- Current time -->
-        <div class="header__time">
+        <div class="time h-100 flex-row center-row">
             {{ currentTimeStr() }}
         </div>
 
         <!-- Sort out the latest created task and display its cropped name or a default message -->
-        <div class="header__last-task">
+        <div class="last-task h-100 flex-row center-row">
             *{{ shortLastTaskName() || 'задачи отсутствуют' }}
         </div>
 
         <!-- Notifications section -->
-        <button class="header__notifications">
-            Уведомления
-            <div class="notifications__count" *ngIf="unreadMessagesCount > 0">
+        <button class="notifications h-100 flex-row center-all">
+            У
+            <div class="notifications__count flex-row center-all" *ngIf="unreadMessagesCount > 0">
                 {{ unreadMessagesCount }}
             </div>
         </button>
 
         <!-- User img section to open the popup -->
-        <div class="header__user-avatar" (click)="toggleUserPopup()" #userAvatar>
+        <div class="user-avatar h-100" (click)="toggleUserPopup()" #userAvatar>
             <img [src]="currentUserData()?.img || 'https://res.cloudinary.com/dxunxtt1u/image/upload/userAvatarPlaceholder_ox0tj4.png'"
-                alt="user img" class="header__user-img">
+                alt="user img" class="user-avatar__img">
         </div>
 
         <!-- Popup -->
-        <div class="user-popup" *ngIf="showUserPopup" #userPopup>
+        <div class="user-popup flex-col" *ngIf="showUserPopup" #userPopup>
 
             <!-- Logged in user data -->
             <ng-container *ngIf="currentUserData() as user; else anonymousInfo">

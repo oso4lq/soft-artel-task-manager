@@ -4,195 +4,156 @@
 
 // Header menu
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
+    padding: 15px 0;
     height: 30px;
     gap: 24px;
 
-    &__left-group {
-        display: flex;
-        align-items: center;
+    &__group {
         gap: 24px;
+    }
+}
 
-        .header__tabs {
-            display: flex;
-            list-style: none;
-            gap: 24px;
+.tabs {
+    list-style: none;
+    gap: 24px;
 
-            .header__tab {
-                padding: 8px 12px; // change
-                color: $text-secondary;
-                cursor: pointer;
+    &__item {
+        color: $text-secondary;
+        cursor: pointer;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
 
-                &.active {
-                    color: $active-blue;
-                    border-bottom: 2px solid $active-blue;
-                }
-            }
+        &_active {
+            color: $active-blue;
+            border-bottom: 2px solid $active-blue;
         }
+    }
+}
 
-        // .header__create-btn {
-        //     padding: 8px 16px;
-        //     color: $active-blue;
-        //     border: $active-blue 1px solid;
-        //     border-radius: 4px;
-        //     cursor: pointer;
-        // }
-        .header__create-container {
-            position: relative;
+.create {
+    position: relative;
 
-            .header__create-btn {
-                padding: 8px 16px;
-                color: $active-blue;
-                border: $active-blue 1px solid;
-                border-radius: 4px;
-                cursor: pointer;
-                background: none;
-                transition: background 0.3s;
+    &__btn {
+        padding: 0 12px;
+        gap: 4px;
+        color: $active-blue;
+        border: $active-blue 1px solid;
+        border-radius: 4px;
+        cursor: pointer;
+        background: none;
+        transition: background 0.3s;
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 18px;
 
-                &:hover {
-                    background: rgba($active-blue, 0.1);
-                }
-            }
-
-            .create-popup {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                background: $bg-light;
-                border: 1px solid $divider;
-                border-radius: 6px;
-                box-shadow: 0 2px 5px $shdw-menu-1;
-                // margin-top: 8px;
-                width: 150px;
-                z-index: 20;
-                display: flex;
-                flex-direction: column;
-
-                .create-popup__option {
-                    padding: 10px 16px;
-                    cursor: pointer;
-                    transition: background 0.2s;
-
-                    &:hover {
-                        background: $bg-light;
-                    }
-                }
-            }
+        &:hover {
+            background: rgba($active-blue, 0.1);
         }
     }
 
-    &__right-group {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-
-        .header__time {
-            display: flex;
-            background: $active-blue;
-            color: $white;
-            border-radius: 4px;
-            padding: 8px 12px;
-            font-weight: bold;
-        }
-
-        .header__last-task {
-            display: flex;
-            // background: $bg-light;
-            color: $text-text;
-            // border-radius: 4px;
-            padding: 8px 12px;
-            // font-style: italic;
-
-            // position: absolute;
-            // top: 100%;
-            // left: 0;
-            background: $bg-light;
-            border: 1px solid $divider 4%;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px $shdw-menu-1;
-            // margin-top: 8px;
-            min-width: 100px;
-            max-width: 150px;
-            z-index: 20;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header__notifications {
-            // margin-right: 16px;
-            // cursor: pointer;
-            // background: none;
-            // border: none;
-            display: flex;
-            position: relative;
-            padding: 8px 12px;
-
-            background: $bg-light;
-            border: 1px solid $divider 4%;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px $shdw-menu-1;
-            // margin-top: 8px;
-            min-width: 100px;
-            max-width: 150px;
-            z-index: 20;
-            display: flex;
-            flex-direction: column;
-
-            cursor: pointer;
-            // background: none;
-            // border: none;
-            // position: relative;
-            // font-size: 16px;
-
-            .notifications__count {
-                position: absolute;
-                top: -5px;
-                right: -10px;
-                background: red;
-                color: white;
-                border-radius: 50%;
-                width: 18px;
-                height: 18px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 12px;
-                font-weight: bold;
-            }
-        }
-
-        .header__user-avatar {
-            transition: transform 0.3s ease;
-        }
-
-        .header__user-avatar:hover {
-            transform: scale(1.1) rotate(10deg);
-
-        }
-
-        .header__user-img {
-            width: 40px;
-            height: 40px;
-            background-color: $divider;
-            border-radius: 50%;
-        }
-
-        .user-popup {
-            position: absolute;
-            top: 60px;
-            right: 40px;
-            background: #e0e0e0;
-            height: 200px;
-            z-index: 10;
-            border-radius: 8px;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
+    &__popup {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: $bg-light;
+        border: 1px solid $divider;
+        border-radius: 6px;
+        box-shadow: 0 2px 5px $shdw-menu-1;
+        width: 150px;
+        z-index: 20;
     }
+
+    &__option {
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+            background: $bg-light;
+        }
+    }
+}
+
+.time {
+    background: $active-blue;
+    box-shadow: 0 5px 10px $shdw-menu-2;
+    color: $white;
+    border-radius: 4px;
+    padding: 0 6px;
+    gap: 4px;
+    height: 30px;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.last-task {
+    color: $text-text;
+    background: $bg-light;
+    min-width: 200px;
+    max-width: 368px;
+    padding: 0 8px;
+    gap: 4px;
+    border: 0.5px solid $bg-border;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px $shdw-menu-1;
+}
+
+.notifications {
+    height: 30px;
+    width: 30px;
+    padding: 4px 8px;
+    border: 0.5px solid $bg-border;
+    border-radius: 6px;
+    color: $text-text;
+    background: $bg-light;
+    box-shadow: 0 2px 5px $shdw-menu-1;
+    position: relative;
+    cursor: pointer;
+
+    &__count {
+        position: absolute;
+        top: -6px;
+        left: 11px;
+        width: 26px;
+        height: 20px;
+        border-radius: 16px;
+        background: $red;
+        color: $white;
+        font-weight: 500;
+        font-size: 11px;
+        line-height: 16px;
+    }
+}
+
+.user-avatar {
+    transition: transform 0.3s ease;
+    position: relative;
+    cursor: pointer;
+
+    &__img {
+        width: 30px;
+        height: 30px;
+        background-color: $divider;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.user-popup {
+    position: absolute;
+    top: 60px;
+    z-index: 10;
+    min-width: 200px;
+    min-height: 120px;
+    border-radius: 6px;
+    padding: 4px 8px;
+    gap: 20px;
+    background: $bg-menu;
+    box-shadow: 0 2px 5px $shdw-menu-1;
 }
