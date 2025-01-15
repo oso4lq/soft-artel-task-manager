@@ -7,12 +7,18 @@ import { debounceTime } from 'rxjs/operators';
 import { TaskCard, TaskStatus } from '../../models/task.models';
 import { UserData } from '../../models/users.model';
 import { UsersService } from '../../../core/services/users.service';
+import { TasksService } from '../../../core/services/tasks.service';
+import { getNextTaskStatus } from '../../utils/task-status-utils';
+import { ModalComponent } from '../modal/modal.component';
+import { EditTaskComponent } from '../edit-task/edit-task.component';
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
   imports: [
     CommonModule,
+    ModalComponent,
+    EditTaskComponent,
   ],
   templateUrl: './task-card.component.html',
   styleUrls: ['./task-card.component.scss']
@@ -21,13 +27,15 @@ export class TaskCardComponent implements OnInit {
 
   // Task to display
   @Input() task!: TaskCard;
+  @Input() isInProgress: boolean = false;
 
   // Signals
   userDatas: Signal<UserData[]> = computed(() => this.usersService.userDatasSig()); // track the userDatas array
 
-  // Signals for hover
+  // Signals for UI
   hoveredTop = signal(false);
   hoveredBottom = signal(false);
+  showEditModal = signal(false);
 
   // For debounce effect
   private hoverTopSubject = new Subject<boolean>();
@@ -60,6 +68,7 @@ export class TaskCardComponent implements OnInit {
 
   constructor(
     private usersService: UsersService,
+    private tasksService: TasksService,
   ) { }
 
   ngOnInit(): void {
@@ -117,6 +126,46 @@ export class TaskCardComponent implements OnInit {
     } else {
       // Upcoming statuses
       return 'progress-block--divider';
+    }
+  }
+
+
+  // Button handlers
+  onEditClick(): void {
+    // «Исправить» => открыть модалку
+    // Один из вариантов — локально (через <app-modal> в шаблоне),
+    // либо генерировать Output() и реагировать в родителе.
+    // Ниже — пример локального открытия:
+    this.showEditModal.set(true);
+  }
+
+  onInWorkClick(): void {
+    // «В работу» => inProgress = true
+    this.task.inProgress = true;
+    this.tasksService.updateTask(this.task);
+  }
+
+  onAcceptClick(): void {
+    // «Принять» => присвоить следующий статус
+    const nextStatus = getNextTaskStatus(this.task);
+    if (nextStatus) {
+      this.task.currentTaskStatus = nextStatus;
+      this.tasksService.updateTask(this.task);
+    }
+  }
+
+  onPauseClick(): void {
+    // «На паузу» => inProgress = false
+    this.task.inProgress = false;
+    this.tasksService.updateTask(this.task);
+  }
+
+  onDoneClick(): void {
+    // «Готово» => аналогично «Принять» (берём следующий статус)
+    const nextStatus = getNextTaskStatus(this.task);
+    if (nextStatus) {
+      this.task.currentTaskStatus = nextStatus;
+      this.tasksService.updateTask(this.task);
     }
   }
 }

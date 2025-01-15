@@ -43,7 +43,8 @@
                     На согласование
                 </label>
                 <label>
-                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Review" [(ngModel)]="selectedStatusFilter" />
+                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Review"
+                        [(ngModel)]="selectedStatusFilter" />
                     На ревью
                 </label>
                 <label>
@@ -52,7 +53,8 @@
                     Для работы
                 </label>
                 <label>
-                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Draft" [(ngModel)]="selectedStatusFilter" />
+                    <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Draft"
+                        [(ngModel)]="selectedStatusFilter" />
                     Черновики
                 </label>
             </div>
@@ -69,7 +71,8 @@
                     <ng-container *ngIf="userData; else showLoginMessage">
                         <!-- Check if the user has tasks -->
                         <ng-container *ngIf="myTasksFiltered().length > 0; else showNoTasksMessage">
-                            <app-task-card *ngFor="let t of myTasksFiltered()" [task]="t"></app-task-card>
+                            <app-task-card *ngFor="let t of myTasksFiltered()" [task]="t"
+                                [isInProgress]="false"></app-task-card>
                         </ng-container>
                         <!-- Message when no tasks -->
                         <ng-template #showNoTasksMessage>
@@ -93,7 +96,7 @@
                 <div class="tasks-block__body tasks-block__body_collapsible">
 
                     <!-- task list -->
-                    <app-task-card *ngFor="let t of unassignedFiltered()" [task]="t">
+                    <app-task-card *ngFor="let t of unassignedFiltered()" [task]="t" [isInProgress]="false">
                     </app-task-card>
 
                 </div>
@@ -107,7 +110,7 @@
                 <div class="tasks-block__body">
 
                     <!-- task list -->
-                    <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t">
+                    <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t" [isInProgress]="true">
                     </app-task-card>
 
                 </div>
@@ -117,7 +120,7 @@
                 <div class="tasks-block__body">
 
                     <!-- task list -->
-                    <app-task-card *ngFor="let t of pauseFiltered()" [task]="t">
+                    <app-task-card *ngFor="let t of pauseFiltered()" [task]="t" [isInProgress]="false">
                     </app-task-card>
 
                 </div>

@@ -1,9 +1,9 @@
 // task-status-utils.ts
 
-import { TaskStatus } from "../models/task.models";
+import { TaskCard, TaskStatus } from "../models/task.models";
 
 // Apply indices for statuses
-// Used in NewTaskComponent and TaskCardComponent
+// Used in NewTaskComponent, TaskCardComponent
 
 export const TaskStatusOrder: { [key in TaskStatus]: number } = {
     [TaskStatus.Draft]: 1,
@@ -15,6 +15,19 @@ export const TaskStatusOrder: { [key in TaskStatus]: number } = {
     [TaskStatus.Closed]: 7,
 };
 
+// Arrange statuses in TaskCard.taskStatuses by their indices
 export function sortTaskStatuses(statuses: TaskStatus[]): TaskStatus[] {
     return statuses.sort((a, b) => TaskStatusOrder[a] - TaskStatusOrder[b]);
+}
+
+// REFINE THIS LOGIC. MAY APPLY NON-EXISTING STATUSES
+// Find next TaskStatus inside the TaskCard.taskStatuses array
+export function getNextTaskStatus(task: TaskCard): TaskStatus | null {
+    // Find currentTaskStatus index using TaskStatusOrder
+    const currentIndex = task.taskStatuses.indexOf(task.currentTaskStatus);
+    // If found and it is not the last, return its next
+    if (currentIndex >= 0 && currentIndex < task.taskStatuses.length - 1) {
+        return task.taskStatuses[currentIndex + 1];
+    }
+    return null; // No statuses left
 }
