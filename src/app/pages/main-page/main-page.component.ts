@@ -208,6 +208,9 @@ export class MainPageComponent implements OnInit {
         return (task.currentTaskStatus === TaskStatus.Execution);
       case TaskStatus.Draft:
         return (task.currentTaskStatus === TaskStatus.Draft);
+      // New status may be added later. Currently the closed tasks disappear
+      // case TaskStatus.Closed:
+      //   return (task.currentTaskStatus === TaskStatus.Closed);
     }
   }
 
@@ -281,6 +284,8 @@ export class MainPageComponent implements OnInit {
       if (!this.matchCategory(t)) return false;
       // 3 - taskStatus = 'В работе'
       if (!this.matchInProgress(t)) return false;
+      // 4 - performerId === currentUser.id
+      if (!this.isCurrentUser(t)) return false;
 
       return true;
     });
@@ -294,6 +299,8 @@ export class MainPageComponent implements OnInit {
       if (!this.matchCategory(t)) return false;
       // 3 - taskStatus = 'Пауза'
       if (!this.matchPause(t)) return false;
+      // 4 - performerId === currentUser.id
+      if (!this.isCurrentUser(t)) return false;
 
       return true;
     });

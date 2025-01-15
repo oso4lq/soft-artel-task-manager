@@ -11,6 +11,7 @@ import { TasksService } from '../../../core/services/tasks.service';
 import { getNextTaskStatus } from '../../utils/task-status-utils';
 import { ModalComponent } from '../modal/modal.component';
 import { EditTaskComponent } from '../edit-task/edit-task.component';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-task-card',
@@ -67,6 +68,7 @@ export class TaskCardComponent implements OnInit {
   });
 
   constructor(
+    private authService: AuthService,
     private usersService: UsersService,
     private tasksService: TasksService,
   ) { }
@@ -142,6 +144,7 @@ export class TaskCardComponent implements OnInit {
   // Work: apply inProgress===true
   onInWorkClick(): void {
     this.task.inProgress = true;
+    this.task.performerId = this.authService.currentUserDataSig()?.id;
     this.tasksService.updateTask(this.task);
   }
 
@@ -150,14 +153,20 @@ export class TaskCardComponent implements OnInit {
     const nextStatus = getNextTaskStatus(this.task);
     if (nextStatus) {
       this.task.currentTaskStatus = nextStatus;
-      this.task.performerId = null;
-      this.tasksService.updateTask(this.task);
+      // this.task.performerId = null;
+      // this.tasksService.updateTask(this.task);
+    } else {
+      this.task.currentTaskStatus = TaskStatus.Closed;
+      // this.tasksService.updateTask(this.task);
     }
+    this.task.performerId = null;
+    this.tasksService.updateTask(this.task);
   }
 
   // Pause: apply inProgress===false
   onPauseClick(): void {
     this.task.inProgress = false;
+    this.task.performerId = this.authService.currentUserDataSig()?.id;
     this.tasksService.updateTask(this.task);
   }
 
@@ -166,8 +175,13 @@ export class TaskCardComponent implements OnInit {
     const nextStatus = getNextTaskStatus(this.task);
     if (nextStatus) {
       this.task.currentTaskStatus = nextStatus;
-      this.task.performerId = null;
-      this.tasksService.updateTask(this.task);
+      // this.task.performerId = null;
+      // this.tasksService.updateTask(this.task);
+    } else {
+      this.task.currentTaskStatus = TaskStatus.Closed;
+      // this.tasksService.updateTask(this.task);
     }
+    this.task.performerId = null;
+    this.tasksService.updateTask(this.task);
   }
 }
