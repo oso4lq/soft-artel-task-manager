@@ -205,7 +205,11 @@ export class MainPageComponent implements OnInit {
       case TaskStatus.Review:
         return (task.currentTaskStatus === TaskStatus.Review);
       case TaskStatus.Execution:
-        return (task.currentTaskStatus === TaskStatus.Execution);
+        return (
+          task.currentTaskStatus === TaskStatus.Execution
+          || task.currentTaskStatus === TaskStatus.Deploy
+          || task.currentTaskStatus === TaskStatus.Testing
+        );
       case TaskStatus.Draft:
         return (task.currentTaskStatus === TaskStatus.Draft);
       // New status may be added later. Currently the closed tasks disappear

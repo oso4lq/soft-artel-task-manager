@@ -51,8 +51,6 @@ export enum TaskStatus {
     Deploy = 'Деплой',
     Testing = 'Тестирование',
     Closed = 'Закрыто',
-    // InProgress = 'В работе',
-    // Pause = 'Пауза',
 }
 
 export interface TaskTime {

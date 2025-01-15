@@ -30,6 +30,8 @@ export class TaskCardComponent implements OnInit {
   @Input() task!: TaskCard;
   @Input() isInProgress: boolean = false;
 
+  public TaskStatus = TaskStatus;
+
   // Signals
   userDatas: Signal<UserData[]> = computed(() => this.usersService.userDatasSig()); // track the userDatas array
 
@@ -159,6 +161,7 @@ export class TaskCardComponent implements OnInit {
       this.task.currentTaskStatus = TaskStatus.Closed;
       // this.tasksService.updateTask(this.task);
     }
+    this.task.inProgress = null;
     this.task.performerId = null;
     this.tasksService.updateTask(this.task);
   }
@@ -181,6 +184,7 @@ export class TaskCardComponent implements OnInit {
       this.task.currentTaskStatus = TaskStatus.Closed;
       // this.tasksService.updateTask(this.task);
     }
+    this.task.inProgress = null;
     this.task.performerId = null;
     this.tasksService.updateTask(this.task);
   }

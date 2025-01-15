@@ -50,13 +50,6 @@
         </div>
 
         <!-- Show control buttons (if hoveredBottom() === true) -->
-
-        <!-- <div class="task-card__actions" *ngIf="hoveredBottom()">
-            <button>Исправить</button>
-            <button>В работу</button>
-            <button>Принять</button>
-        </div> -->
-
         <div class="task-card__actions" *ngIf="hoveredBottom()">
             <ng-container *ngIf="isInProgress; else elseButtons">
                 <button (click)="onPauseClick()">На паузу</button>
@@ -64,8 +57,8 @@
             </ng-container>
             <ng-template #elseButtons>
                 <button (click)="onEditClick()">Исправить</button>
-                <button (click)="onInWorkClick()">В работу</button>
-                <button (click)="onAcceptClick()">Принять</button>
+                <button *ngIf="task.currentTaskStatus !== TaskStatus.Draft" (click)="onInWorkClick()">В работу</button>
+                <button *ngIf="task.currentTaskStatus !== TaskStatus.Draft" (click)="onAcceptClick()">Принять</button>
             </ng-template>
         </div>
 
