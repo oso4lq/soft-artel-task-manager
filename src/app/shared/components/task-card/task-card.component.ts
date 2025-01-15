@@ -1,6 +1,6 @@
 // task-card.component.ts
 
-import { Component, computed, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, Input, OnInit, Signal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { TasksService } from '../../../core/services/tasks.service';
 import { getNextTaskStatus } from '../../utils/task-status-utils';
 import { AuthService } from '../../../core/services/auth.service';
 import { AppComponent } from '../../../app.component';
+import { UserData } from '../../models/users.model';
 
 @Component({
   selector: 'app-task-card',
@@ -31,6 +32,7 @@ export class TaskCardComponent implements OnInit {
   // Signals for UI
   hoveredTop = signal(false);
   hoveredBottom = signal(false);
+  currentUserData: Signal<UserData | null> = computed(() => this.authService.currentUserDataSig()); // track the current user data
 
   // For debounce effect
   private hoverTopSubject = new Subject<boolean>();
@@ -126,46 +128,66 @@ export class TaskCardComponent implements OnInit {
 
   // Button handlers
   onEditClick(): void {
-    this.parent.openEditTaskModal(this.task);
+    if (this.currentUserData()) {
+      this.parent.openEditTaskModal(this.task);
+    } else {
+      this.parent.openLoginModal();
+    }
   }
 
   // Work: apply inProgress===true
   onInWorkClick(): void {
-    this.task.inProgress = true;
-    this.task.performerId = this.authService.currentUserDataSig()?.id;
-    this.tasksService.updateTask(this.task);
+    if (this.currentUserData()) {
+      this.task.inProgress = true;
+      this.task.performerId = this.authService.currentUserDataSig()?.id;
+      this.tasksService.updateTask(this.task);
+    } else {
+      this.parent.openLoginModal();
+    }
   }
 
   // Accept: apply next status and null assignee
   onAcceptClick(): void {
-    const nextStatus = getNextTaskStatus(this.task);
-    if (nextStatus) {
-      this.task.currentTaskStatus = nextStatus;
+    if (this.currentUserData()) {
+      const nextStatus = getNextTaskStatus(this.task);
+      if (nextStatus) {
+        this.task.currentTaskStatus = nextStatus;
+      } else {
+        this.task.currentTaskStatus = TaskStatus.Closed;
+      }
+      this.task.inProgress = null;
+      this.task.performerId = null;
+      this.tasksService.updateTask(this.task);
     } else {
-      this.task.currentTaskStatus = TaskStatus.Closed;
+      this.parent.openLoginModal();
     }
-    this.task.inProgress = null;
-    this.task.performerId = null;
-    this.tasksService.updateTask(this.task);
   }
 
   // Pause: apply inProgress===false
   onPauseClick(): void {
-    this.task.inProgress = false;
-    this.task.performerId = this.authService.currentUserDataSig()?.id;
-    this.tasksService.updateTask(this.task);
+    if (this.currentUserData()) {
+      this.task.inProgress = false;
+      this.task.performerId = this.authService.currentUserDataSig()?.id;
+      this.tasksService.updateTask(this.task);
+    } else {
+      this.parent.openLoginModal();
+    }
   }
 
   // Done: apply next status and null assignee
   onDoneClick(): void {
-    const nextStatus = getNextTaskStatus(this.task);
-    if (nextStatus) {
-      this.task.currentTaskStatus = nextStatus;
+    if (this.currentUserData()) {
+      const nextStatus = getNextTaskStatus(this.task);
+      if (nextStatus) {
+        this.task.currentTaskStatus = nextStatus;
+      } else {
+        this.task.currentTaskStatus = TaskStatus.Closed;
+      }
+      this.task.inProgress = null;
+      this.task.performerId = null;
+      this.tasksService.updateTask(this.task);
     } else {
-      this.task.currentTaskStatus = TaskStatus.Closed;
+      this.parent.openLoginModal();
     }
-    this.task.inProgress = null;
-    this.task.performerId = null;
-    this.tasksService.updateTask(this.task);
   }
 }

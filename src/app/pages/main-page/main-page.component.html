@@ -4,7 +4,7 @@
 </h1>
 
 <!-- Dropdown menu filters -->
-<div class="dropdown-filters">
+<div class="dropdown-filters flex-row">
     <select class="dropdown-filters__select" [(ngModel)]="selectedProduct"
         (ngModelChange)="onProductFilterChange($event)">
         <option value="all">Все продукты</option>
@@ -25,9 +25,10 @@
 </div>
 
 <!-- Task columns -->
-<div class="columns">
-    <!-- Column 1 -->
-    <div class="columns__col1">
+<div class="columns flex-row">
+
+    <!-- Left column -->
+    <div class="columns__left">
 
         <div class="status-filters">
             <label>
@@ -63,12 +64,12 @@
                 <!-- Check if user exists -->
                 <ng-container *ngIf="userData; else showLoginMessage">
                     <!-- Check if the user has tasks -->
-                    <ng-container *ngIf="myTasksFiltered().length > 0; else showNoTasksMessage">
+                    <ng-container *ngIf="myTasksFiltered().length > 0; else showNoMyTasksMessage">
                         <app-task-card *ngFor="let t of myTasksFiltered()" [task]="t"
                             [isInProgress]="false"></app-task-card>
                     </ng-container>
                     <!-- Message when no tasks -->
-                    <ng-template #showNoTasksMessage>
+                    <ng-template #showNoMyTasksMessage>
                         <p>У вас нет задач.</p>
                     </ng-template>
                 </ng-container>
@@ -88,23 +89,35 @@
             <!-- *ngIf="!collapsed.unassigned" -->
             <div class="tasks-block__body tasks-block__body_collapsible">
 
-                <!-- task list -->
-                <app-task-card *ngFor="let t of unassignedFiltered()" [task]="t" [isInProgress]="false">
-                </app-task-card>
+                <!-- Check if the user has tasks -->
+                <ng-container *ngIf="unassignedFiltered().length > 0; else showNoUnassignedTasksMessage">
+                    <app-task-card *ngFor="let t of unassignedFiltered()" [task]="t" [isInProgress]="false">
+                    </app-task-card>
+                </ng-container>
+                <!-- Message when no tasks -->
+                <ng-template #showNoUnassignedTasksMessage>
+                    <p>Нет неназначенных задач.</p>
+                </ng-template>
 
             </div>
         </div>
     </div>
 
-    <!-- Column 2 -->
-    <div class="columns__col2">
+    <!-- Right column -->
+    <div class="columns__right">
         <div class="tasks-block">
             <div class="tasks-block__title">В работе:</div>
             <div class="tasks-block__body">
 
-                <!-- task list -->
-                <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t" [isInProgress]="true">
-                </app-task-card>
+                <!-- Check if the user has tasks -->
+                <ng-container *ngIf="inProgressFiltered().length > 0; else showNoInProgressTasksMessage">
+                    <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t" [isInProgress]="true">
+                    </app-task-card>
+                </ng-container>
+                <!-- Message when no tasks -->
+                <ng-template #showNoInProgressTasksMessage>
+                    <p>Нет задач в работе.</p>
+                </ng-template>
 
             </div>
         </div>
@@ -112,9 +125,15 @@
             <div class="tasks-block__title">На паузе:</div>
             <div class="tasks-block__body">
 
-                <!-- task list -->
-                <app-task-card *ngFor="let t of pauseFiltered()" [task]="t" [isInProgress]="false">
-                </app-task-card>
+                <!-- Check if the user has tasks -->
+                <ng-container *ngIf="pauseFiltered().length > 0; else showNoPausedTasksMessage">
+                    <app-task-card *ngFor="let t of pauseFiltered()" [task]="t" [isInProgress]="false">
+                    </app-task-card>
+                </ng-container>
+                <!-- Message when no tasks -->
+                <ng-template #showNoPausedTasksMessage>
+                    <p>Нет задач на паузе.</p>
+                </ng-template>
 
             </div>
         </div>

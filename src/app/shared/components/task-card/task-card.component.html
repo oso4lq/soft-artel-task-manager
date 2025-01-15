@@ -1,6 +1,6 @@
 <!-- task-card.component.html -->
 
-<div class="task-card">
+<div class="task-card w-100">
 
     <!-- Top Card Part -->
     <div class="task-card__top" (mouseenter)="onTopHover(true)" (mouseleave)="onTopHover(false)">
@@ -28,10 +28,10 @@
     <div class="task-card__bottom" (mouseenter)="onBottomHover(true)" (mouseleave)="onBottomHover(false)">
 
         <!-- Progress bar -->
-        <div class="task-card__progress-bar">
+        <div class="progress-bar">
             <!-- Progress bar here... -->
             <ng-container *ngFor="let status of task.taskStatuses; let i = index">
-                <div class="progress-block" [ngClass]="getProgressBlockClass(i)"></div>
+                <div class="progress-bar__block" [ngClass]="getProgressBlockClass(i)"></div>
             </ng-container>
         </div>
 
