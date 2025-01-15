@@ -25,14 +25,11 @@ export class NewTaskComponent implements OnInit {
   @Output() closed = new EventEmitter<void>();
 
   // State
-  // userData: UserData | null = null; // Store the fetched user data
   public TaskStatus = TaskStatus;
   errorMessage: string = '';
 
   // Signals
-  // currentUser: Signal<User | null | undefined> = computed(() => this.authService.currentUserSig()); // track the current user
   currentUserData: Signal<UserData | null> = computed(() => this.authService.currentUserDataSig()); // track the current user data
-  // userList = computed(() => this.usersService.userDatasSig());
   userDatas: Signal<UserData[]> = computed(() => this.usersService.userDatasSig()); // track the userDatas array
 
   // Initial task state
@@ -70,7 +67,7 @@ export class NewTaskComponent implements OnInit {
     [TaskStatus.Testing]: false,
   };
 
-  // TaskType and ProductType lists for <select>
+  // Lists for <select>
   taskTypes = Object.values(TaskType);
   productTypes = Object.values(ProductType);
 

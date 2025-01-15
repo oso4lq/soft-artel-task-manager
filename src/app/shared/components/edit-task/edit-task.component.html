@@ -1,0 +1,112 @@
+<!-- Кнопка закрытия -->
+<span class="close-button" (click)="closeModal()">&times;</span>
+
+<h2>Редактировать задачу</h2>
+
+<form (ngSubmit)="saveChanges()">
+    <!-- taskName -->
+    <div>
+        <label for="taskName">Введите название задачи</label>
+        <input type="text" id="taskName" [(ngModel)]="task.taskName" name="taskName" required />
+    </div>
+
+    <!-- taskPath -->
+    <div>
+        <span class="taskPath">Определите расположение задачи</span>
+
+        <label for="projectName">projectName</label>
+        <textarea id="projectName" [(ngModel)]="task.taskPath.projectName" name="projectName"></textarea>
+
+        <label for="productName">productName</label>
+        <select id="productName" [(ngModel)]="task.taskPath.productName" name="productName">
+            <option *ngFor="let pType of productTypes" [value]="pType">
+                {{ pType }}
+            </option>
+        </select>
+
+        <label for="version">version</label>
+        <input type="number" id="version" [(ngModel)]="task.taskPath.version" name="version" />
+
+        <label for="feature">feature</label>
+        <textarea id="feature" [(ngModel)]="task.taskPath.feature" name="feature"></textarea>
+    </div>
+
+    <!-- taskType -->
+    <div>
+        <label for="taskType">Определите тип задачи</label>
+        <select [(ngModel)]="task.taskType" name="taskType">
+            <option *ngFor="let tType of taskTypes" [value]="tType">
+                {{ tType }}
+            </option>
+        </select>
+    </div>
+
+    <!-- taskStatuses checkboxes -->
+    <div>
+        <label>Выберите, какие статусы будут у задачи (от 1 до 5)</label>
+        <div>
+            <label>
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Approval]" name="approval" />
+                {{ 'Согласование' }}
+            </label>
+
+            <label>
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Execution]" name="execution" />
+                {{ 'Исполнение' }}
+            </label>
+
+            <label>
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Review]" name="review" />
+                {{ 'Ревью' }}
+            </label>
+
+            <label>
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Deploy]" name="deploy" />
+                {{ 'Деплой' }}
+            </label>
+
+            <label>
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Testing]" name="testing" />
+                {{ 'Тестирование' }}
+            </label>
+        </div>
+    </div>
+
+    <!-- currentStatus -->
+    <div>
+        <label for="currentStatus">Выберите текущий статус задачи</label>
+        <select id="currentStatus" [(ngModel)]="task.currentTaskStatus" name="currentStatus">
+            <!-- Варианты берём из task.taskStatuses -->
+            <option *ngFor="let s of task.taskStatuses" [value]="s">
+                {{ s }}
+            </option>
+        </select>
+    </div>
+
+    <!-- performerId -->
+    <div>
+        <label>Выберите исполнителя</label>
+        <select [(ngModel)]="task.performerId" name="performerId">
+            <option [ngValue]="null">-- Не выбрано --</option>
+            <option *ngFor="let user of userDatas()" [ngValue]="user.id">
+                {{ user.username }}
+            </option>
+        </select>
+    </div>
+
+    <!-- taskTime -->
+    <div>
+        <label for="taskTimeSpent">Введите время выполнения</label>
+        <input type="text" id="taskTimeSpent" [(ngModel)]="task.taskTime.spent" name="taskTimeSpent" required />
+        <input type="text" id="taskTimePlanned" [(ngModel)]="task.taskTime.planned" name="taskTimePlanned" required />
+    </div>
+
+    <!-- Блок для ошибок -->
+    <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+    </div>
+
+    <!-- Кнопки -->
+    <button type="submit">Сохранить изменения</button>
+    <button type="button" (click)="deleteTask()">Удалить задачу</button>
+</form>
