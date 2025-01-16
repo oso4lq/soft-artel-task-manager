@@ -1,4 +1,5 @@
 @import './variables.scss';
+@import './utils.scss';
 
 * {
     margin: 0;
@@ -14,4 +15,25 @@ body {
 body {
     margin: 0;
     font-family: "Inter", serif;
+}
+
+app-main-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-bottom: 8px;
+}
+
+app-task-card {
+    display: flex;
+}
+
+app-login,
+app-register,
+app-new-task,
+app-edit-task {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
 }

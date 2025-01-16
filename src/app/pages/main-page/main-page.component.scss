@@ -1,178 +1,168 @@
+// main-page.component.scss
+
 @import '../../../styles/variables.scss';
-
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 4px);
-    padding: 0 40px;
-    border-top: $active-blue 4px solid;
-}
-
-// Header menu
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    height: 30px;
-    gap: 24px;
-
-    &__left-group {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-
-        .header__tabs {
-            display: flex;
-            list-style: none;
-            gap: 24px;
-
-            .header__tab {
-                padding: 8px 12px; // change
-                color: $text-secondary;
-                cursor: pointer;
-
-                &.active {
-                    color: $active-blue;
-                    border-bottom: 2px solid $active-blue;
-                }
-            }
-        }
-
-        .header__create-btn {
-            padding: 8px 16px;
-            color: $active-blue;
-            border: $active-blue 1px solid;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    }
-
-    &__right-group {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-
-        .header__time {
-            display: flex;
-            background: $active-blue;
-            color: $white;
-            border-radius: 4px;
-        }
-
-        .header__last-task {
-            display: flex;
-            background: $bg-light;
-            color: $text-text;
-            border-radius: 4px;
-        }
-
-        .header__notifications {
-            margin-right: 16px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            position: relative;
-        }
-
-        .header__user-avatar {
-            width: 32px;
-            height: 32px;
-            background-color: $divider;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        .header__user-avatar:hover {
-            transform: scale(1.1) rotate(10deg);
-        }
-
-        .user-popup {
-            position: absolute;
-            top: 60px;
-            right: 40px;
-            background: #e0e0e0;
-            height: 200px;
-            z-index: 10;
-            border-radius: 8px;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-    }
-}
 
 .main-date {
     color: $text-primary;
-    margin: 16px 0;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    margin: 0;
+    margin-bottom: 8px;
 }
 
-// Dropdown filters
 .dropdown-filters {
-    display: flex;
-    gap: 16px;
+    justify-content: flex-start;
+    gap: 12px;
+    height: 32px;
+    border-radius: 4px;
+    margin-bottom: 8px;
 
-    &__item {
+    &__select {
         background-color: $bg-menu;
-        padding: 8px 16px;
-        border: 1px solid $divider;
-        border-radius: 4px;
+        color: $text-text;
         cursor: pointer;
+
+        border-radius: 4px;
+        padding: 0 12px;
+        gap: 2px;
+
+        border: 1px solid $bg-border;
+        box-shadow: 0 2px 5px $shdw-menu-1;
+
+        // appearance: none;
+        // -webkit-appearance: none;
+        // -moz-appearance: none;
     }
 }
 
-// Columns
 .columns {
-    display: flex;
+    gap: 32px;
+    height: 100px;
     flex-grow: 1;
 
-    &__col1,
-    &__col2 {
+    &__left,
+    &__right {
+        justify-content: flex-start;
         flex: 1;
-        margin-right: 16px;
-        background-color: $bg_blocks;
-        border: 1px solid $bg-border;
-        overflow-y: auto;
+        gap: 16px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
 
-        &:last-child {
-            margin-right: 0;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__right {
+        overflow-y: auto;
+    }
+
+    &__wrapper {
+        overflow-y: auto;
+        gap: 16px;
+
+        &::-webkit-scrollbar {
+            display: none;
         }
     }
 }
 
-// Status filters
 .status-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 8px;
+    justify-content: flex-start;
+    gap: 20px;
+    border-bottom: 1px solid $divider;
+    padding: 8px 0;
 
     &__item {
-        background-color: $bg-fields;
-        padding: 8px;
-        border-radius: 4px;
+        padding: 8px 0;
         cursor: pointer;
+        color: $text-text;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 4px;
+        background-color: none;
+        transition: background-color 0.3s, color 0.3s;
+
+        input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        &.status-filters__item_active {
+            color: $active-blue;
+            border-bottom: 1px solid $active-blue;
+        }
+
+        &:hover {
+            // color: rgba($active-blue, 0.5);
+            // border-bottom: 1px solid rgba($active-blue, 0.5);
+            color: $active-blue;
+            border-bottom: 1px solid $active-blue;
+        }
     }
 }
 
-// Task list blocks
 .tasks-block {
-    border-top: 1px solid $divider;
-    padding: 8px;
+    border-radius: 8px;
+    gap: 8px;
 
     &__title {
-        font-weight: bold;
-        margin-bottom: 4px;
+        justify-content: flex-start;
+        gap: 12px;
+
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        color: $text-text;
+
+        cursor: pointer;
+        user-select: none;
+        position: relative;
     }
 
-    // &__body {
-    // wrap by default?
-    // }
+    .collapse-icon {
+        transition: transform 0.3s ease;
+        display: inline-block;
+
+        &.collapsed {
+            transform: rotate(180deg);
+        }
+    }
+
+    &__body {
+        background-color: $bg-blocks;
+        border: 1px solid $bg-border;
+        box-shadow: 0 2px 5px $shdw-menu-1;
+        border-radius: 8px;
+        padding: 12px;
+        gap: 8px;
+    }
+
+    p {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        color: $text-text;
+    }
+
+    &_in-progress {
+        background-color: $bg-blue;
+        padding: 12px;
+    }
+
+    &_paused {
+        background-color: none;
+    }
 }
 
-.columns__col1,
-.columns__col2 {
-    overflow-y: auto;
+.no-task-block {
+    background-color: $bg-blocks;
+    border: 1px solid $bg-border;
+    box-shadow: 0 2px 5px $shdw-menu-1;
+    border-radius: 8px;
+    padding: 12px;
+    gap: 8px;
 }

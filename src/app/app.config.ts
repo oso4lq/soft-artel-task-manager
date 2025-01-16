@@ -10,8 +10,10 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-// import { tasksReducer } from './core/store/tasks/tasks.reducer';
-// import { TasksEffects } from './core/store/tasks/tasks.effects';
+import { tasksReducer } from './core/store/tasks/tasks.reducer';
+import { TasksEffects } from './core/store/tasks/tasks.effects';
+import { authReducer } from './core/store/auth/auth.reducer';
+import { AuthEffects } from './core/store/auth/auth.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,11 +29,12 @@ export const appConfig: ApplicationConfig = {
 
     // NgRx
     provideStore({
-      // tasks: tasksReducer,
-      // auth: authReducer,
+      tasks: tasksReducer,
+      auth: authReducer,
     }),
     provideEffects([
-      // TasksEffects
+      TasksEffects,
+      AuthEffects,
     ]),
   ]
 };

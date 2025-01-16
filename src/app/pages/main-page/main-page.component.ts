@@ -1,17 +1,14 @@
 // main-page.component.ts
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal, computed } from '@angular/core';
-import { TaskCard } from '../../shared/models/task.models';
+import { Component, OnInit, signal, computed, Signal, effect } from '@angular/core';
+import { TaskCard, TaskStatus, TaskType } from '../../shared/models/task.models';
 import { TasksService } from '../../core/services/tasks.service';
 import { FormsModule } from '@angular/forms';
 import { TaskCardComponent } from '../../shared/components/task-card/task-card.component';
 import { AuthService } from '../../core/services/auth.service';
-import { User } from '@angular/fire/auth';
-import { Router } from '@angular/router';
-
-// Temporary solution to store current user's performerId
-export const USER_SESSION_ID = 'user-123';
+import { UserData } from '../../shared/models/users.model';
+import { TimeService } from '../../core/services/time.service';
 
 @Component({
   selector: 'app-main-page',
@@ -26,18 +23,18 @@ export const USER_SESSION_ID = 'user-123';
 })
 export class MainPageComponent implements OnInit {
 
-  // Filter by product (all by default)
+  // State
+  userData: UserData | null = null; // Store the fetched user data
+  public TaskStatus = TaskStatus;
+
+  // Signals
+  arrangedTasks: Signal<TaskCard[]> = computed(() => this.tasksService.arrangedTasksSig()); // track the tasks array
+  currentDateStr: Signal<string> = computed(() => this.timeService.currentDateStrSig()); // track current date
+
+  // Filter signals
   selectedProduct = signal('all');
-  // Filter by category (all by default)
   selectedCategory = signal('all');
-  // Radio button status filter (execution by default)
-  selectedStatusFilter = signal<'approval' | 'review' | 'execution' | 'draft'>('execution');
-
-  // Store user
-  user: User | null = null;
-
-  // User popup
-  isUserPopupOpen = false;
+  selectedStatusFilter = signal<TaskStatus.Approval | TaskStatus.Review | TaskStatus.Execution | TaskStatus.Draft>(TaskStatus.Execution);
 
   // Signal for collapsible task lists
   collapsed = signal({
@@ -45,107 +42,51 @@ export class MainPageComponent implements OnInit {
     unassigned: false
   });
 
-  // Store loaded tasks in a signal
-  tasks = signal<TaskCard[]>([]);
+  constructor(
+    private tasksService: TasksService,
+    private authService: AuthService,
+    private timeService: TimeService,
+  ) {
+    // Effect to watch for changes in currentUserData
+    effect(() => {
+      const data = this.authService.currentUserDataSig();
+      if (data) {
+        this.userData = data;
+      } else {
+        this.userData = null;
+      }
+    });
+  }
 
   // Make a list of developing products
   allProjects = computed(() => {
-    // Extract projectNames from tasks()
-    const names = this.tasks().map(t => t.taskPath.projectName);
+    const names = this.arrangedTasks().map(t => t.taskPath.projectName); // Extract projectNames from tasks()
     const unique = Array.from(new Set(names));
     return unique; // Unique projectNames
   });
 
-  // Find the latest task
-  private lastTask = computed(() => {
-    const all = this.tasks();
-    if (!all.length) {
-      return null;
-    }
-    const sorted = [...all].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
-    return sorted[0];
-  });
+  // Counters for task filters
+  approvalCount = computed(() => this.arrangedTasks().filter(t =>
+    t.currentTaskStatus === TaskStatus.Approval && t.inProgress === null
+  ).length);
 
-  // Compile a short version of the latest task name
-  shortLastTaskName = computed(() => {
-    const task = this.lastTask();
-    if (!task) return null;
-    const name = task.taskName;
-    return name.length > 47 ? name.slice(0, 47) + '...' : name;
-  });
+  reviewCount = computed(() => this.arrangedTasks().filter(t =>
+    t.currentTaskStatus === TaskStatus.Review && t.inProgress === null
+  ).length);
 
-  // Date and time
-  private timeSignal = signal(new Date());
-  currentTimeStr = computed(() => {
-    return this.timeSignal().toLocaleTimeString('ru-RU', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  });
-  private dateSignal = signal(new Date());
-  currentDateStr = computed(() => {
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long'
-    };
-    const formatted = new Intl.DateTimeFormat('ru-RU', options).format(this.dateSignal());
-    return formatted.charAt(0).toUpperCase() + formatted.slice(1);
-  });
+  executionCount = computed(() => this.arrangedTasks().filter(t =>
+    (t.currentTaskStatus === TaskStatus.Execution ||
+      t.currentTaskStatus === TaskStatus.Deploy ||
+      t.currentTaskStatus === TaskStatus.Testing) && t.inProgress === null
+  ).length);
 
-  constructor(
-    private tasksService: TasksService,
-    private authService: AuthService,
-    private router: Router,
-  ) { }
+  draftCount = computed(() => this.arrangedTasks().filter(t =>
+    t.currentTaskStatus === TaskStatus.Draft && t.inProgress === null
+  ).length);
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
 
-    // Subscribe on user$
-    this.authService.user$.subscribe(currentUser => {
-      this.user = currentUser;
-    });
-
-    // Refresh date and time
-    setInterval(() => {
-      const oldValue = this.timeSignal();
-      const newValue = new Date();
-      this.timeSignal.set(newValue);
-
-      // Check calendar day
-      if (oldValue.getDate() !== newValue.getDate()) {
-        this.dateSignal.set(newValue);
-      }
-    }, 1000);
-
-    this.loadTasks();
-  }
-
-  loadTasks(): void {
-    this.tasksService.getTasks().subscribe((data) => {
-      this.tasks.set(data);
-      console.log('Данные получены:', this.tasks());
-    });
-  }
-
-  toggleUserPopup() {
-    this.isUserPopupOpen = !this.isUserPopupOpen;
-  }
-
-  logout() {
-    this.authService.logout().then(() => {
-      // Можно сделать дополнительный редирект, если нужно
-      this.authService.logout();
-      this.router.navigate(['/login']);
-    });
-  }
-
-  goToLogin() {
-    // Можно переходить на страницу логина или другую
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
+  // Wrap / Unwrap task lists in MY and UNASSIGNED blocks
   toggleCollapsible(listName: 'myTasks' | 'unassigned') {
     this.collapsed.update((prev) => ({
       ...prev,
@@ -164,7 +105,7 @@ export class MainPageComponent implements OnInit {
   }
 
   // Select the filter from the Status radio buttons
-  onStatusFilterChange(value: 'approval' | 'review' | 'execution' | 'draft') {
+  onStatusFilterChange(value: TaskStatus.Approval | TaskStatus.Review | TaskStatus.Execution | TaskStatus.Draft) {
     this.selectedStatusFilter.set(value);
   }
 
@@ -180,18 +121,18 @@ export class MainPageComponent implements OnInit {
       case 'all':
         return true;
       case 'common':
-        return (task.taskType === 'Дизайн' || task.taskType === 'Аналитика');
+        return (task.taskType === TaskType.Design || task.taskType === TaskType.Analytics);
       case 'development':
-        return (task.taskType === 'Frontend' || task.taskType === 'Backend');
+        return (task.taskType === TaskType.Frontend || task.taskType === TaskType.Backend);
       case 'testing':
-        return (task.taskType === 'Тестирование');
+        return (task.taskType === TaskType.Testing);
       case 'errors':
         return (
-          task.taskType === 'Ошибка блокирующая'
-          || task.taskType === 'Ошибка критическая'
-          || task.taskType === 'Ошибка значительная'
-          || task.taskType === 'Ошибка незначительная'
-          || task.taskType === 'Ошибка тривиальная'
+          task.taskType === TaskType.BlockingBug
+          || task.taskType === TaskType.CriticalBug
+          || task.taskType === TaskType.MajorBug
+          || task.taskType === TaskType.MinorBug
+          || task.taskType === TaskType.TrivialBug
         );
       default:
         return true;
@@ -200,90 +141,111 @@ export class MainPageComponent implements OnInit {
 
   private matchLeftColumnStatus(task: TaskCard): boolean {
     switch (this.selectedStatusFilter()) {
-      case 'approval':
-        return (task.taskStatus === 'Согласование' && task.performerId === USER_SESSION_ID);
-      case 'review':
-        return (task.taskStatus === 'Ревью' && task.performerId === USER_SESSION_ID);
-      case 'execution':
+      case TaskStatus.Approval:
+        return (task.currentTaskStatus === TaskStatus.Approval);
+      case TaskStatus.Review:
+        return (task.currentTaskStatus === TaskStatus.Review);
+      case TaskStatus.Execution:
         return (
-          task.taskStatus === 'Исполнение'
-          && (!task.performerId || task.performerId === USER_SESSION_ID)
+          task.currentTaskStatus === TaskStatus.Execution
+          || task.currentTaskStatus === TaskStatus.Deploy
+          || task.currentTaskStatus === TaskStatus.Testing
         );
-      case 'draft':
-        return (task.taskStatus === 'Черновик' && task.performerId === USER_SESSION_ID);
+      case TaskStatus.Draft:
+        return (task.currentTaskStatus === TaskStatus.Draft);
+      // New status may be added later. Currently the closed tasks disappear
+      // case TaskStatus.Closed:
+      //   return (task.currentTaskStatus === TaskStatus.Closed);
     }
   }
 
-  private matchMy(task: TaskCard): boolean {
-    return task.performerId === USER_SESSION_ID;
+  private matchNullProgress(task: TaskCard): boolean {
+    return task.inProgress === null;
   }
 
-  private matchUnassigned(task: TaskCard): boolean {
-    return !task.performerId; // task.performerId === '' / undefined / null
+  // If the user is anonymous, do not check performerId
+  private isCurrentUser(task: TaskCard): boolean {
+    const userData = this.authService.currentUserDataSig();
+    console.log('userData.id:', userData?.id);
+    if (!userData) return false;
+    console.log('userData.id:', userData.id);
+    return task.performerId === userData.id;
+  }
+
+  private isUnassigned(task: TaskCard): boolean {
+    return !task.performerId;
   }
 
   private matchInProgress(task: TaskCard): boolean {
-    return task.taskStatus === 'В работе';
+    return task.inProgress === true;
   }
 
   private matchPause(task: TaskCard): boolean {
-    return task.taskStatus === 'Пауза';
+    return task.inProgress === false;
   }
   // Helper methods end
 
 
   // Sort the tasks for each block using different filters
   myTasksFiltered = computed(() => {
-    return this.tasks().filter((t) => {
+    return this.arrangedTasks().filter((t) => {
       // 1 - product
       if (!this.matchProduct(t)) return false;
       // 2 - category
       if (!this.matchCategory(t)) return false;
       // 3 - radio-status (because it is in the left column)
       if (!this.matchLeftColumnStatus(t)) return false;
-      // 4 - performerId = user
-      if (!this.matchMy(t)) return false;
+      // 4 - performerId === currentUser.id
+      if (!this.isCurrentUser(t)) return false;
+      // 5 - inProgress === null
+      if (!this.matchNullProgress(t)) return false;
 
       return true;
     });
   });
 
   unassignedFiltered = computed(() => {
-    return this.tasks().filter((t) => {
+    return this.arrangedTasks().filter((t) => {
       // 1 - product
       if (!this.matchProduct(t)) return false;
       // 2 - category
       if (!this.matchCategory(t)) return false;
       // 3 - radio-status (because it is in the left column)
       if (!this.matchLeftColumnStatus(t)) return false;
-      // 4 - performerId = undefined/null
-      if (!this.matchUnassigned(t)) return false;
+      // 4 - performerId === undefined/null
+      if (!this.isUnassigned(t)) return false;
+      // 5 - inProgress === null
+      if (!this.matchNullProgress(t)) return false;
 
       return true;
     });
   });
 
   inProgressFiltered = computed(() => {
-    return this.tasks().filter((t) => {
+    return this.arrangedTasks().filter((t) => {
       // 1 - product
       if (!this.matchProduct(t)) return false;
       // 2 - category
       if (!this.matchCategory(t)) return false;
       // 3 - taskStatus = 'В работе'
       if (!this.matchInProgress(t)) return false;
+      // 4 - performerId === currentUser.id
+      if (!this.isCurrentUser(t)) return false;
 
       return true;
     });
   });
 
   pauseFiltered = computed(() => {
-    return this.tasks().filter((t) => {
+    return this.arrangedTasks().filter((t) => {
       // 1 - product
       if (!this.matchProduct(t)) return false;
       // 2 - category
       if (!this.matchCategory(t)) return false;
       // 3 - taskStatus = 'Пауза'
       if (!this.matchPause(t)) return false;
+      // 4 - performerId === currentUser.id
+      if (!this.isCurrentUser(t)) return false;
 
       return true;
     });

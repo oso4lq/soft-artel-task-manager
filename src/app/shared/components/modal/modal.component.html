@@ -1,0 +1,12 @@
+<!-- modal.component.html -->
+
+<div class="overlay" *ngIf="isOpen" (click)="onOverlayClick()">
+    <div class="window flex-col" (click)="$event.stopPropagation()">
+
+        <button class="btn-close cursor-pointer" (click)="onCloseButtonClick()">×</button>
+
+        <!-- Component to open in this modal -->
+        <ng-content></ng-content>
+
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<!-- header.component.html -->
+
+<header class="header flex-row center-row">
+    <div class="header__group h-100 flex-row center-row">
+        <ul class="tabs h-100 flex-row center-row">
+            <li class="tabs__item tabs__item_active">Главная</li>
+            <li class="tabs__item">Проекты</li>
+            <li class="tabs__item">Команда</li>
+            <li class="tabs__item">Канбан</li>
+            <li class="tabs__item">Итерации</li>
+        </ul>
+
+        <!-- Open model window to create a new task -->
+        <div class="create h-100 flex-row center-row" (mouseenter)="onCreateMouseEnter()"
+            (mouseleave)="onCreateMouseLeave()" #createBtn>
+            <button class="create__btn h-100" (click)="newTask()">Создать</button>
+            <div class="create__popup flex-col" *ngIf="showCreatePopup">
+                <div class="create__option" (click)="onCreateTaskClick()">Задачу</div>
+                <div class="create__option" (click)="onCreateProjectClick()">Проект</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header__group h-100 flex-row center-row">
+        <!-- Current time -->
+        <div class="time h-100 flex-row center-row">
+            {{ currentTimeStr() }}
+        </div>
+
+        <!-- Sort out the latest created task and display its cropped name or a default message -->
+        <div class="last-task h-100 flex-row center-row">
+            *{{ shortLastTaskName() || 'задачи отсутствуют' }}
+        </div>
+
+        <!-- Notifications section -->
+        <button class="notifications h-100 flex-row center-all">
+            У
+            <div class="notifications__count flex-row center-all" *ngIf="unreadMessagesCount > 0">
+                {{ unreadMessagesCount }}
+            </div>
+        </button>
+
+        <!-- User img section to open the popup -->
+        <div class="user-avatar h-100" (click)="toggleUserPopup()" #userAvatar>
+            <img [src]="currentUserData()?.img || 'https://res.cloudinary.com/dxunxtt1u/image/upload/userAvatarPlaceholder_ox0tj4.png'"
+                alt="user img" class="user-avatar__img">
+        </div>
+
+        <!-- Popup -->
+        <div class="user-popup flex-col" *ngIf="showUserPopup" #userPopup>
+
+            <!-- Logged in user data -->
+            <ng-container *ngIf="currentUserData() as user; else anonymousInfo">
+                <p>Имя: <span>{{ user.username }}</span></p>
+                <p>Email: <span>{{ user.email }}</span></p>
+                <p>Telegram: <span>{{ user.telegram}}</span></p>
+                <button (click)="onLogoutClick()" class="create__btn">Выйти</button>
+            </ng-container>
+
+            <!-- Anonymous session -->
+            <ng-template #anonymousInfo>
+                <p>Анонимная сессия</p>
+                <button (click)="onLoginClick()">Войти / Зарегистрироваться</button>
+            </ng-template>
+
+        </div>
+    </div>
+</header>

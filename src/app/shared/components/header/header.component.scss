@@ -1,0 +1,194 @@
+// header.component.scss
+
+@import '../../../../styles/variables.scss';
+
+.header {
+    padding: 15px 0;
+    height: 30px;
+    gap: 24px;
+    margin-bottom: 8px;
+
+    &__group {
+        gap: 24px;
+    }
+}
+
+.tabs {
+    list-style: none;
+    gap: 24px;
+
+    &__item {
+        color: $text-secondary;
+        cursor: pointer;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+
+        &_active {
+            color: $active-blue;
+            border-bottom: 2px solid $active-blue;
+        }
+    }
+}
+
+.create {
+    position: relative;
+
+    &__btn {
+        padding: 0 12px;
+        gap: 4px;
+        color: $active-blue;
+        border: $active-blue 1px solid;
+        border-radius: 4px;
+        cursor: pointer;
+        background: none;
+        transition: background 0.3s;
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 18px;
+
+        &:hover {
+            background: rgba($active-blue, 0.1);
+        }
+    }
+
+    &__popup {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: $bg-light;
+        border: 1px solid $divider;
+        border-radius: 6px;
+        box-shadow: 0 2px 5px $shdw-menu-1;
+        width: 150px;
+        z-index: 20;
+    }
+
+    &__option {
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        border-radius: 6px;
+
+        &:hover {
+            background: $bg-blue;
+        }
+    }
+}
+
+.time {
+    background: $active-blue;
+    box-shadow: 0 5px 10px $shdw-menu-2;
+    color: $white;
+    border-radius: 4px;
+    padding: 0 6px;
+    gap: 4px;
+    height: 30px;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.last-task {
+    color: $text-text;
+    background: $bg-light;
+    min-width: 200px;
+    max-width: 368px;
+    padding: 0 8px;
+    gap: 4px;
+    border: 0.5px solid $bg-border;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px $shdw-menu-1;
+}
+
+.notifications {
+    height: 30px;
+    width: 30px;
+    padding: 4px 8px;
+    border: 0.5px solid $bg-border;
+    border-radius: 6px;
+    color: $text-text;
+    background: $bg-light;
+    box-shadow: 0 2px 5px $shdw-menu-1;
+    position: relative;
+    cursor: pointer;
+
+    &__count {
+        position: absolute;
+        top: -6px;
+        left: 11px;
+        width: 26px;
+        height: 20px;
+        border-radius: 16px;
+        background: $red;
+        color: $white;
+        font-weight: 500;
+        font-size: 11px;
+        line-height: 16px;
+    }
+}
+
+.user-avatar {
+    transition: transform 0.3s ease;
+    position: relative;
+    cursor: pointer;
+
+    &__img {
+        width: 30px;
+        height: 30px;
+        background-color: $divider;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.user-popup {
+    position: absolute;
+    top: 60px;
+    right: 40px;
+    z-index: 10;
+    min-width: 200px;
+    min-height: 120px;
+    border: 1px solid $bg-border;
+    border-radius: 6px;
+    padding: 12px;
+    gap: 8px;
+    background: $bg-menu;
+    box-shadow: 0 2px 5px $shdw-menu-1;
+
+    p {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        color: $text-primary;
+    }
+
+    span {
+        color: $text-text;
+    }
+
+    button {
+        padding: 0 12px;
+        color: $active-blue;
+        border: $active-blue 1px solid;
+        border-radius: 4px;
+        cursor: pointer;
+        background: none;
+        transition: background 0.3s;
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 18px;
+        height: 30px;
+
+        &:hover {
+            background: rgba($active-blue, 0.1);
+        }
+    }
+}

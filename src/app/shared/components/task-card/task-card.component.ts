@@ -1,11 +1,16 @@
 // task-card.component.ts
 
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, Input, OnInit, Signal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-
-import { TaskCard } from '../../models/task.models';
+import { TaskCard, TaskStatus } from '../../models/task.models';
+import { UsersService } from '../../../core/services/users.service';
+import { TasksService } from '../../../core/services/tasks.service';
+import { getNextTaskStatus } from '../../utils/task-status-utils';
+import { AuthService } from '../../../core/services/auth.service';
+import { AppComponent } from '../../../app.component';
+import { UserData } from '../../models/users.model';
 
 @Component({
   selector: 'app-task-card',
@@ -20,15 +25,86 @@ export class TaskCardComponent implements OnInit {
 
   // Task to display
   @Input() task!: TaskCard;
+  @Input() isInProgress: boolean = false;
 
-  // Signal "hoveredTop" to display the path
+  public TaskStatus = TaskStatus;
+  placeholder = 'https://res.cloudinary.com/dxunxtt1u/image/upload/userAvatarPlaceholder_ox0tj4.png';
+
+  // Signals for UI
   hoveredTop = signal(false);
-  // Signal "hoveredBottom" to display the buttons
   hoveredBottom = signal(false);
+  currentUserData: Signal<UserData | null> = computed(() => this.authService.currentUserDataSig()); // track the current user data
 
   // For debounce effect
   private hoverTopSubject = new Subject<boolean>();
   private hoverBottomSubject = new Subject<boolean>();
+
+  // Calculate current status index. If Closed, all statuses are "passed"
+  currentStatusIndex = computed(() => {
+    if (this.task.currentTaskStatus === TaskStatus.Closed) {
+      return this.task.taskStatuses.length - 1;
+    }
+    return this.task.taskStatuses.indexOf(this.task.currentTaskStatus);
+  });
+
+  // Closed task attribute
+  isClosed = computed(() => {
+    return this.task.currentTaskStatus === TaskStatus.Closed;
+  });
+
+  // Get this task assignee name
+  // taskPerformerName = computed(() => {
+  //   if (!this.task.performerId) {
+  //     return 'Любой сотрудник';
+  //   }
+  //   const users = this.usersService.userDatasSig();
+  //   const foundUser = users.find(u => u.id === this.task.performerId);
+  //   return foundUser ? foundUser.username : 'Неизвестный сотрудник';
+  // });
+  taskPerformerName = computed(() => {
+    if (!this.task.performerId) {
+      return 'Любой сотрудник';
+    }
+    const users = this.usersService.userDatasSig();
+    const foundUser = users.find(u => u.id === this.task.performerId);
+    if (!foundUser) {
+      return 'Неизвестный сотрудник';
+    }
+
+    const fullName = foundUser.username.trim();
+    const nameParts = fullName.split(' ');
+
+    if (nameParts.length === 1) {
+      return nameParts[0];
+    } else if (nameParts.length === 2) {
+      const [firstName, lastName] = nameParts;
+      const abbreviatedLastName = lastName.charAt(0).toUpperCase() + '.';
+      return `${firstName} ${abbreviatedLastName}`;
+    } else {
+      // If more than 2 parts, trim all except first and first letter of last
+      const firstName = nameParts[0];
+      const lastName = nameParts[nameParts.length - 1];
+      const abbreviatedLastName = lastName.charAt(0).toUpperCase() + '.';
+      return `${firstName} ${abbreviatedLastName}`;
+    }
+  });
+
+  // Get this task assignee img
+  taskPerformerImg = computed(() => {
+    if (!this.task.performerId) {
+      return this.placeholder;
+    }
+    const users = this.usersService.userDatasSig();
+    const foundUser = users.find(u => u.id === this.task.performerId);
+    return foundUser ? foundUser.img : this.placeholder;
+  });
+
+  constructor(
+    private authService: AuthService,
+    private usersService: UsersService,
+    private tasksService: TasksService,
+    private parent: AppComponent,
+  ) { }
 
   ngOnInit(): void {
     // Subscribe with a 300ms debounce for the Top Card Part
@@ -40,7 +116,7 @@ export class TaskCardComponent implements OnInit {
 
     // Subscribe with a 800ms debounce for the Bottom Card Part
     this.hoverBottomSubject
-      .pipe(debounceTime(800))
+      .pipe(debounceTime(300))
       .subscribe((value) => {
         this.hoveredBottom.set(value);
       });
@@ -54,5 +130,101 @@ export class TaskCardComponent implements OnInit {
   // mouseenter / mouseleave for the Bottom Card Part
   onBottomHover(isHover: boolean) {
     this.hoverBottomSubject.next(isHover);
+  }
+
+  // Apply a specific CSS class for the progress bar
+  getProgressBlockClass(index: number): string {
+    if (this.isClosed()) {
+      // If Closed, colorize green
+      return 'progress-block--green';
+    }
+
+    const currentIndex = this.currentStatusIndex();
+    if (index < currentIndex) {
+      // Previous statuses
+      return 'progress-bar__block_green';
+    } else if (index === currentIndex) {
+      // Current status
+      if (this.task.inProgress === true) {
+        // Task has an assignee and is in progress => blue
+        return 'progress-bar__block_active-blue';
+      } else if (this.task.inProgress === false) {
+        // Task has an assignee and is on pause => dark grey
+        return 'progress-bar__block_text-secondary';
+      } else {
+        // (other) inProgress === null => grey
+        // Task has may have an assignee but he didn't start it 
+        return 'progress-bar__block_divider';
+      }
+    } else {
+      // Upcoming statuses => grey
+      return 'progress-bar__block_divider';
+    }
+  }
+
+
+  // Button handlers
+  onEditClick(): void {
+    if (this.currentUserData()) {
+      this.parent.openEditTaskModal(this.task);
+    } else {
+      this.parent.openLoginModal();
+    }
+  }
+
+  // Work: apply inProgress===true
+  onInWorkClick(): void {
+    if (this.currentUserData()) {
+      this.task.inProgress = true;
+      this.task.performerId = this.authService.currentUserDataSig()?.id;
+      this.tasksService.updateTask(this.task);
+    } else {
+      this.parent.openLoginModal();
+    }
+  }
+
+  // Accept: apply next status and null assignee
+  onAcceptClick(): void {
+    if (this.currentUserData()) {
+      const nextStatus = getNextTaskStatus(this.task);
+      if (nextStatus) {
+        this.task.currentTaskStatus = nextStatus;
+      } else {
+        this.task.currentTaskStatus = TaskStatus.Closed;
+      }
+      this.task.inProgress = null;
+      this.task.performerId = null;
+      this.tasksService.updateTask(this.task);
+    } else {
+      this.parent.openLoginModal();
+    }
+  }
+
+  // Pause: apply inProgress===false
+  onPauseClick(): void {
+    if (this.currentUserData()) {
+      this.task.inProgress = false;
+      this.task.performerId = this.authService.currentUserDataSig()?.id;
+      this.tasksService.updateTask(this.task);
+    } else {
+      this.parent.openLoginModal();
+    }
+  }
+
+  // Done: apply next status and null assignee
+  onDoneClick(): void {
+    if (this.currentUserData()) {
+      const nextStatus = getNextTaskStatus(this.task);
+      if (nextStatus) {
+        this.task.currentTaskStatus = nextStatus;
+      } else {
+        this.task.currentTaskStatus = TaskStatus.Closed;
+      }
+      this.task.inProgress = null;
+      this.task.performerId = null;
+      this.tasksService.updateTask(this.task);
+    } else {
+      this.parent.openLoginModal();
+    }
   }
 }

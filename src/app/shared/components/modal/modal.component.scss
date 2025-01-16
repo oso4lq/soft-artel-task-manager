@@ -1,0 +1,48 @@
+@import '../../../../styles/variables.scss';
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+}
+
+.window {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  max-width: 90%;
+  min-height: 400px;
+  max-height: 90%;
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.btn-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: background 0.3s;
+
+  background: rgba($red, 0.05);
+  color: $red;
+  border: $red 1px solid;
+
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 24px;
+
+  &:hover {
+    background: rgba($red, 0.2);
+  }
+}

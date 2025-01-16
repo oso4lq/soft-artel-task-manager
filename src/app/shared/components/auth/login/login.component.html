@@ -1,23 +1,33 @@
-<!-- src/app/auth/login/login.component.html -->
+<!-- login.component.html -->
 
-<div class="auth-container">
-    <h2>Вход</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<h2>Вход</h2>
+<form class="flex-col" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-block h-100 flex-row center-row">
         <label for="email">Email:</label>
-        <input id="email" formControlName="email" type="email" required />
-
-        <label for="password">Пароль:</label>
-        <input id="password" formControlName="password" type="password" required />
-
-        <button type="submit" [disabled]="loginForm.invalid">Войти</button>
-    </form>
-    <div *ngIf="errorMessage" class="error">
-        {{ errorMessage }}
+        <input class="flex-grow" id="email" formControlName="email" type="email" required />
     </div>
 
-    <p>Нет аккаунта? <button (click)="goToRegisterPage()">Зарегистрироваться</button></p>
-    <p>Или</p>
-    <button (click)="signInAnonymously()">продолжить без учётной записи</button>
-    <p>(ограниченный функционал)</p>
+    <div class="form-block h-100 flex-row center-row">
+        <label for="password">Пароль:</label>
+        <input class="flex-grow" id="password" formControlName="password" type="password" required />
+    </div>
 
+    <div class="error-message form-block h-100 flex-row center-row">
+        <span>{{ errorMessage }}</span>
+    </div>
+
+    <button type="submit" [disabled]="loginForm.invalid">Войти</button>
+
+</form>
+
+<div class="flex-col">
+    <div class="form-block h-100 flex-row center-row">
+        <span>Нет аккаунта?</span>
+        <button class="flex-grow" (click)="goToRegister()">Зарегистрироваться</button>
+    </div>
+    <div class="form-block h-100 flex-row center-row">
+        <span>Или</span>
+        <button class="btn-anon flex-grow" (click)="signInAnonymously()">продолжить без учётной записи</button>
+    </div>
 </div>

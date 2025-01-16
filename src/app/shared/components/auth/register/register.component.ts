@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { AppComponent } from '../../../../app.component';
 
 @Component({
   selector: 'app-register',
@@ -18,15 +19,19 @@ import { CommonModule } from '@angular/common';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
+
+  // State
   registerForm: FormGroup;
-  errorMessage: string = '';
+  errorMessage: string | null = null;
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private parent: AppComponent,
   ) {
     this.registerForm = this.fb.group({
+      username: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
@@ -38,26 +43,49 @@ export class RegisterComponent {
       ? null : { 'mismatch': true };
   }
 
+  // Form submission
   onSubmit() {
+
+    const username = this.registerForm.get('username')?.value;
+    const login = this.registerForm.get('email')?.value;
+    const password = this.registerForm.get('password')?.value;
+
+    if (!login || !password) {
+      const missingFields = [];
+      if (!username) missingFields.push('ваше имя');
+      if (!login) missingFields.push('email');
+      if (!password) missingFields.push('пароль');
+      this.showErrorMessage(`Пожалуйста, введите ${missingFields.join(' и ')}`);
+      return;
+    }
+
     if (this.registerForm.valid) {
-      const { email, password } = this.registerForm.value;
-      this.authService.register(email, password)
-        .then(() => {
-          this.router.navigate(['/main']);
-        })
-        .catch(error => {
-          this.errorMessage = error.message;
-        });
+      this.errorMessage = null;
+      this.authService.login(login, password).subscribe({
+        next: () => this.parent.closeModal(),
+        error: (err) => {
+          this.showErrorMessage(err);
+        },
+      });
     }
   }
 
-  goToLoginPage() {
-    this.router.navigate(['/register']);
+  private showErrorMessage(msg: string) {
+    this.errorMessage = msg;
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 3000);
+  }
+
+  goToLogin() {
+    this.parent.closeModal();
+    this.parent.openLoginModal();
   }
 
   signInAnonymously() {
     this.authService.signInAnonymouslyUser()
       .then(() => {
+        this.parent.closeModal();
         this.router.navigate(['/main']);
       })
       .catch(error => {

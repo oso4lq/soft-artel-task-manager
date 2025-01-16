@@ -1,12 +1,15 @@
 // task.models.ts
 
 export interface TaskCard {
+    id: string | null | undefined; // Task service ID
     taskPath: TaskPath;
     taskName: string;
     taskType: TaskType;
-    taskKey: string; // Task ID
-    taskStatus: TaskStatus;
-    performerId?: string;
+    taskKey: string; // Task production ID
+    taskStatuses: TaskStatus[];
+    currentTaskStatus: TaskStatus;
+    performerId?: string | null | undefined;
+    inProgress?: boolean | null;
     taskTime: TaskTime;
     createdAt: string;
 }
@@ -48,11 +51,14 @@ export enum TaskStatus {
     Deploy = 'Деплой',
     Testing = 'Тестирование',
     Closed = 'Закрыто',
-    InProgress = 'В работе',
-    Pause = 'Пауза',
 }
 
 export interface TaskTime {
     spent: string;
     planned: string;
+}
+
+export interface CounterDoc {
+    group: string;
+    nextNumber: number;
 }

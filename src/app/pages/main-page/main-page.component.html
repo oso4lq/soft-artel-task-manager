@@ -1,160 +1,146 @@
-<!-- main-page.component.html -->
+<!-- Current date -->
+<h1 class="main-date">
+    {{ currentDateStr() }}
+</h1>
 
-<div class="wrapper">
+<!-- Dropdown menu filters -->
+<div class="dropdown-filters flex-row">
+    <select class="dropdown-filters__select flex-row center-row" [(ngModel)]="selectedProduct"
+        (ngModelChange)="onProductFilterChange($event)">
+        <option value="all">Все продукты</option>
+        <!-- List of unique projectName options -->
+        <option *ngFor="let product of allProjects()" [value]="product">
+            {{ product }}
+        </option>
+    </select>
 
-    <!-- Header menu -->
-    <header class="header">
-        <div class="header__left-group">
-            <ul class="header__tabs">
-                <li class="header__tab active">Главная</li>
-                <li class="header__tab">Проекты</li>
-                <li class="header__tab">Команда</li>
-                <li class="header__tab">Канбан</li>
-                <li class="header__tab">Итерации</li>
-            </ul>
-            <button class="header__create-btn">Создать</button>
+    <select class="dropdown-filters__select flex-row center-row" [(ngModel)]="selectedCategory"
+        (ngModelChange)="onCategoryFilterChange($event)">
+        <option value="all">Все задачи</option>
+        <option value="common">Общие</option>
+        <option value="development">Разработка</option>
+        <option value="testing">Тестирование</option>
+        <option value="errors">Ошибки</option>
+    </select>
+</div>
+
+<!-- Task columns -->
+<div class="columns flex-row">
+
+    <!-- Left column -->
+    <div class="columns__left flex-col">
+
+        <div class="status-filters flex-row center-row">
+            <label class="status-filters__item h-100 flex-row center-row"
+                [ngClass]="{'status-filters__item_active': selectedStatusFilter() === TaskStatus.Approval}">
+                <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Approval"
+                    [(ngModel)]="selectedStatusFilter" />
+                На согласование: {{ approvalCount() }}
+            </label>
+            <label class="status-filters__item h-100 flex-row center-row"
+                [ngClass]="{'status-filters__item_active': selectedStatusFilter() === TaskStatus.Review}">
+                <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Review"
+                    [(ngModel)]="selectedStatusFilter" />
+                На ревью: {{ reviewCount() }}
+            </label>
+            <label class="status-filters__item h-100 flex-row center-row"
+                [ngClass]="{'status-filters__item_active': selectedStatusFilter() === TaskStatus.Execution}">
+                <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Execution"
+                    [(ngModel)]="selectedStatusFilter" />
+                Для работы: {{ executionCount() }}
+            </label>
+            <label class="status-filters__item h-100 flex-row center-row"
+                [ngClass]="{'status-filters__item_active': selectedStatusFilter() === TaskStatus.Draft}">
+                <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Draft"
+                    [(ngModel)]="selectedStatusFilter" />
+                Черновики: {{ draftCount() }}
+            </label>
         </div>
 
-        <div class="header__right-group">
-            <!-- Current time -->
-            <div class="header__time">
-                {{ currentTimeStr() }}
-            </div>
-
-            <!-- Sort out the latest created task and display its cropped name or a default message -->
-            <div class="header__last-task">
-                *{{ shortLastTaskName() || 'задачи отсутствуют' }}
-            </div>
-
-            <!-- Notifications section -->
-            <button class="header__notifications">Уведомления</button>
-
-            <!-- User img section to open the popup -->
-            <div class="header__user-avatar" (click)="toggleUserPopup()"></div>
-
-            <!-- Popup -->
-            <div class="user-popup" *ngIf="isUserPopupOpen">
-                <!-- Signed user -->
-                <ng-container *ngIf="user && !user.isAnonymous; else anonymousInfo">
-                    <p>Имя: {{ user.displayName || 'Имя не задано' }}</p>
-                    <p>Email: {{ user.email }}</p>
-                    <p>Telegram: </p>
-                    <button (click)="logout()">Выйти</button>
-                </ng-container>
-
-                <!-- Anonymous session -->
-                <ng-template #anonymousInfo>
-                    <p>Анонимная сессия</p>
-                    <button (click)="goToLogin()">Войти / Зарегистрироваться</button>
-                </ng-template>
-            </div>
-        </div>
-    </header>
-
-    <!-- Current date -->
-    <h1 class="main-date">
-        {{ currentDateStr() }}
-    </h1>
-
-    <!-- Dropdown menu filters -->
-    <div class="dropdown-filters">
-        <select class="dropdown-filters__select" [(ngModel)]="selectedProduct"
-            (ngModelChange)="onProductFilterChange($event)">
-            <option value="all">Все продукты</option>
-            <!-- List of unique projectName options -->
-            <option *ngFor="let product of allProjects()" [value]="product">
-                {{ product }}
-            </option>
-        </select>
-
-        <select class="dropdown-filters__select" [(ngModel)]="selectedCategory"
-            (ngModelChange)="onCategoryFilterChange($event)">
-            <option value="all">Все задачи</option>
-            <option value="common">Общие</option>
-            <option value="development">Разработка</option>
-            <option value="testing">Тестирование</option>
-            <option value="errors">Ошибки</option>
-        </select>
-    </div>
-
-    <!-- Task columns -->
-    <div class="columns">
-        <!-- Column 1 -->
-        <div class="columns__col1">
-
-            <div class="status-filters">
-                <label>
-                    <input type="radio" name="leftColumnStatus" [value]="'approval'"
-                        [(ngModel)]="selectedStatusFilter" />
-                    На согласование
-                </label>
-                <label>
-                    <input type="radio" name="leftColumnStatus" [value]="'review'" [(ngModel)]="selectedStatusFilter" />
-                    На ревью
-                </label>
-                <label>
-                    <input type="radio" name="leftColumnStatus" [value]="'execution'"
-                        [(ngModel)]="selectedStatusFilter" />
-                    Для работы
-                </label>
-                <label>
-                    <input type="radio" name="leftColumnStatus" [value]="'draft'" [(ngModel)]="selectedStatusFilter" />
-                    Черновики
-                </label>
-            </div>
-
-            <div class="tasks-block">
-                <div class="tasks-block__title" (click)="toggleCollapsible('myTasks')">
-                    Мои:
+        <div class="columns__wrapper flex-col">
+            <div class="tasks-block flex-col">
+                <div class="tasks-block__title flex-row center-row" (click)="toggleCollapsible('myTasks')">
+                    <span class="collapse-icon" [ngClass]="{'collapsed': collapsed().myTasks}">
+                        ^
+                    </span>
+                    Мои: {{ myTasksFiltered().length }}
                 </div>
                 <!-- *ngIf="!collapsed.myTasks" -->
-                <div class="tasks-block__body tasks-block__body_collapsible">
-
-                    <!-- task list -->
-                    <app-task-card *ngFor="let t of myTasksFiltered()" [task]="t">
-                    </app-task-card>
-
+                <div class="tasks-block__body tasks-block__body_collapsible flex-col" *ngIf="!collapsed().myTasks">
+                    <!-- Check if user exists -->
+                    <ng-container *ngIf="userData; else showLoginMessage">
+                        <!-- Check if the user has tasks -->
+                        <ng-container *ngIf="myTasksFiltered().length > 0; else showNoMyTasksMessage">
+                            <app-task-card *ngFor="let t of myTasksFiltered()" [task]="t"
+                                [isInProgress]="false"></app-task-card>
+                        </ng-container>
+                        <!-- Message when no tasks -->
+                        <ng-template #showNoMyTasksMessage>
+                            <p>У вас нет задач.</p>
+                        </ng-template>
+                    </ng-container>
+                    <!-- Message for anonymous user -->
+                    <ng-template #showLoginMessage>
+                        <p>Войдите в свой аккаунт, чтобы просмотреть свои задачи.</p>
+                    </ng-template>
                 </div>
             </div>
 
-            <div class="tasks-block">
-                <div class="tasks-block__title" (click)="toggleCollapsible('unassigned')">
-                    Неназначенные:
+            <div class="tasks-block flex-col">
+                <div class="tasks-block__title flex-row center-row" (click)="toggleCollapsible('unassigned')">
+                    <span class="collapse-icon" [ngClass]="{'collapsed': collapsed().unassigned}">
+                        ^
+                    </span>
+                    Неназначенные: {{ unassignedFiltered().length }}
                 </div>
                 <!-- *ngIf="!collapsed.unassigned" -->
-                <div class="tasks-block__body tasks-block__body_collapsible">
-
-                    <!-- task list -->
-                    <app-task-card *ngFor="let t of unassignedFiltered()" [task]="t">
-                    </app-task-card>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- Column 2 -->
-        <div class="columns__col2">
-            <div class="tasks-block">
-                <div class="tasks-block__title">В работе:</div>
-                <div class="tasks-block__body">
-
-                    <!-- task list -->
-                    <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t">
-                    </app-task-card>
-
-                </div>
-            </div>
-            <div class="tasks-block">
-                <div class="tasks-block__title">На паузе:</div>
-                <div class="tasks-block__body">
-
-                    <!-- task list -->
-                    <app-task-card *ngFor="let t of pauseFiltered()" [task]="t">
-                    </app-task-card>
-
+                <div class="tasks-block__body tasks-block__body_collapsible flex-col" *ngIf="!collapsed().unassigned">
+                    <!-- Check if unassigned tasks exist -->
+                    <ng-container *ngIf="unassignedFiltered().length > 0; else showNoUnassignedTasksMessage">
+                        <app-task-card *ngFor="let t of unassignedFiltered()" [task]="t" [isInProgress]="false">
+                        </app-task-card>
+                    </ng-container>
+                    <!-- Message when no tasks -->
+                    <ng-template #showNoUnassignedTasksMessage>
+                        <p>Нет неназначенных задач.</p>
+                    </ng-template>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Right column -->
+    <div class="columns__right flex-col">
+        <div class="tasks-block tasks-block_in-progress flex-col">
+            <div class="tasks-block__title">
+                В работе: {{ inProgressFiltered().length }}
+            </div>
+            <!-- Check if the user has tasks -->
+            <ng-container *ngIf="inProgressFiltered().length > 0; else showNoInProgressTasksMessage">
+                <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t" [isInProgress]="true">
+                </app-task-card>
+            </ng-container>
+            <!-- Message when no tasks -->
+            <ng-template #showNoInProgressTasksMessage>
+                <p>Нет задач в работе.</p>
+            </ng-template>
+        </div>
+
+        <div class="tasks-block tasks-block_paused flex-col">
+            <div class="tasks-block__title">
+                На паузе: {{ pauseFiltered().length }}
+            </div>
+            <!-- Check if the user has tasks -->
+            <ng-container *ngIf="pauseFiltered().length > 0; else showNoPausedTasksMessage">
+                <app-task-card *ngFor="let t of pauseFiltered()" [task]="t" [isInProgress]="false">
+                </app-task-card>
+            </ng-container>
+            <!-- Message when no tasks -->
+            <ng-template #showNoPausedTasksMessage>
+                <div class="no-task-block">
+                    <p>Нет задач на паузе.</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
 </div>

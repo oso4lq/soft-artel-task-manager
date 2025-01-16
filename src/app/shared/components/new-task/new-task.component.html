@@ -1,0 +1,111 @@
+<!-- new-task.component.html -->
+
+<h2>Создать новую задачу</h2>
+<form class="flex-col" (ngSubmit)="submit()">
+
+    <!-- taskName -->
+    <div class="form-block h-100 flex-row center-row">
+        <label for="taskName">Название задачи:</label>
+        <textarea class="flex-grow custom-textarea" type="text" id="taskName" [(ngModel)]="task.taskName"
+            name="taskName" required></textarea>
+    </div>
+
+    <!-- taskPath -->
+    <div class="flex-col">
+        <div class="form-block h-100 flex-row center-row">
+            <label for="projectName">Название проекта:</label>
+            <input class="flex-grow" id="projectName" [(ngModel)]="task.taskPath.projectName" name="projectName" />
+        </div>
+
+        <div class="form-block h-100 flex-row center-row">
+            <label for="productName">Тип продукта:</label>
+
+            <select class="flex-grow " id="productName" [(ngModel)]="task.taskPath.productName" name="productName">
+                <option *ngFor="let pType of productTypes" [value]="pType">
+                    {{ pType }}
+                </option>
+            </select>
+        </div>
+
+        <div class="form-block h-100 flex-row center-row">
+            <label for="version">Версия продукта:</label>
+            <input class="flex-grow" type="number" id="version" [(ngModel)]="task.taskPath.version" name="version" />
+        </div>
+
+        <div class="form-block h-100 flex-row center-row">
+            <label for="feature">Фича:</label>
+            <textarea class="flex-grow custom-textarea" id="feature" [(ngModel)]="task.taskPath.feature"
+                name="feature"></textarea>
+        </div>
+    </div>
+
+    <!-- taskType -->
+    <div class="form-block h-100 flex-row center-row">
+        <label for="taskType">Тип задачи:</label>
+
+        <select class="flex-grow " [(ngModel)]="task.taskType" name="taskType">
+            <option *ngFor="let tType of taskTypes" [value]="tType">
+                {{ tType }}
+            </option>
+        </select>
+    </div>
+
+    <!-- taskStatuses checkboxes -->
+    <div class="flex-col" style="gap: 4px;">
+        <label>Этапы (от 1 до 5):</label>
+        <div class="form-block h-100 flex-row center-row status-checkboxes">
+            <label class="status-checkbox__item flex-row center-all"
+                [ngClass]="{'status-checkbox__item_active': statusesCheckbox[TaskStatus.Approval]}">
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Approval]" name="approval" />
+                Согласование
+            </label>
+            <label class="status-checkbox__item flex-row center-all"
+                [ngClass]="{'status-checkbox__item_active': statusesCheckbox[TaskStatus.Execution]}">
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Execution]" name="execution" />
+                Исполнение
+            </label>
+            <label class="status-checkbox__item flex-row center-all"
+                [ngClass]="{'status-checkbox__item_active': statusesCheckbox[TaskStatus.Review]}">
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Review]" name="review" />
+                Ревью
+            </label>
+            <label class="status-checkbox__item flex-row center-all"
+                [ngClass]="{'status-checkbox__item_active': statusesCheckbox[TaskStatus.Deploy]}">
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Deploy]" name="deploy" />
+                Деплой
+            </label>
+            <label class="status-checkbox__item flex-row center-all"
+                [ngClass]="{'status-checkbox__item_active': statusesCheckbox[TaskStatus.Testing]}">
+                <input type="checkbox" [(ngModel)]="statusesCheckbox[TaskStatus.Testing]" name="testing" />
+                Тестирование
+            </label>
+        </div>
+    </div>
+
+    <!-- performerId -->
+    <div class="form-block h-100 flex-row center-row">
+        <label>Исполнитель:</label>
+        <select class="flex-grow" [(ngModel)]="task.performerId" name="performerId">
+            <option [ngValue]="null">-- Не выбрано --</option>
+            <option *ngFor="let user of userDatas()" [ngValue]="user.id">
+                {{ user.username }}
+            </option>
+        </select>
+    </div>
+
+    <!-- taskTime -->
+    <div class="form-block h-100 flex-row center-row">
+        <label for="taskTimeSpent">Время выполнения задачи:</label>
+        <input class="flex-grow" type="text" id="taskTimePlanned" [(ngModel)]="task.taskTime.planned"
+            name="taskTimePlanned" required />
+        <span>ч</span>
+    </div>
+
+    <!-- Box for errors -->
+    <div class="error-message form-block h-100 flex-row center-row">
+        <span>{{ errorMessage }}</span>
+    </div>
+
+    <button type="submit">Сформировать задачу</button>
+
+</form>
