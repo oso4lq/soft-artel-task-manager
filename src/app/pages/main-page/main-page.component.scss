@@ -124,11 +124,12 @@
     }
 
     .collapse-icon {
+        transform: rotate(180deg);
         transition: transform 0.3s ease;
         display: inline-block;
 
         &.collapsed {
-            transform: rotate(180deg);
+            transform: rotate(0deg);
         }
     }
 

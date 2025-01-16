@@ -5,18 +5,25 @@
     <!-- Top Card Part -->
     <div class="task-card__top flex-col" (mouseenter)="onTopHover(true)" (mouseleave)="onTopHover(false)">
         <!-- Show path (if hoveredTop() === true) -->
-        <!-- *ngIf="hoveredTop()" -->
-        <div class="task-card__path flex-row" [class.visible]="hoveredTop()">
-            {{ task.taskPath.projectName }} /
-            {{ task.taskPath.productName }} /
-            {{ task.taskPath.version }} /
-            {{ task.taskPath.feature }} /
+        <div class="task-card__path flex-row center-row visible" [class.visible]="hoveredTop()">
+            <!-- <app-icon iconId="icon-misc-project-logo" width="16" height="16"></app-icon> -->
+            <span> {{ task.taskPath.projectName }} </span>
+            <span>/</span>
+            <app-icon [iconId]="getProductIconId()" width="16" height="16"></app-icon>
+            <span> {{ task.taskPath.productName }} </span>
+            <span>/</span>
+            <span> {{ task.taskPath.version }} </span>
+            <span>/</span>
+            <app-icon iconId="icon-misc-feature" width="16" height="16"></app-icon>
+            <span> {{ task.taskPath.feature }} </span>
+            <span>/</span>
         </div>
 
         <!-- Task header -->
         <div class="task-card__title flex-row center-row">
             <span class="task-card__type-icon">
-                {{ task.taskType }}
+                <app-icon [iconId]="getTaskTypeIcon().iconId" width="16" height="16" [color]="getTaskTypeIcon().color">
+                </app-icon>
             </span>
             <span class="task-card__name">
                 {{ task.taskName }}
@@ -58,7 +65,9 @@
             <!-- Status, performer, time -->
             <div class="task-card__info flex-row center-row">
                 <span class="task-card__status-icon">
-                    {{ task.currentTaskStatus }}
+                    <app-icon [iconId]="getTaskStatusIcon().iconId" width="16" height="16"
+                        [color]="getTaskStatusIcon().color">
+                    </app-icon>
                 </span>
                 <div class="task-card__user flex-row center-row">
                     <img class="user-avatar__img h-100" [src]="taskPerformerImg() || placeholder" alt="">
@@ -66,9 +75,12 @@
                         {{ taskPerformerName() }}
                     </span>
                 </div>
-                <span class="task-card__time">
-                    {{ task.taskTime.spent }}ч / {{ task.taskTime.planned }}ч
-                </span>
+                <div class="task-card__time flex-row center-row">
+                    <app-icon iconId="icon-misc-clock" width="16" height="16"></app-icon>
+                    <span class="task-card__time">
+                        {{ task.taskTime.spent }}ч / {{ task.taskTime.planned }}ч
+                    </span>
+                </div>
             </div>
         </ng-template>
     </div>

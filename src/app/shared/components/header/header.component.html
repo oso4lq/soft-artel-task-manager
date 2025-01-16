@@ -3,17 +3,43 @@
 <header class="header flex-row center-row">
     <div class="header__group h-100 flex-row center-row">
         <ul class="tabs h-100 flex-row center-row">
-            <li class="tabs__item tabs__item_active">Главная</li>
-            <li class="tabs__item">Проекты</li>
-            <li class="tabs__item">Команда</li>
-            <li class="tabs__item">Канбан</li>
-            <li class="tabs__item">Итерации</li>
+            <li class="tabs__item tabs__item_active flex-row center-row">
+                <app-icon iconId="icon-head-cosmo" width="16" height="16"></app-icon>
+                Главная
+            </li>
+            <div class="divider"></div>
+            <li class="tabs__item flex-row center-row">
+                <app-icon iconId="icon-head-projects" width="16" height="16"></app-icon>
+                Проекты
+                <app-icon iconId="icon-misc-chevron-down" width="16" height="16"></app-icon>
+            </li>
+            <div class="divider"></div>
+            <li class="tabs__item flex-row center-row">
+                <app-icon iconId="icon-head-team" width="16" height="16"></app-icon>
+                Команда
+            </li>
+            <div class="divider"></div>
+            <li class="tabs__item flex-row center-row">
+                <app-icon iconId="icon-head-kanban" width="16" height="16"></app-icon>
+                Канбан
+            </li>
+            <div class="divider"></div>
+            <li class="tabs__item flex-row center-row">
+                <app-icon iconId="icon-head-calendar" width="16" height="16"></app-icon>
+                Итерации
+            </li>
         </ul>
+
+        <div class="divider"></div>
 
         <!-- Open model window to create a new task -->
         <div class="create h-100 flex-row center-row" (mouseenter)="onCreateMouseEnter()"
             (mouseleave)="onCreateMouseLeave()" #createBtn>
-            <button class="create__btn h-100" (click)="newTask()">Создать</button>
+            <button class="create__btn h-100 flex-row center-row" (click)="newTask()">
+                <app-icon iconId="icon-misc-plus" width="16" height="16"></app-icon>
+                Создать
+                <app-icon iconId="icon-misc-chevron-down" width="16" height="16"></app-icon>
+            </button>
             <div class="create__popup flex-col" *ngIf="showCreatePopup">
                 <div class="create__option" (click)="onCreateTaskClick()">Задачу</div>
                 <div class="create__option" (click)="onCreateProjectClick()">Проект</div>
@@ -24,17 +50,22 @@
     <div class="header__group h-100 flex-row center-row">
         <!-- Current time -->
         <div class="time h-100 flex-row center-row">
+            <app-icon iconId="icon-misc-clock" width="16" height="16" color="white"></app-icon>
             {{ currentTimeStr() }}
         </div>
 
         <!-- Sort out the latest created task and display its cropped name or a default message -->
         <div class="last-task h-100 flex-row center-row">
-            *{{ shortLastTaskName() || 'задачи отсутствуют' }}
+            <span class="task-card__type-icon">
+                <app-icon [iconId]="getTaskTypeIcon().iconId" width="16" height="16" [color]="getTaskTypeIcon().color">
+                </app-icon>
+            </span>
+            {{ shortLastTaskName() || 'задачи отсутствуют' }}
         </div>
 
         <!-- Notifications section -->
         <button class="notifications h-100 flex-row center-all">
-            У
+            <app-icon iconId="icon-head-message" width="16" height="16"></app-icon>
             <div class="notifications__count flex-row center-all" *ngIf="unreadMessagesCount > 0">
                 {{ unreadMessagesCount }}
             </div>

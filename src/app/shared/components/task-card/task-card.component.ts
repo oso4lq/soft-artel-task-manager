@@ -4,19 +4,22 @@ import { Component, computed, Input, OnInit, Signal, signal } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { TaskCard, TaskStatus } from '../../models/task.models';
+import { ProductType, TaskCard, TaskStatus, TaskType } from '../../models/task.models';
 import { UsersService } from '../../../core/services/users.service';
 import { TasksService } from '../../../core/services/tasks.service';
 import { getNextTaskStatus } from '../../utils/task-status-utils';
 import { AuthService } from '../../../core/services/auth.service';
 import { AppComponent } from '../../../app.component';
 import { UserData } from '../../models/users.model';
+import { IconComponent } from '../../icon/icon/icon.component';
+import { productIconMap, taskStatusIconMap, taskTypeIconMap } from '../../utils/icon-utils';
 
 @Component({
   selector: 'app-task-card',
   standalone: true,
   imports: [
     CommonModule,
+    IconComponent,
   ],
   templateUrl: './task-card.component.html',
   styleUrls: ['./task-card.component.scss']
@@ -39,6 +42,7 @@ export class TaskCardComponent implements OnInit {
   private hoverTopSubject = new Subject<boolean>();
   private hoverBottomSubject = new Subject<boolean>();
 
+
   // Calculate current status index. If Closed, all statuses are "passed"
   currentStatusIndex = computed(() => {
     if (this.task.currentTaskStatus === TaskStatus.Closed) {
@@ -53,14 +57,6 @@ export class TaskCardComponent implements OnInit {
   });
 
   // Get this task assignee name
-  // taskPerformerName = computed(() => {
-  //   if (!this.task.performerId) {
-  //     return 'Любой сотрудник';
-  //   }
-  //   const users = this.usersService.userDatasSig();
-  //   const foundUser = users.find(u => u.id === this.task.performerId);
-  //   return foundUser ? foundUser.username : 'Неизвестный сотрудник';
-  // });
   taskPerformerName = computed(() => {
     if (!this.task.performerId) {
       return 'Любой сотрудник';
@@ -120,6 +116,23 @@ export class TaskCardComponent implements OnInit {
       .subscribe((value) => {
         this.hoveredBottom.set(value);
       });
+  }
+
+  // Get iconId for a ProductType
+  getProductIconId(): string {
+    return productIconMap[this.task.taskPath.productName] || 'icon-default-product';
+  }
+
+  // Get iconId and color for TaskType
+  getTaskTypeIcon(): { iconId: string, color?: string } {
+    return taskTypeIconMap[this.task.taskType] || { iconId: 'icon-default-task' };
+  }
+
+  // Get iconId and color for TaskStatus
+  getTaskStatusIcon(): { iconId: string, color: string } {
+    const iconId = taskStatusIconMap[this.task.currentTaskStatus] || 'icon-status-default';
+    const color = this.task.inProgress ? '#16A4E3' : '#7E7E7E';
+    return { iconId, color };
   }
 
   // mouseenter / mouseleave for the Top Card Part

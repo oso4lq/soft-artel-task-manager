@@ -8,12 +8,16 @@ import { AppComponent } from '../../../app.component';
 import { TimeService } from '../../../core/services/time.service';
 import { TasksService } from '../../../core/services/tasks.service';
 import { fromEvent, Subscription } from 'rxjs';
+import { IconComponent } from '../../icon/icon/icon.component';
+import { taskTypeIconMap } from '../../utils/icon-utils';
+import { TaskCard } from '../../models/task.models';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
     CommonModule,
+    IconComponent,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -23,7 +27,8 @@ export class HeaderComponent implements OnInit {
   // Signals
   currentUserData: Signal<UserData | null> = computed(() => this.authService.currentUserDataSig()); // track the current user data
   currentTimeStr: Signal<string> = computed(() => this.timeService.currentTimeStrSig()); // track current time
-  shortLastTaskName: Signal<string | null> = computed(() => this.tasksService.shortLastTaskNameSig()); // track latest task
+  lastTask: Signal<TaskCard | null> = computed(() => this.tasksService.lastTaskSig()) // track latest task
+  shortLastTaskName: Signal<string | null> = computed(() => this.tasksService.shortLastTaskNameSig()); // track latest task name
 
   // State
   showUserPopup = false;
@@ -53,6 +58,18 @@ export class HeaderComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.unsubscribeClickOutside();
+  }
+
+  // Get iconId and color for TaskType
+  getTaskTypeIcon(): { iconId: string, color?: string } {
+    const lastTask = this.lastTask();
+    const taskType = lastTask?.taskType;
+
+    if (taskType && taskTypeIconMap[taskType]) {
+      return taskTypeIconMap[taskType];
+    }
+
+    return { iconId: 'icon-default-task' };
   }
 
   // Create button and related
