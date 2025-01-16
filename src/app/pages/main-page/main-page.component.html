@@ -5,7 +5,7 @@
 
 <!-- Dropdown menu filters -->
 <div class="dropdown-filters flex-row">
-    <select class="dropdown-filters__select" [(ngModel)]="selectedProduct"
+    <select class="dropdown-filters__select flex-row center-row" [(ngModel)]="selectedProduct"
         (ngModelChange)="onProductFilterChange($event)">
         <option value="all">Все продукты</option>
         <!-- List of unique projectName options -->
@@ -14,7 +14,7 @@
         </option>
     </select>
 
-    <select class="dropdown-filters__select" [(ngModel)]="selectedCategory"
+    <select class="dropdown-filters__select flex-row center-row" [(ngModel)]="selectedCategory"
         (ngModelChange)="onCategoryFilterChange($event)">
         <option value="all">Все задачи</option>
         <option value="common">Общие</option>

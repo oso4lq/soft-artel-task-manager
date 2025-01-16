@@ -27,3 +27,13 @@ app-main-page {
 app-task-card {
     display: flex;
 }
+
+app-login,
+app-register,
+app-new-task,
+app-edit-task {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}

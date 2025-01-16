@@ -1,25 +1,32 @@
 <!-- login.component.html -->
 
-<div class="auth-container">
-    <h2>Вход</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<h2>Вход</h2>
+<form class="flex-col" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
+    <div class="form-block h-100 flex-row center-row">
         <label for="email">Email:</label>
-        <input id="email" formControlName="email" type="email" required />
+        <input class="flex-grow" id="email" formControlName="email" type="email" required />
+    </div>
 
+    <div class="form-block h-100 flex-row center-row">
         <label for="password">Пароль:</label>
-        <input id="password" formControlName="password" type="password" required />
+        <input class="flex-grow" id="password" formControlName="password" type="password" required />
+    </div>
 
-        <button type="submit" [disabled]="loginForm.invalid">Войти</button>
+    <button type="submit" [disabled]="loginForm.invalid">Войти</button>
 
-    </form>
     <div *ngIf="errorMessage" class="error">
         {{ errorMessage }}
     </div>
+</form>
 
-    <p>Нет аккаунта? <button (click)="goToRegister()">Зарегистрироваться</button></p>
-    <p>Или</p>
-    <button (click)="signInAnonymously()">продолжить без учётной записи</button>
-    <p>(ограниченный функционал)</p>
-
+<div class="flex-col">
+    <div class="form-block h-100 flex-row center-row">
+        <span>Нет аккаунта?</span>
+        <button class="flex-grow" (click)="goToRegister()">Зарегистрироваться</button>
+    </div>
+    <div class="form-block h-100 flex-row center-row">
+        <span>Или</span>
+        <button class="btn-anon flex-grow" (click)="signInAnonymously()">продолжить без учётной записи</button>
+    </div>
 </div>
