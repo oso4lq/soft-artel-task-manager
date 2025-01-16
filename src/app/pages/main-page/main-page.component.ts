@@ -64,6 +64,26 @@ export class MainPageComponent implements OnInit {
     const unique = Array.from(new Set(names));
     return unique; // Unique projectNames
   });
+
+  // Counters for task filters
+  approvalCount = computed(() => this.arrangedTasks().filter(t =>
+    t.currentTaskStatus === TaskStatus.Approval && t.inProgress === null
+  ).length);
+
+  reviewCount = computed(() => this.arrangedTasks().filter(t =>
+    t.currentTaskStatus === TaskStatus.Review && t.inProgress === null
+  ).length);
+
+  executionCount = computed(() => this.arrangedTasks().filter(t =>
+    (t.currentTaskStatus === TaskStatus.Execution ||
+      t.currentTaskStatus === TaskStatus.Deploy ||
+      t.currentTaskStatus === TaskStatus.Testing) && t.inProgress === null
+  ).length);
+
+  draftCount = computed(() => this.arrangedTasks().filter(t =>
+    t.currentTaskStatus === TaskStatus.Draft && t.inProgress === null
+  ).length);
+
   ngOnInit(): void { }
 
   // Wrap / Unwrap task lists in MY and UNASSIGNED blocks

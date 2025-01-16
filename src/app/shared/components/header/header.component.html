@@ -51,10 +51,10 @@
 
             <!-- Logged in user data -->
             <ng-container *ngIf="currentUserData() as user; else anonymousInfo">
-                <p>Имя: {{ user.username }}</p>
-                <p>Email: {{ user.email }}</p>
-                <p>Telegram: {{ user.telegram}}</p>
-                <button (click)="onLogoutClick()">Выйти</button>
+                <p>Имя: <span>{{ user.username }}</span></p>
+                <p>Email: <span>{{ user.email }}</span></p>
+                <p>Telegram: <span>{{ user.telegram}}</span></p>
+                <button (click)="onLogoutClick()" class="create__btn">Выйти</button>
             </ng-container>
 
             <!-- Anonymous session -->

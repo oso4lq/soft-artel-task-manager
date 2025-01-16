@@ -69,9 +69,13 @@
         padding: 10px 16px;
         cursor: pointer;
         transition: background 0.2s;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        border-radius: 6px;
 
         &:hover {
-            background: $bg-light;
+            background: $bg-blue;
         }
     }
 }
@@ -149,12 +153,43 @@
 .user-popup {
     position: absolute;
     top: 60px;
+    right: 40px;
     z-index: 10;
     min-width: 200px;
     min-height: 120px;
+    border: 1px solid $bg-border;
     border-radius: 6px;
-    padding: 4px 8px;
-    gap: 20px;
+    padding: 12px;
+    gap: 8px;
     background: $bg-menu;
     box-shadow: 0 2px 5px $shdw-menu-1;
+
+    p {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        color: $text-primary;
+    }
+
+    span {
+        color: $text-text;
+    }
+
+    button {
+        padding: 0 12px;
+        color: $active-blue;
+        border: $active-blue 1px solid;
+        border-radius: 4px;
+        cursor: pointer;
+        background: none;
+        transition: background 0.3s;
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 18px;
+        height: 30px;
+
+        &:hover {
+            background: rgba($active-blue, 0.1);
+        }
+    }
 }
