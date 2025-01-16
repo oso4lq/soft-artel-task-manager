@@ -5,11 +5,12 @@
     <!-- Top Card Part -->
     <div class="task-card__top flex-col" (mouseenter)="onTopHover(true)" (mouseleave)="onTopHover(false)">
         <!-- Show path (if hoveredTop() === true) -->
-        <div class="task-card__path flex-row" *ngIf="hoveredTop()">
+        <!-- *ngIf="hoveredTop()" -->
+        <div class="task-card__path flex-row" [class.visible]="hoveredTop()">
             {{ task.taskPath.projectName }} /
             {{ task.taskPath.productName }} /
-            v.{{ task.taskPath.version }} /
-            {{ task.taskPath.feature }}
+            {{ task.taskPath.version }} /
+            {{ task.taskPath.feature }} /
         </div>
 
         <!-- Task header -->
@@ -31,7 +32,7 @@
 
         <!-- Show control buttons (if hoveredBottom() === true) -->
         <ng-container *ngIf="hoveredBottom(); else taskDetails">
-            <div class="actions flex-row">
+            <div class="actions flex-row visible">
                 <ng-container *ngIf="isInProgress; else elseButtons">
                     <button (click)="onPauseClick()" class="actions__btn actions__btn_pause">На паузу</button>
                     <button (click)="onDoneClick()" class="actions__btn actions__btn_ready">Готово</button>

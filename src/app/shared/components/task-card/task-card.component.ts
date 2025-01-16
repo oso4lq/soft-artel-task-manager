@@ -53,13 +53,40 @@ export class TaskCardComponent implements OnInit {
   });
 
   // Get this task assignee name
+  // taskPerformerName = computed(() => {
+  //   if (!this.task.performerId) {
+  //     return 'Любой сотрудник';
+  //   }
+  //   const users = this.usersService.userDatasSig();
+  //   const foundUser = users.find(u => u.id === this.task.performerId);
+  //   return foundUser ? foundUser.username : 'Неизвестный сотрудник';
+  // });
   taskPerformerName = computed(() => {
     if (!this.task.performerId) {
       return 'Любой сотрудник';
     }
     const users = this.usersService.userDatasSig();
     const foundUser = users.find(u => u.id === this.task.performerId);
-    return foundUser ? foundUser.username : 'Неизвестный сотрудник';
+    if (!foundUser) {
+      return 'Неизвестный сотрудник';
+    }
+
+    const fullName = foundUser.username.trim();
+    const nameParts = fullName.split(' ');
+
+    if (nameParts.length === 1) {
+      return nameParts[0];
+    } else if (nameParts.length === 2) {
+      const [firstName, lastName] = nameParts;
+      const abbreviatedLastName = lastName.charAt(0).toUpperCase() + '.';
+      return `${firstName} ${abbreviatedLastName}`;
+    } else {
+      // If more than 2 parts, trim all except first and first letter of last
+      const firstName = nameParts[0];
+      const lastName = nameParts[nameParts.length - 1];
+      const abbreviatedLastName = lastName.charAt(0).toUpperCase() + '.';
+      return `${firstName} ${abbreviatedLastName}`;
+    }
   });
 
   // Get this task assignee img
@@ -89,7 +116,7 @@ export class TaskCardComponent implements OnInit {
 
     // Subscribe with a 800ms debounce for the Bottom Card Part
     this.hoverBottomSubject
-      .pipe(debounceTime(800))
+      .pipe(debounceTime(300))
       .subscribe((value) => {
         this.hoveredBottom.set(value);
       });
@@ -119,18 +146,18 @@ export class TaskCardComponent implements OnInit {
     } else if (index === currentIndex) {
       // Current status
       if (this.task.inProgress === true) {
-        // Task has an assignee and is in progress
+        // Task has an assignee and is in progress => blue
         return 'progress-bar__block_active-blue';
       } else if (this.task.inProgress === false) {
-        // Task has an assignee and is on pause
+        // Task has an assignee and is on pause => dark grey
         return 'progress-bar__block_text-secondary';
       } else {
-        // (other) inProgress === null
+        // (other) inProgress === null => grey
         // Task has may have an assignee but he didn't start it 
         return 'progress-bar__block_divider';
       }
     } else {
-      // Upcoming statuses
+      // Upcoming statuses => grey
       return 'progress-bar__block_divider';
     }
   }
