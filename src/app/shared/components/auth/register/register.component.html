@@ -23,11 +23,12 @@
         <input class="flex-grow" id="confirmPassword" formControlName="confirmPassword" type="password" required />
     </div>
 
+    <div class="error-message form-block h-100 flex-row center-row">
+        <span>{{ errorMessage }}</span>
+    </div>
+
     <button type="submit" [disabled]="registerForm.invalid">Зарегистрироваться</button>
 
-    <div *ngIf="errorMessage" class="error">
-        {{ errorMessage }}
-    </div>
 </form>
 
 <div class="flex-col">

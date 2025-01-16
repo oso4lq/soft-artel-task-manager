@@ -5,14 +5,10 @@ h2 {
     margin: 12px 0;
 }
 
-form {
-    margin: 20px 0;
-}
-
 .form-block {
     height: 30px;
     gap: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 label {
@@ -36,15 +32,6 @@ span {
     font-size: 14px;
     line-height: 21px;
     color: $text-primary;
-}
-
-.note {
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 18px;
-    color: $text-primary;
-    text-align: right;
-    color: $text-text;
 }
 
 button {
@@ -71,5 +58,16 @@ button {
 
     &:hover {
         background: rgba($text-secondary, 0.1);
+    }
+}
+
+.error-message {
+    width: 80%;
+    text-align: center;
+    align-self: center;
+
+    span {
+        color: $red !important;
+        font-size: 13px;
     }
 }
