@@ -9,7 +9,6 @@
     margin-bottom: 8px;
 }
 
-// Dropdown filters
 .dropdown-filters {
     justify-content: flex-start;
     gap: 12px;
@@ -21,8 +20,6 @@
     &__select {
         background-color: $bg-menu;
         color: $text-text;
-        // padding: 8px 16px;
-        // border: 1px solid $divider;
         border-radius: 4px;
         cursor: pointer;
 
@@ -31,12 +28,10 @@
         gap: 2px;
 
         border: 1px solid $bg-border;
-        // border-radius: 6px;
         box-shadow: 0 2px 5px $shdw-menu-1;
     }
 }
 
-// Columns
 .columns {
     gap: 32px;
     height: 100px;
@@ -44,12 +39,17 @@
 
     &__left,
     &__right {
+        justify-content: flex-start;
         flex: 1;
         overflow-y: auto;
+        gap: 16px;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 }
 
-// Status filters
 .status-filters {
     gap: 8px;
     padding: 8px;
@@ -63,25 +63,42 @@
     }
 }
 
-// Task list blocks
 .tasks-block {
-    padding: 8px;
+    border-radius: 8px;
+    gap: 8px;
 
     &__title {
         font-weight: 500;
         font-size: 16px;
         line-height: 24px;
-        margin-bottom: 8px;
+        color: $text-text;
     }
 
     // wrap by default?
     &__body {
-        background-color: $bg_blocks;
+        background-color: $bg-blocks;
         border: 1px solid $bg-border;
         box-shadow: 0 2px 5px $shdw-menu-1;
-
         border-radius: 8px;
         padding: 12px;
         gap: 8px;
     }
+
+    &_in-progress {
+        background-color: $bg-blue;
+        padding: 12px;
+    }
+
+    &_paused {
+        background-color: none;
+    }
+}
+
+.no-task-block {
+    background-color: $bg-blocks;
+    border: 1px solid $bg-border;
+    box-shadow: 0 2px 5px $shdw-menu-1;
+    border-radius: 8px;
+    padding: 12px;
+    gap: 8px;
 }

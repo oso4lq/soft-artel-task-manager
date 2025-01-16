@@ -28,7 +28,7 @@
 <div class="columns flex-row">
 
     <!-- Left column -->
-    <div class="columns__left">
+    <div class="columns__left flex-col">
 
         <div class="status-filters flex-row">
             <label>
@@ -53,14 +53,12 @@
             </label>
         </div>
 
-        <div class="tasks-block">
+        <div class="tasks-block flex-col">
             <div class="tasks-block__title" (click)="toggleCollapsible('myTasks')">
                 Мои:
             </div>
             <!-- *ngIf="!collapsed.myTasks" -->
-            <div class="tasks-block__body tasks-block__body_collapsible">
-
-                <!-- task list -->
+            <div class="tasks-block__body tasks-block__body_collapsible flex-col">
                 <!-- Check if user exists -->
                 <ng-container *ngIf="userData; else showLoginMessage">
                     <!-- Check if the user has tasks -->
@@ -73,23 +71,20 @@
                         <p>У вас нет задач.</p>
                     </ng-template>
                 </ng-container>
-
                 <!-- Message for anonymous user -->
                 <ng-template #showLoginMessage>
                     <p>Войдите в свой аккаунт, чтобы просмотреть свои задачи.</p>
                 </ng-template>
-
             </div>
         </div>
 
-        <div class="tasks-block">
+        <div class="tasks-block flex-col">
             <div class="tasks-block__title" (click)="toggleCollapsible('unassigned')">
                 Неназначенные:
             </div>
             <!-- *ngIf="!collapsed.unassigned" -->
-            <div class="tasks-block__body tasks-block__body_collapsible">
-
-                <!-- Check if the user has tasks -->
+            <div class="tasks-block__body tasks-block__body_collapsible flex-col">
+                <!-- Check if unassigned tasks exist -->
                 <ng-container *ngIf="unassignedFiltered().length > 0; else showNoUnassignedTasksMessage">
                     <app-task-card *ngFor="let t of unassignedFiltered()" [task]="t" [isInProgress]="false">
                     </app-task-card>
@@ -98,44 +93,38 @@
                 <ng-template #showNoUnassignedTasksMessage>
                     <p>Нет неназначенных задач.</p>
                 </ng-template>
-
             </div>
         </div>
     </div>
 
     <!-- Right column -->
-    <div class="columns__right">
-        <div class="tasks-block">
+    <div class="columns__right flex-col">
+        <div class="tasks-block tasks-block_in-progress flex-col">
             <div class="tasks-block__title">В работе:</div>
-            <div class="tasks-block__body">
-
-                <!-- Check if the user has tasks -->
-                <ng-container *ngIf="inProgressFiltered().length > 0; else showNoInProgressTasksMessage">
-                    <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t" [isInProgress]="true">
-                    </app-task-card>
-                </ng-container>
-                <!-- Message when no tasks -->
-                <ng-template #showNoInProgressTasksMessage>
-                    <p>Нет задач в работе.</p>
-                </ng-template>
-
-            </div>
+            <!-- Check if the user has tasks -->
+            <ng-container *ngIf="inProgressFiltered().length > 0; else showNoInProgressTasksMessage">
+                <app-task-card *ngFor="let t of inProgressFiltered()" [task]="t" [isInProgress]="true">
+                </app-task-card>
+            </ng-container>
+            <!-- Message when no tasks -->
+            <ng-template #showNoInProgressTasksMessage>
+                <p>Нет задач в работе.</p>
+            </ng-template>
         </div>
-        <div class="tasks-block">
+
+        <div class="tasks-block tasks-block_paused flex-col">
             <div class="tasks-block__title">На паузе:</div>
-            <div class="tasks-block__body">
-
-                <!-- Check if the user has tasks -->
-                <ng-container *ngIf="pauseFiltered().length > 0; else showNoPausedTasksMessage">
-                    <app-task-card *ngFor="let t of pauseFiltered()" [task]="t" [isInProgress]="false">
-                    </app-task-card>
-                </ng-container>
-                <!-- Message when no tasks -->
-                <ng-template #showNoPausedTasksMessage>
+            <!-- Check if the user has tasks -->
+            <ng-container *ngIf="pauseFiltered().length > 0; else showNoPausedTasksMessage">
+                <app-task-card *ngFor="let t of pauseFiltered()" [task]="t" [isInProgress]="false">
+                </app-task-card>
+            </ng-container>
+            <!-- Message when no tasks -->
+            <ng-template #showNoPausedTasksMessage>
+                <div class="no-task-block">
                     <p>Нет задач на паузе.</p>
-                </ng-template>
-
-            </div>
+                </div>
+            </ng-template>
         </div>
     </div>
 </div>
