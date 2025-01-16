@@ -19,6 +19,7 @@
     }
 
     &__path {
+        justify-content: flex-start;
         font-weight: 400;
         font-size: 14px;
         line-height: 21px;
@@ -28,6 +29,7 @@
         max-height: 0;
         transition: opacity 0.2s ease, max-height 0.2s ease;
         overflow: hidden;
+        gap: 6px;
 
         &.visible {
             opacity: 1;
@@ -36,7 +38,7 @@
     }
 
     &__title {
-        gap: 8px;
+        gap: 16px;
     }
 
     &__type-icon {
@@ -82,7 +84,12 @@
         justify-content: flex-start;
     }
 
+    &__performer {
+        color: $text-secondary;
+    }
+
     &__time {
+        gap: 8px;
         color: $text-service;
     }
 }

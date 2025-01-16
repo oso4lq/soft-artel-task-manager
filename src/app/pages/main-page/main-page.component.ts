@@ -9,6 +9,7 @@ import { TaskCardComponent } from '../../shared/components/task-card/task-card.c
 import { AuthService } from '../../core/services/auth.service';
 import { UserData } from '../../shared/models/users.model';
 import { TimeService } from '../../core/services/time.service';
+import { IconComponent } from '../../shared/icon/icon/icon.component';
 
 @Component({
   selector: 'app-main-page',
@@ -17,6 +18,7 @@ import { TimeService } from '../../core/services/time.service';
     CommonModule,
     FormsModule,
     TaskCardComponent,
+    IconComponent,
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']

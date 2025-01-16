@@ -50,13 +50,17 @@
     <div class="header__group h-100 flex-row center-row">
         <!-- Current time -->
         <div class="time h-100 flex-row center-row">
-            <app-icon iconId="icon-head-clock" width="16" height="16"></app-icon>
+            <app-icon iconId="icon-misc-clock" width="16" height="16" color="white"></app-icon>
             {{ currentTimeStr() }}
         </div>
 
         <!-- Sort out the latest created task and display its cropped name or a default message -->
         <div class="last-task h-100 flex-row center-row">
-            *{{ shortLastTaskName() || 'задачи отсутствуют' }}
+            <span class="task-card__type-icon">
+                <app-icon [iconId]="getTaskTypeIcon().iconId" width="16" height="16" [color]="getTaskTypeIcon().color">
+                </app-icon>
+            </span>
+            {{ shortLastTaskName() || 'задачи отсутствуют' }}
         </div>
 
         <!-- Notifications section -->
