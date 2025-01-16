@@ -1,67 +1,74 @@
 <!-- task-card.component.html -->
 
-<div class="task-card w-100">
+<div class="task-card w-100 flex-col">
 
     <!-- Top Card Part -->
-    <div class="task-card__top" (mouseenter)="onTopHover(true)" (mouseleave)="onTopHover(false)">
-
+    <div class="task-card__top flex-col" (mouseenter)="onTopHover(true)" (mouseleave)="onTopHover(false)">
         <!-- Show path (if hoveredTop() === true) -->
-        <div class="task-card__path" *ngIf="hoveredTop()">
+        <div class="task-card__path flex-row" *ngIf="hoveredTop()">
             {{ task.taskPath.projectName }} /
             {{ task.taskPath.productName }} /
             v.{{ task.taskPath.version }} /
             {{ task.taskPath.feature }}
         </div>
 
-        <div class="task-card__title">
+        <!-- Task header -->
+        <div class="task-card__title flex-row center-row">
             <span class="task-card__type-icon">
                 {{ task.taskType }}
             </span>
             <span class="task-card__name">
                 {{ task.taskName }}
-                ({{ task.taskKey }})
+            </span>
+            <span class="task-card__key">
+                {{ task.taskKey }}
             </span>
         </div>
     </div>
 
     <!-- Bottom Card Part -->
-    <div class="task-card__bottom" (mouseenter)="onBottomHover(true)" (mouseleave)="onBottomHover(false)">
-
-        <!-- Progress bar -->
-        <div class="progress-bar">
-            <!-- Progress bar here... -->
-            <ng-container *ngFor="let status of task.taskStatuses; let i = index">
-                <div class="progress-bar__block" [ngClass]="getProgressBlockClass(i)"></div>
-            </ng-container>
-        </div>
-
-        <!-- Status, performer, time -->
-        <div class="task-card__info">
-            <span class="task-card__status-icon">
-                {{ task.currentTaskStatus }}
-            </span>
-            <!-- Get this task assignee name -->
-            <span class="task-card__performer">
-                {{ taskPerformerName() }}
-            </span>
-            <span class="task-card__time">
-                Затрачено: {{ task.taskTime.spent }} / План: {{ task.taskTime.planned }}
-            </span>
-        </div>
+    <div class="task-card__bottom flex-col" (mouseenter)="onBottomHover(true)" (mouseleave)="onBottomHover(false)">
 
         <!-- Show control buttons (if hoveredBottom() === true) -->
-        <div class="task-card__actions" *ngIf="hoveredBottom()">
-            <ng-container *ngIf="isInProgress; else elseButtons">
-                <button (click)="onPauseClick()">На паузу</button>
-                <button (click)="onDoneClick()">Готово</button>
-            </ng-container>
-            <ng-template #elseButtons>
-                <button (click)="onEditClick()">Исправить</button>
-                <button *ngIf="task.currentTaskStatus !== TaskStatus.Draft" (click)="onInWorkClick()">В работу</button>
-                <button *ngIf="task.currentTaskStatus !== TaskStatus.Draft" (click)="onAcceptClick()">Принять</button>
-            </ng-template>
-        </div>
+        <ng-container *ngIf="hoveredBottom(); else taskDetails">
+            <div class="actions flex-row">
+                <ng-container *ngIf="isInProgress; else elseButtons">
+                    <button (click)="onPauseClick()" class="actions__btn actions__btn_pause">На паузу</button>
+                    <button (click)="onDoneClick()" class="actions__btn actions__btn_ready">Готово</button>
+                </ng-container>
+                <ng-template #elseButtons>
+                    <button (click)="onEditClick()" class="actions__btn actions__btn_edit">Исправить</button>
+                    <button *ngIf="task.currentTaskStatus !== TaskStatus.Draft" (click)="onInWorkClick()"
+                        class="actions__btn actions__btn_to-work">В работу</button>
+                    <button *ngIf="task.currentTaskStatus !== TaskStatus.Draft" (click)="onAcceptClick()"
+                        class="actions__btn actions__btn_accept">Принять</button>
+                </ng-template>
+            </div>
+        </ng-container>
 
+        <ng-template #taskDetails>
+            <!-- Progress bar -->
+            <div class="progress-bar flex-row">
+                <ng-container *ngFor="let status of task.taskStatuses; let i = index">
+                    <div class="progress-bar__block" [ngClass]="getProgressBlockClass(i)"></div>
+                </ng-container>
+            </div>
+
+            <!-- Status, performer, time -->
+            <div class="task-card__info flex-row center-row">
+                <span class="task-card__status-icon">
+                    {{ task.currentTaskStatus }}
+                </span>
+                <div class="task-card__user flex-row center-row">
+                    <img class="user-avatar__img h-100" [src]="taskPerformerImg() || placeholder" alt="">
+                    <span class="task-card__performer">
+                        {{ taskPerformerName() }}
+                    </span>
+                </div>
+                <span class="task-card__time">
+                    {{ task.taskTime.spent }}ч / {{ task.taskTime.planned }}ч
+                </span>
+            </div>
+        </ng-template>
     </div>
-
 </div>

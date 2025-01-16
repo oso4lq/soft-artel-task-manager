@@ -11,12 +11,10 @@
 
 // Dropdown filters
 .dropdown-filters {
-    // display: flex;
     justify-content: flex-start;
     gap: 12px;
     height: 32px;
     border-radius: 4px;
-    // padding: 0 12px;
     gap: 12px;
     margin-bottom: 8px;
 
@@ -40,7 +38,6 @@
 
 // Columns
 .columns {
-    // display: flex;
     gap: 32px;
     height: 100px;
     flex-grow: 1;
@@ -54,8 +51,6 @@
 
 // Status filters
 .status-filters {
-    display: flex;
-    flex-wrap: wrap;
     gap: 8px;
     padding: 8px;
     border-bottom: 1px solid $divider;

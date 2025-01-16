@@ -4,83 +4,174 @@
     border: 1px solid $divider;
     border-radius: 8px;
     background: $bg-light;
-    // margin-bottom: 16px;
     padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    gap: 20px;
 
     &__top {
-        display: flex;
-        flex-direction: column;
         gap: 8px;
     }
 
     &__path {
-        font-size: 0.9rem;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
         color: $text-service;
     }
 
     &__title {
-        display: flex;
-        align-items: center;
         gap: 8px;
+    }
 
-        .task-card__type-icon {
-            color: $orange;
-            font-weight: bold;
-        }
+    &__type-icon {
+        color: $orange;
+        font-weight: bold;
+    }
+
+    &__name {
+        flex-grow: 1;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 21px;
+        text-align: center;
+        color: $text-primary;
+    }
+
+    &__key {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        text-align: right;
+        color: $text-secondary;
     }
 
     &__bottom {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+        gap: 12px;
     }
-
-
 
     &__info {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        font-size: 0.85rem;
+        gap: 12px;
+
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 18px;
+        text-align: right;
+        color: $text-secondary;
     }
 
-    &__actions {
-        display: flex;
-        gap: 8px;
-        margin-top: 8px;
+    &__user {
+        gap: 4px;
+        flex-grow: 1;
+        justify-content: flex-start;
+    }
+
+    &__time {
+        color: $text-service;
+    }
+}
+
+.user-avatar {
+    transition: transform 0.3s ease;
+    position: relative;
+    cursor: pointer;
+
+    &__img {
+        width: 16px;
+        height: 16px;
+        background-color: $divider;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    &:hover {
+        transform: scale(1.1);
     }
 }
 
 .progress-bar {
-    // display: flex;
     gap: 6px;
     height: 2px;
-    display: flex;
     gap: 4px;
 
     &__block {
-        width: 100%;
+        flex-grow: 1;
         height: 2px;
-        background-color: $divider;
 
-        &--green {
+        &_green {
             background-color: $green;
         }
 
-        &--active-blue {
+        &_active-blue {
             background-color: $active-blue;
         }
 
-        &--text-secondary {
+        &_text-secondary {
             background-color: $text-secondary;
         }
 
-        &--divider {
+        &_divider {
             background-color: $divider;
+        }
+    }
+}
+
+.actions {
+    gap: 12px;
+    height: 44px;
+
+    &__btn {
+        flex-grow: 1;
+        padding: 0 8px;
+        border-radius: 6px;
+        transition: background 0.3s;
+
+        &_edit {
+            background: rgba($red, 0.05);
+            color: $red;
+            border: $red 1px solid;
+
+            &:hover {
+                background: rgba($red, 0.2);
+            }
+        }
+
+        &_to-work {
+            background: rgba($active-blue, 0.05);
+            color: $active-blue;
+            border: $active-blue 1px solid;
+
+            &:hover {
+                background: rgba($active-blue, 0.2);
+            }
+        }
+
+        &_accept {
+            background: rgba($green, 0.05);
+            color: $green;
+            border: $green 1px solid;
+
+            &:hover {
+                background: rgba($green, 0.2);
+            }
+        }
+
+        &_pause {
+            background: rgba($text-secondary, 0.05);
+            color: $text-secondary;
+            border: $text-secondary 1px solid;
+
+            &:hover {
+                background: rgba($text-secondary, 0.2);
+            }
+        }
+
+        &_ready {
+            background: rgba($green, 0.05);
+            color: $green;
+            border: $green 1px solid;
+
+            &:hover {
+                background: rgba($green, 0.2);
+            }
         }
     }
 }

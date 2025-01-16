@@ -28,6 +28,7 @@ export class TaskCardComponent implements OnInit {
   @Input() isInProgress: boolean = false;
 
   public TaskStatus = TaskStatus;
+  placeholder = 'https://res.cloudinary.com/dxunxtt1u/image/upload/userAvatarPlaceholder_ox0tj4.png';
 
   // Signals for UI
   hoveredTop = signal(false);
@@ -51,15 +52,24 @@ export class TaskCardComponent implements OnInit {
     return this.task.currentTaskStatus === TaskStatus.Closed;
   });
 
+  // Get this task assignee name
   taskPerformerName = computed(() => {
     if (!this.task.performerId) {
       return 'Любой сотрудник';
     }
     const users = this.usersService.userDatasSig();
-    console.log(users);
     const foundUser = users.find(u => u.id === this.task.performerId);
-    console.log(foundUser);
     return foundUser ? foundUser.username : 'Неизвестный сотрудник';
+  });
+
+  // Get this task assignee img
+  taskPerformerImg = computed(() => {
+    if (!this.task.performerId) {
+      return this.placeholder;
+    }
+    const users = this.usersService.userDatasSig();
+    const foundUser = users.find(u => u.id === this.task.performerId);
+    return foundUser ? foundUser.img : this.placeholder;
   });
 
   constructor(
@@ -105,23 +115,23 @@ export class TaskCardComponent implements OnInit {
     const currentIndex = this.currentStatusIndex();
     if (index < currentIndex) {
       // Previous statuses
-      return 'progress-block--green';
+      return 'progress-bar__block_green';
     } else if (index === currentIndex) {
       // Current status
       if (this.task.inProgress === true) {
         // Task has an assignee and is in progress
-        return 'progress-block--active-blue';
+        return 'progress-bar__block_active-blue';
       } else if (this.task.inProgress === false) {
         // Task has an assignee and is on pause
-        return 'progress-block--text-secondary';
+        return 'progress-bar__block_text-secondary';
       } else {
         // (other) inProgress === null
         // Task has may have an assignee but he didn't start it 
-        return 'progress-block--divider';
+        return 'progress-bar__block_divider';
       }
     } else {
       // Upcoming statuses
-      return 'progress-block--divider';
+      return 'progress-bar__block_divider';
     }
   }
 
