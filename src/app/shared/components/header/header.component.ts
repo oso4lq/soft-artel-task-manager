@@ -8,12 +8,14 @@ import { AppComponent } from '../../../app.component';
 import { TimeService } from '../../../core/services/time.service';
 import { TasksService } from '../../../core/services/tasks.service';
 import { fromEvent, Subscription } from 'rxjs';
+import { IconComponent } from '../../icon/icon/icon.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
     CommonModule,
+    IconComponent,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'

@@ -2,20 +2,30 @@
 
 @import '../../../../styles/variables.scss';
 
+app-icon {
+    display: flex;
+}
+
 .header {
     padding: 15px 0;
     height: 30px;
-    gap: 24px;
+    gap: 12px;
     margin-bottom: 8px;
 
     &__group {
-        gap: 24px;
+        gap: 12px;
     }
+}
+
+.divider {
+    height: 100%;
+    width: 1px;
+    border-right: 1px solid $divider;
 }
 
 .tabs {
     list-style: none;
-    gap: 24px;
+    gap: 12px;
 
     &__item {
         color: $text-secondary;
@@ -23,10 +33,10 @@
         font-weight: 400;
         font-size: 14px;
         line-height: 21px;
+        gap: 8px;
 
         &_active {
             color: $active-blue;
-            border-bottom: 2px solid $active-blue;
         }
     }
 }
@@ -60,7 +70,7 @@
         border: 1px solid $divider;
         border-radius: 6px;
         box-shadow: 0 2px 5px $shdw-menu-1;
-        width: 150px;
+        width: 115px;
         z-index: 20;
     }
 
