@@ -74,4 +74,9 @@ app-icon {
         overflow: auto;
         margin: 0;
     }
+
+    app-edit-task,
+    app-new-task {
+        height: 100%;
+    }
 }

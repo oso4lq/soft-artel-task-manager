@@ -107,20 +107,19 @@
     </div>
 
     <!-- taskTime -->
-    <div class="flex-col" style="gap: 4px;">
+    <div class="form-block flex-col " style="gap: 4px;">
         <label for="taskTimeSpent">Время выполнения задачи:</label>
-
-        <div class="form-block h-100 flex-row ">
-            <div class="time-block flex-row center-row">
+        <div class="time h-100 flex-row ">
+            <div class="time__block flex-row center-row">
                 <span>Затраченное:</span>
-                <input class="time-block__input" type="number" id="taskTimeSpent" [(ngModel)]="task.taskTime.spent"
+                <input class="time__input" type="number" id="taskTimeSpent" [(ngModel)]="task.taskTime.spent"
                     name="taskTimeSpent" required />
                 <span>ч,</span>
             </div>
 
-            <div class="time-block flex-row center-row">
+            <div class="time__block flex-row center-row">
                 <span>Ожидаемое:</span>
-                <input class="time-block__input" type="number" id="taskTimePlanned" [(ngModel)]="task.taskTime.planned"
+                <input class="time__input" type="number" id="taskTimePlanned" [(ngModel)]="task.taskTime.planned"
                     name="taskTimePlanned" required />
                 <span>ч</span>
             </div>
@@ -133,7 +132,7 @@
     </div>
 
     <!-- Buttons -->
-    <div class="form-block h-100 flex-row center-row">
+    <div class="form-block btns h-100 flex-row center-row">
         <button class="btn-delete" type="button" (click)="deleteTask()">Удалить задачу</button>
         <button class="btn-submit" type="submit">Сохранить изменения</button>
     </div>

@@ -94,9 +94,11 @@
     <!-- taskTime -->
     <div class="form-block h-100 flex-row center-row">
         <label for="taskTimeSpent">Время выполнения задачи:</label>
-        <input class="flex-grow" type="number" id="taskTimePlanned" [(ngModel)]="task.taskTime.planned"
-            name="taskTimePlanned" required />
-        <span>ч</span>
+        <div class="time__block flex-row center-row">
+            <input class="flex-grow" type="number" id="taskTimePlanned" [(ngModel)]="task.taskTime.planned"
+                name="taskTimePlanned" required />
+            <span>ч</span>
+        </div>
     </div>
 
     <!-- Box for errors -->
@@ -104,6 +106,8 @@
         <span>{{ errorMessage }}</span>
     </div>
 
-    <button type="submit">Создать задачу</button>
+    <div class="form-block btns h-100 flex-row center-row">
+        <button class="btn-submit" type="submit">Создать задачу</button>
+    </div>
 
 </form>

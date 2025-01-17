@@ -3,7 +3,7 @@
 <div class="wrapper">
 
     <!-- Desktop header menu -->
-    <app-header *ngIf="!(mobileService.isMobile$ | async) as isMobile"></app-header>
+    <app-header *ngIf="!(mobileService.isMobile$ | async)"></app-header>
 
     <!-- Mobile menu -->
     <app-mobile-menu *ngIf="mobileService.isMobile$ | async"></app-mobile-menu>
