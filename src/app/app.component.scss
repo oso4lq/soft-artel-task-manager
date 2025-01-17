@@ -7,3 +7,15 @@
     padding: 0 40px;
     border-top: $active-blue 4px solid;
 }
+
+@media (max-width: 768px) {
+    .wrapper {
+        height: unset;
+        padding: 0 16px;
+        border-top: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}

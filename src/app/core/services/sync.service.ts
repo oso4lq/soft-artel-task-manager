@@ -1,13 +1,11 @@
 // src/app/core/services/sync.service.ts
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, fromEvent, merge, of } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent } from 'rxjs';
 import { IndexedDbService } from './indexed-db.service';
 import { TasksFirebaseService } from './tasks-firebase.service';
 import { UsersFirebaseService } from './users-firebase.service';
 import { TaskCard } from '../../shared/models/task.models';
-import { UserData } from '../../shared/models/users.model';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({

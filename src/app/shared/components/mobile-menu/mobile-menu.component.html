@@ -1,1 +1,28 @@
-<p>mobile-menu works!</p>
+<div class="wrapper flex-row center-all">
+    <div class="mobile-menu w-100 flex-row center-row">
+
+        <!-- Team -->
+        <button class="mobile-menu__btn notifications h-100 flex-row center-all">
+            <app-icon iconId="icon-head-team" width="20" height="20"></app-icon>
+            <div class="notifications__count notifications__count_active-blue flex-row center-all"
+                *ngIf="usersCount > 0">
+                <span class="notifications__text">{{ usersCount }}</span>
+            </div>
+        </button>
+
+        <!-- Main list -->
+        <button class="mobile-menu__btn mobile-menu__btn_active h-100 flex-row center-all">
+            <app-icon iconId="icon-head-cosmo" width="20" height="20"></app-icon>
+        </button>
+
+        <!-- Messenger -->
+        <button class="mobile-menu__btn notifications h-100 flex-row center-all">
+            <app-icon iconId="icon-head-message" width="20" height="20"></app-icon>
+            <div class="notifications__count notifications__count_red flex-row center-all"
+                *ngIf="unreadMessagesCount > 0">
+                <span class="notifications__text">{{ unreadMessagesCount }}</span>
+            </div>
+        </button>
+
+    </div>
+</div>

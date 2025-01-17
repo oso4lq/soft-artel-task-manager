@@ -20,6 +20,7 @@ import { TimeService } from './core/services/time.service';
 import { loadUsers } from './core/store/users/users.actions';
 import { MobileService } from './core/services/mobile.service';
 import { SyncService } from './core/services/sync.service';
+import { MobileMenuComponent } from './shared/components/mobile-menu/mobile-menu.component';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,7 @@ import { SyncService } from './core/services/sync.service';
     CommonModule,
     RouterOutlet,
     HeaderComponent,
+    MobileMenuComponent,
     ModalComponent,
     LoginComponent,
     RegisterComponent,
@@ -56,7 +58,7 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private timeService: TimeService,
     private syncService: SyncService,
-    private mobileService: MobileService,
+    public mobileService: MobileService,
     private store: Store,
   ) { }
 

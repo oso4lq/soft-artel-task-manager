@@ -11,6 +11,7 @@ import { UserData } from '../../shared/models/users.model';
 import { TimeService } from '../../core/services/time.service';
 import { IconComponent } from '../../shared/icon/icon/icon.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { MobileService } from '../../core/services/mobile.service';
 
 @Component({
   selector: 'app-main-page',
@@ -84,6 +85,7 @@ export class MainPageComponent implements OnInit {
     private tasksService: TasksService,
     private authService: AuthService,
     private timeService: TimeService,
+    public mobileService: MobileService,
   ) {
     // Effect to watch for changes in currentUserData
     effect(() => {
