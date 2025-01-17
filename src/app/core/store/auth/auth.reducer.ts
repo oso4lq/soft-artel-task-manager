@@ -1,7 +1,6 @@
 // src/app/core/store/auth/auth.reducer.ts
 
 import { createReducer, on } from '@ngrx/store';
-import { User } from '@angular/fire/auth';
 import * as AuthActions from './auth.actions';
 
 export interface AuthState {
@@ -13,7 +12,7 @@ export interface AuthState {
     // It is used in auth.effects.ts and indexed-db.service.ts
     user: {
         uid: string;
-        email: string | null;
+        // email: string | null;
         isAnonymous: boolean;
       } | null;
     loading: boolean; // For a pre-loader

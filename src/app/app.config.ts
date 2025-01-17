@@ -16,6 +16,7 @@ import { authReducer } from './core/store/auth/auth.reducer';
 import { AuthEffects } from './core/store/auth/auth.effects';
 import { DropdownModule } from 'primeng/dropdown';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { UsersEffects } from './core/store/users/users.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -37,6 +38,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideEffects([
       TasksEffects,
+      UsersEffects,
       AuthEffects,
     ]),
 

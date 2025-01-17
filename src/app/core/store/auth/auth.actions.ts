@@ -1,7 +1,6 @@
 // src/app/core/store/auth/auth.actions.ts
 
 import { createAction, props } from '@ngrx/store';
-import { User } from '@angular/fire/auth';
 
 export const loadAuthFromIndexedDb = createAction(
     '[Auth] Load Auth From IndexedDB'

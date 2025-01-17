@@ -214,9 +214,7 @@ export class MainPageComponent implements OnInit {
   // If the user is anonymous, do not check performerId
   private isCurrentUser(task: TaskCard): boolean {
     const userData = this.authService.currentUserDataSig();
-    console.log('userData.id:', userData?.id);
     if (!userData) return false;
-    console.log('userData.id:', userData.id);
     return task.performerId === userData.id;
   }
 

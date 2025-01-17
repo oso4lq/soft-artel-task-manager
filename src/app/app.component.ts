@@ -17,6 +17,9 @@ import { loadAuthFromIndexedDb } from './core/store/auth/auth.actions';
 import { loadTasks } from './core/store/tasks/tasks.actions';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { TimeService } from './core/services/time.service';
+import { loadUsers } from './core/store/users/users.actions';
+import { MobileService } from './core/services/mobile.service';
+import { SyncService } from './core/services/sync.service';
 
 @Component({
   selector: 'app-root',
@@ -49,9 +52,11 @@ export class AppComponent implements OnInit {
 
   constructor(
     private tasksService: TasksService,
-    private authService: AuthService,
     private usersService: UsersService,
+    private authService: AuthService,
     private timeService: TimeService,
+    private syncService: SyncService,
+    private mobileService: MobileService,
     private store: Store,
   ) { }
 
@@ -60,6 +65,9 @@ export class AppComponent implements OnInit {
     this.store.dispatch(loadAuthFromIndexedDb());
     // Load tasks from the IndexedDB cache
     this.store.dispatch(loadTasks());
+    // Load userDatas from the IndexedDB cache
+    this.store.dispatch(loadUsers());
+
     // Load tasks from the Firestore
     this.tasksService.loadTasks();
     // Load userDatas from the Firestore
