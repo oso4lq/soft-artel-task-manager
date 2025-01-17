@@ -10,6 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { UserData } from '../../shared/models/users.model';
 import { TimeService } from '../../core/services/time.service';
 import { IconComponent } from '../../shared/icon/icon/icon.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-main-page',
@@ -19,6 +20,7 @@ import { IconComponent } from '../../shared/icon/icon/icon.component';
     FormsModule,
     TaskCardComponent,
     IconComponent,
+    DropdownModule,
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
@@ -28,6 +30,40 @@ export class MainPageComponent implements OnInit {
   // State
   userData: UserData | null = null; // Store the fetched user data
   public TaskStatus = TaskStatus;
+  productsBase = [
+    {
+      label: 'Все продукты',
+      value: 'all',
+      icon: 'icon-none'
+    },
+  ];
+  categories = [
+    {
+      label: 'Все задачи',
+      value: 'all',
+      icon: 'icon-none'
+    },
+    {
+      label: 'Общие',
+      value: 'common',
+      icon: 'icon-filter-general'
+    },
+    {
+      label: 'Разработка',
+      value: 'development',
+      icon: 'icon-filter-dev'
+    },
+    {
+      label: 'Тестирование',
+      value: 'testing',
+      icon: 'icon-filter-test'
+    },
+    {
+      label: 'Ошибки',
+      value: 'errors',
+      icon: 'icon-filter-bug'
+    },
+  ];
 
   // Signals
   arrangedTasks: Signal<TaskCard[]> = computed(() => this.tasksService.arrangedTasksSig()); // track the tasks array
@@ -65,6 +101,16 @@ export class MainPageComponent implements OnInit {
     const names = this.arrangedTasks().map(t => t.taskPath.projectName); // Extract projectNames from tasks()
     const unique = Array.from(new Set(names));
     return unique; // Unique projectNames
+  });
+
+  // Add the list of developing products to dropdown
+  productOptions = computed(() => {
+    const dynamicItems = this.allProjects().map((p) => ({
+      label: p,
+      value: p,
+      icon: 'icon-none'
+    }));
+    return [...this.productsBase, ...dynamicItems];
   });
 
   // Counters for task filters

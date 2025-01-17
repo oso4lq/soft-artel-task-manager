@@ -7,8 +7,7 @@
     font-weight: 500;
     font-size: 20px;
     line-height: 28px;
-    margin: 0;
-    margin-bottom: 8px;
+    margin: 8px 0;
 }
 
 .dropdown-filters {
@@ -30,10 +29,54 @@
         border: 1px solid $bg-border;
         box-shadow: 0 2px 5px $shdw-menu-1;
 
-        // appearance: none;
-        // -webkit-appearance: none;
-        // -moz-appearance: none;
+        &_active {
+            color: $active-blue;
+            border: 1px solid $active-blue;
+            background: rgba($active-blue, 0.1);
+        }
     }
+}
+
+::ng-deep .p-select-overlay {
+    padding: 12px 8px;
+    background-color: $bg-menu !important;
+    border-radius: 4px !important;
+    min-width: 220px !important;
+    max-width: 300px;
+    border: 1px solid $bg-border !important;
+    box-shadow: 0 2px 5px $shdw-menu-1 !important;
+}
+
+::ng-deep .p-select-list {
+    width: 200px;
+    color: $text-primary;
+}
+
+::ng-deep .flex {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 14px;
+    height: 18px;
+    gap: 8px;
+
+    span {
+        margin: 0 !important;
+    }
+}
+
+::ng-deep p-dropdownitem {
+    :hover {
+        color: $active-blue;
+    }
+}
+
+::ng-deep .p-select-option {
+    padding: 8px 0 !important;
+}
+
+::ng-deep .p-select-option-selected {
+    color: $active-blue !important;
 }
 
 .columns {
@@ -69,20 +112,27 @@
 }
 
 .status-filters {
-    justify-content: flex-start;
-    gap: 20px;
     border-bottom: 1px solid $divider;
-    padding: 8px 0;
+    position: relative;
+    height: 36px;
+
+    &__wrapper {
+        position: absolute;
+        top: 0;
+        justify-content: flex-start;
+        gap: 20px;
+        height: 36px;
+    }
 
     &__item {
-        padding: 8px 0;
+        padding: 8px 4px;
         cursor: pointer;
         color: $text-text;
         font-weight: 400;
         font-size: 14px;
-        line-height: 4px;
+        line-height: 21px;
         background-color: none;
-        transition: background-color 0.3s, color 0.3s;
+        transition: background-color 0.3s, color 0.3s, border 0.3s;
 
         input[type="radio"] {
             position: absolute;
@@ -97,8 +147,6 @@
         }
 
         &:hover {
-            // color: rgba($active-blue, 0.5);
-            // border-bottom: 1px solid rgba($active-blue, 0.5);
             color: $active-blue;
             border-bottom: 1px solid $active-blue;
         }
