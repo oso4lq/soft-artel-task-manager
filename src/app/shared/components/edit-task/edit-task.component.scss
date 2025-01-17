@@ -1,49 +1,5 @@
 @import '../../../../styles/variables.scss';
 
-// .wrapper {
-//     padding: 20px;
-// }
-
-h2 {
-    font-size: 24px;
-    margin: 12px 0;
-}
-
-.form-block {
-    gap: 12px;
-    margin-bottom: 8px;
-}
-
-label {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 21px;
-    color: $text-primary;
-    width: 200px;
-}
-
-input,
-select,
-textarea {
-    border: 1px solid $bg-border;
-    border-radius: 6px;
-    padding: 0 12px;
-    background: $bg-fields;
-    height: 30px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    line-height: 21px;
-    color: $text-text;
-}
-
-textarea.custom-textarea {
-    height: 40px;
-    padding: 4px 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    line-height: 21px;
-}
-
 span {
     font-weight: 400;
     font-size: 14px;
@@ -51,84 +7,8 @@ span {
     color: $text-primary;
 }
 
-button {
-    padding: 0 12px;
-    color: $active-blue;
-    border: $active-blue 1px solid;
-    border-radius: 4px;
-    cursor: pointer;
-    background: none;
-    transition: background 0.3s;
-    font-weight: 500;
-    font-size: 13px;
-    line-height: 18px;
-    height: 30px;
-
-    &:hover {
-        background: rgba($active-blue, 0.1);
-    }
-}
-
-.btn-anon {
-    color: $text-secondary;
-    border: $text-secondary 1px solid;
-
-    &:hover {
-        background: rgba($text-secondary, 0.1);
-    }
-}
-
-.error-message {
-    height: 24px;
-    width: 80%;
-    align-self: center;
-
-    span {
-        width: 100%;
-        color: $red !important;
-        font-size: 13px;
-        text-align: center;
-    }
-}
-
 
 // Custom styles
-.status-checkboxes {
-    gap: 8px;
-}
-
-.status-checkbox__item {
-    position: relative;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    color: $text-text;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 21px;
-    background-color: $bg-fields;
-    transition: background-color 0.3s, color 0.3s;
-
-    input[type="checkbox"] {
-        position: absolute;
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    &.status-checkbox__item_active {
-        color: $active-blue;
-        background: rgba($active-blue, 0.1);
-    }
-
-    &:hover {
-        color: $active-blue;
-        background: rgba($active-blue, 0.1);
-    }
-}
-
-// Custom styles
-
 .time {
     &__block {
         gap: 8px;
@@ -155,31 +35,7 @@ button {
 
 // MOBILE
 @media (max-width: 768px) {
-    h2 {
-        margin: 12px 24px;
-        margin-top: 24px;
-    }
-
-    form {
-        overflow: auto;
-        margin: 0 24px 24px;
-        padding-right: 8px;
-    }
-
-    input,
-    select,
-    textarea {
-        width: -webkit-fill-available;
-    }
-
-    .form-block {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-
-    }
-
-    .status-checkboxes {
+      .status-checkboxes {
         flex-direction: row;
         flex-wrap: wrap;
 
@@ -194,7 +50,6 @@ button {
         gap: 8px;
 
         &__block {
-            gap: 8px;
             width: -webkit-fill-available;
         }
 
@@ -207,14 +62,5 @@ button {
         flex-direction: row;
         gap: 12px;
         margin: 0;
-    }
-
-    .desktop {
-        display: none;
-    }
-
-    .mobile {
-        display: flex;
-        flex-direction: column;
     }
 }

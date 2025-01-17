@@ -66,8 +66,9 @@
         <!-- Notifications section -->
         <button class="notifications h-100 flex-row center-all">
             <app-icon iconId="icon-head-message" width="16" height="16"></app-icon>
-            <div class="notifications__count flex-row center-all" *ngIf="unreadMessagesCount > 0">
-                {{ unreadMessagesCount }}
+            <div class="notifications__count notifications__count_red flex-row center-all"
+                *ngIf="unreadMessagesCount > 0">
+                <span class="notifications__text">{{ unreadMessagesCount }}</span>
             </div>
         </button>
 

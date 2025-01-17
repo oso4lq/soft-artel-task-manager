@@ -43,24 +43,6 @@
 .create {
     position: relative;
 
-    &__btn {
-        padding: 0 12px;
-        gap: 4px;
-        color: $active-blue;
-        border: $active-blue 1px solid;
-        border-radius: 4px;
-        cursor: pointer;
-        background: none;
-        transition: background 0.3s;
-        font-weight: 500;
-        font-size: 13px;
-        line-height: 18px;
-
-        &:hover {
-            background: rgba($active-blue, 0.1);
-        }
-    }
-
     &__popup {
         position: absolute;
         top: 100%;
@@ -115,29 +97,15 @@
 }
 
 .notifications {
-    height: 30px;
-    width: 30px;
-    // padding: 4px 8px;
     border: 0.5px solid $bg-border;
     border-radius: 6px;
     color: $text-text;
     background: $bg-light;
     box-shadow: 0 2px 5px $shdw-menu-1;
-    position: relative;
-    cursor: pointer;
 
     &__count {
-        position: absolute;
-        top: -6px;
         left: 11px;
         width: 26px;
-        height: 20px;
-        border-radius: 16px;
-        background: $red;
-        color: $white;
-        font-weight: 500;
-        font-size: 11px;
-        line-height: 16px;
     }
 }
 

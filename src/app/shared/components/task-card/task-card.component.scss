@@ -43,7 +43,6 @@
 
     &__type-icon {
         color: $orange;
-        // font-weight: bold;
     }
 
     &__name {
@@ -146,6 +145,7 @@
     }
 
     &__btn {
+        height: 100% !important;
         flex-grow: 1;
         padding: 0 8px;
         border-radius: 6px;
