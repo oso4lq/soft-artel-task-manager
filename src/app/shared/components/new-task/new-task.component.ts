@@ -138,7 +138,8 @@ export class NewTaskComponent implements OnInit {
     }
 
     // 5 - Generate createdAt
-    this.task.createdAt = new Date().toISOString();
+    // Generated in tasks.service
+    // this.task.createdAt = new Date().toISOString();
 
     // 6 - Generate taskKey by taskType
     this.task.taskKey = await this.tasksService.generateTaskKey(this.task.taskType);

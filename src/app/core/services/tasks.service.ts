@@ -19,7 +19,9 @@ export class TasksService {
     // Arrange the tasks by their date (new first)
     arrangedTasksSig = computed(() => {
         const all = this.tasksSig();
-        return [...all].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+        // Leave only those with !deletedAt
+        const notDeleted = all.filter(task => !task.deletedAt);
+        return [...notDeleted].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
     });
 
     // Find the latest task
@@ -72,6 +74,12 @@ export class TasksService {
     // Add a new task, update the signal, and return the document reference with the auto-generated ID
     addTask(newTask: TaskCard): Promise<DocumentReference> {
         console.log('addTask', newTask);
+
+        const now = new Date().toISOString();
+        newTask.createdAt = now;
+        newTask.editedAt = now;
+        newTask.deletedAt = '';
+
         return this.tasksFirebaseService.addTask(newTask).then((docRef) => {
             // Set the generated ID in the newTask object
             newTask.id = docRef.id;
@@ -87,6 +95,9 @@ export class TasksService {
     // Update a task (local and to Firebase)
     updateTask(updatedTask: TaskCard): void {
         console.log('updateTask', updatedTask);
+
+        updatedTask.editedAt = new Date().toISOString();
+
         this.tasksFirebaseService.updateTask(updatedTask).then(() => {
             this.tasksSig.update((tasks) =>
                 tasks.map((t) => (t.id === updatedTask.id ? updatedTask : t))
@@ -94,10 +105,35 @@ export class TasksService {
         });
     }
 
-    // Delete a task (local and from Firebase)
     deleteTask(taskId: string | number): void {
+        console.log('softDeleteTask', taskId);
+
+        // Find task in tasksSig
+        const foundTask = this.tasksSig().find(t => t.id === taskId);
+        if (!foundTask) {
+            console.warn('Задача не найдена, удаление невозможно');
+            return;
+        }
+
+        // Mark about deletion
+        const now = new Date().toISOString();
+        foundTask.deletedAt = now;
+        foundTask.editedAt = now;
+
+        // Update the Firebase
+        this.tasksFirebaseService.updateTask(foundTask).then(() => {
+
+            // Remove from tasksSig
+            this.tasksSig.update((tasks) => tasks.filter((t) => t.id !== taskId));
+
+            console.log('Задача помечена как удалённая: ', taskId);
+        });
+    }
+
+    // Delete a task (local and from Firebase)
+    hardDeleteTask(taskId: string | number): void {
         console.log('deleteTask', taskId);
-        this.tasksFirebaseService.deleteTask(taskId).then(() => {
+        this.tasksFirebaseService.hardDeleteTask(taskId).then(() => {
             this.tasksSig.update((tasks) => tasks.filter((t) => t.id !== taskId));
         });
     }

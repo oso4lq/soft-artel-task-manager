@@ -35,7 +35,7 @@ export class TasksFirebaseService {
   }
 
   // Delete a task from Firebase
-  deleteTask(taskId: string | number): Promise<void> {
+  hardDeleteTask(taskId: string | number): Promise<void> {
     console.log('deleteTask');
     const taskDoc = doc(this.firestore, `tasks/${taskId}`);
     return deleteDoc(taskDoc);
