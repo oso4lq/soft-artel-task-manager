@@ -3,9 +3,10 @@
 <div class="task-card w-100 flex-col">
 
     <!-- Top Card Part -->
-    <div class="task-card__top flex-col" (mouseenter)="onTopHover(true)" (mouseleave)="onTopHover(false)">
-        <!-- Show path (if hoveredTop() === true) -->
-        <div class="task-card__path flex-row center-row visible" [class.visible]="hoveredTop()">
+    <div class="task-card__top flex-col" (mouseenter)="onTopHover(true)" (mouseleave)="onTopHover(false)"
+        (click)="onTopClickMobile()">
+        <!-- Show path (if isPathShown() === true) -->
+        <div class="task-card__path flex-row center-row visible" [class.visible]="isPathShown()">
             <!-- <app-icon iconId="icon-misc-project-logo" width="16" height="16"></app-icon> -->
             <span> {{ task.taskPath.projectName }} </span>
             <span>/</span>
@@ -35,10 +36,11 @@
     </div>
 
     <!-- Bottom Card Part -->
-    <div class="task-card__bottom flex-col" (mouseenter)="onBottomHover(true)" (mouseleave)="onBottomHover(false)">
+    <div class="task-card__bottom flex-col" (mouseenter)="onBottomHover(true)" (mouseleave)="onBottomHover(false)"
+        (click)="onBottomClickMobile()">
 
-        <!-- Show control buttons (if hoveredBottom() === true) -->
-        <ng-container *ngIf="hoveredBottom(); else taskDetails">
+        <!-- Show control buttons (if isControlsShown() === true) -->
+        <ng-container *ngIf="isControlsShown(); else taskDetails">
             <div class="actions flex-row visible">
                 <ng-container *ngIf="isInProgress; else elseButtons">
                     <button (click)="onPauseClick()" class="actions__btn actions__btn_pause">На паузу</button>
