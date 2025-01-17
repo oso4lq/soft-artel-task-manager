@@ -23,21 +23,22 @@
         <input class="flex-grow" id="confirmPassword" formControlName="confirmPassword" type="password" required />
     </div>
 
+    <button class="btn-act" type="submit" [disabled]="registerForm.invalid" style="max-width: unset;">
+        Зарегистрироваться
+    </button>
+
     <div class="error-message form-block h-100 flex-row center-row">
         <span>{{ errorMessage }}</span>
     </div>
-
-    <button type="submit" [disabled]="registerForm.invalid">Зарегистрироваться</button>
-
 </form>
 
 <div class="flex-col">
     <div class="form-block h-100 flex-row center-row">
-        <span>Уже есть аккаунт?</span>
+        <label>Уже есть аккаунт?</label>
         <button class="flex-grow" (click)="goToLogin()">Войти</button>
     </div>
     <div class="form-block h-100 flex-row center-row">
-        <span>Или</span>
-        <button class="btn-anon flex-grow" (click)="signInAnonymously()">продолжить без учётной записи</button>
+        <label>Или</label>
+        <button class="btn-anon flex-grow" (click)="signInAnonymously()">Продолжить без учётной записи</button>
     </div>
 </div>

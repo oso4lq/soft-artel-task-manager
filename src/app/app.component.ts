@@ -1,6 +1,6 @@
 // app.component.ts
 
-import { Component, computed, effect, OnInit, Signal, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ModalComponent } from './shared/components/modal/modal.component';
 import { LoginComponent } from './shared/components/auth/login/login.component';
@@ -8,9 +8,7 @@ import { RegisterComponent } from './shared/components/auth/register/register.co
 import { CommonModule } from '@angular/common';
 import { NewTaskComponent } from './shared/components/new-task/new-task.component';
 import { EditTaskComponent } from './shared/components/edit-task/edit-task.component';
-import { TaskCard, TaskStatus, TaskType } from './shared/models/task.models';
-import { UserData } from './shared/models/users.model';
-import { User } from 'firebase/auth';
+import { TaskCard } from './shared/models/task.models';
 import { TasksService } from './core/services/tasks.service';
 import { AuthService } from './core/services/auth.service';
 import { UsersService } from './core/services/users.service';

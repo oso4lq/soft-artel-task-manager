@@ -12,6 +12,8 @@ export interface TaskCard {
     inProgress?: boolean | null;
     taskTime: TaskTime;
     createdAt: string;
+    editedAt?: string;
+    deletedAt?: string;
 }
 
 export interface TaskPath {

@@ -19,7 +19,6 @@
 
         <div class="form-block h-100 flex-row center-row">
             <label for="productName">Тип продукта:</label>
-
             <select class="flex-grow " id="productName" [(ngModel)]="task.taskPath.productName" name="productName">
                 <option *ngFor="let pType of productTypes" [value]="pType">
                     {{ pType }}
@@ -42,7 +41,6 @@
     <!-- taskType -->
     <div class="form-block h-100 flex-row center-row">
         <label for="taskType">Тип задачи:</label>
-
         <select class="flex-grow" [(ngModel)]="task.taskType" name="taskType">
             <option *ngFor="let tType of taskTypes" [value]="tType">
                 {{ tType }}
@@ -115,14 +113,14 @@
         <div class="form-block h-100 flex-row ">
             <div class="time-block flex-row center-row">
                 <span>Затраченное:</span>
-                <input class="time-block__input" type="text" id="taskTimeSpent" [(ngModel)]="task.taskTime.spent"
+                <input class="time-block__input" type="number" id="taskTimeSpent" [(ngModel)]="task.taskTime.spent"
                     name="taskTimeSpent" required />
                 <span>ч,</span>
             </div>
 
             <div class="time-block flex-row center-row">
                 <span>Ожидаемое:</span>
-                <input class="time-block__input" type="text" id="taskTimePlanned" [(ngModel)]="task.taskTime.planned"
+                <input class="time-block__input" type="number" id="taskTimePlanned" [(ngModel)]="task.taskTime.planned"
                     name="taskTimePlanned" required />
                 <span>ч</span>
             </div>

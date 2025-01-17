@@ -1,6 +1,6 @@
 // app.config.ts
 
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
@@ -14,6 +14,8 @@ import { tasksReducer } from './core/store/tasks/tasks.reducer';
 import { TasksEffects } from './core/store/tasks/tasks.effects';
 import { authReducer } from './core/store/auth/auth.reducer';
 import { AuthEffects } from './core/store/auth/auth.effects';
+import { DropdownModule } from 'primeng/dropdown';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,6 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(),
+    provideAnimations(),
 
     // Firestore Database & Auth
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
@@ -36,5 +39,8 @@ export const appConfig: ApplicationConfig = {
       TasksEffects,
       AuthEffects,
     ]),
+
+    // PrimeNG
+    importProvidersFrom(DropdownModule),
   ]
 };
