@@ -16,6 +16,7 @@ label {
     font-size: 14px;
     line-height: 21px;
     color: $text-primary;
+    width: 200px;
 }
 
 input {
@@ -46,9 +47,18 @@ button {
     font-size: 13px;
     line-height: 18px;
     height: 30px;
+    max-width: 300px;
 
     &:hover {
         background: rgba($active-blue, 0.1);
+    }
+}
+
+.btn-act {
+    background: rgba($active-blue, 0.1);
+
+    &:hover {
+        background: rgba($active-blue, 0.25);
     }
 }
 

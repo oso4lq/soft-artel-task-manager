@@ -19,7 +19,6 @@
 
         <div class="form-block h-100 flex-row center-row">
             <label for="productName">Тип продукта:</label>
-
             <select class="flex-grow " id="productName" [(ngModel)]="task.taskPath.productName" name="productName">
                 <option *ngFor="let pType of productTypes" [value]="pType">
                     {{ pType }}
@@ -42,7 +41,6 @@
     <!-- taskType -->
     <div class="form-block h-100 flex-row center-row">
         <label for="taskType">Тип задачи:</label>
-
         <select class="flex-grow" [(ngModel)]="task.taskType" name="taskType">
             <option *ngFor="let tType of taskTypes" [value]="tType">
                 {{ tType }}

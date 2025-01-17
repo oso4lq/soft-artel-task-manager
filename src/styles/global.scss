@@ -15,6 +15,10 @@ body {
 body {
     margin: 0;
     font-family: "Inter", serif;
+
+    // feuerfuchs
+    // scrollbar-width: thin;
+    // scrollbar-color: $active-blue transparent;
 }
 
 app-main-page {
@@ -40,4 +44,19 @@ app-edit-task {
 
 app-icon {
     display: flex;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 6px;
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background-color: $active-blue;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 4px transparent;
 }

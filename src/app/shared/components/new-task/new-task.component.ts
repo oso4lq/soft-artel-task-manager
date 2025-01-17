@@ -253,10 +253,6 @@ export class NewTaskComponent implements OnInit {
       missing.push('хотя бы 1 статус');
     }
 
-    // if (!this.task.performerId) {
-    //   missing.push('имя исполнителя');
-    // }
-
     if (!this.task.taskTime.planned.trim()) {
       missing.push('ожидаемое время выполнения задачи');
     }
