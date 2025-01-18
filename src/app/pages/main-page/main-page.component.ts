@@ -79,6 +79,7 @@ export class MainPageComponent implements OnInit {
   // Signals
   arrangedTasks: Signal<TaskCard[]> = computed(() => this.tasksService.arrangedTasksSig()); // track the tasks array
   currentDateStr: Signal<string> = computed(() => this.timeService.currentDateStrSig()); // track current date
+  currentUserData: Signal<UserData | null> = computed(() => this.authService.currentUserDataSig())
 
   // Filter signals
   selectedProduct = signal('all');
@@ -158,7 +159,7 @@ export class MainPageComponent implements OnInit {
   ).length);
 
   draftCount = computed(() => {
-    if (!this.userData) return 0;
+    if (!this.currentUserData()) return 0;
 
     return this.arrangedTasks().filter(t =>
       t.currentTaskStatus === TaskStatus.Draft &&

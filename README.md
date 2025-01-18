@@ -1,27 +1,51 @@
 # SoftArtelTaskManager
+Проект реализован на Angular с использованием экосистемы NgRx для управления состоянием и Firebase для бэкенда и хранения данных.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.2.
+## Стек
+- Angular 19.0.6: основа фронтенд-приложения.
+- NgRx: управление состоянием и организация Flux-подобной архитектуры.
+- Firebase: бэкенд для хранения данных о задачах и пользователях (Authentication, Realtime Database / Firestore).
+- IndexedDB (Dexie): локальное хранилище для поддержания оффлайн-функционала.
+- RxJS: реактивное программирование и управление потоками данных.
+- PrimeNG: библиотека UI-компонентов для Angular (dropdown).
 
-## Development server
+## Основные возможности
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+**Разделение задач по блокам:**
+- Мои: задачи, назначенные на текущего пользователя.
+- Неназначенные: задачи без конкретного исполнителя.
+- В работе: активные задачи, находящиеся в исполнении.
+- На паузе: задачи, которые временно приостановлены.
 
-## Code scaffolding
+**Фильтрация задач:**
+- По продукту: выбор из списка названий продуктов, над которыми ведётся работа.
+- По категории: общие, разработка, тестирование, ошибки.
+- По статусу: согласование, ревью, исполнение, черновик.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+**Управление задачами:**
+- Создание новой задачи: с заполнением ключевых полей (название, описание, приоритет и т.д.).
+- Редактирование задачи: изменение деталей задачи, её приоритета, категорий и статуса.
+- Сохранение черновиков: возможность сохранять незавершённые задачи как черновики и возвращаться к ним позже.
 
-## Build
+**Аутентификация:**
+- Логин: вход под учётной записью.
+- Регистрация: создание новой учётной записи.
+- Анонимная сессия: базовые возможности для неавторизованных пользователей без сохранения данных в личном кабинете.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+**Карточка задачи:**
+- Прогресс-бар: отображение текущего статуса задачи и прогресса её выполнения.
+- Эффекты при наведении: интерактивные анимации, позволяющие скрывать/показывать элементы интерфейса для более удобной работы.
 
-## Running unit tests
+**Оффлайн и онлайн режимы работы:**
+- Firebase: бэкенд-сервис для хранения данных о задачах и пользователях.
+- NgRx + IndexedDB + Dexie: реализация оффлайн-режима. При потере соединения приложение продолжает работу с данными в локальном кеше, а при восстановлении связи происходит синхронизация.
+- Sync Service: управление процессом синхронизации, валидация данных и проверка актуальности задач.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+**Валидация данных:**
+При переходе из оффлайн-режима в онлайн приложение сверяет задачи с данными в Firebase, чтобы исключить конфликты и сохранить целостность информации.
 
-## Running end-to-end tests
+**Минималистичный интерфейс:**
+Дружелюбный дизайн с акцентом на удобство использования. Макет: https://www.figma.com/design/ILz2ff1XGlBHO2xk4Xeg3d/Test-Assignment-Angular?node-id=0-1&p=f&t=tx5VBv8InHcKwau6-0
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Запуск проекта
+Запустите команду `ng serve` для запуска сервера. Перейдите на `http://localhost:4200/`.
