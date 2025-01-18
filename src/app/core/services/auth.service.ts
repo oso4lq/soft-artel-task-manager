@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { from, Observable, Subscription } from 'rxjs';
 import { UserData } from '../../shared/models/users.model';
 import { UsersFirebaseService } from './users-firebase.service';
+import { doc, setDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -71,9 +72,24 @@ export class AuthService {
   register(email: string, username: string, password: string): Observable<void> {
     console.log('register user');
     const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password)
-      .then(response =>
-        updateProfile(response.user, { displayName: username })
-      )
+      .then(async (response) => {
+        await updateProfile(response.user, { displayName: username });
+
+        // Create UserData document using name
+        const userId = response.user.uid;
+        const userDocRef = doc(this.usersFirebaseService.firestore, 'users', userId);
+        const userData: UserData = {
+          id: userId,
+          username: username,
+          img: '',
+          email: email,
+          telegram: '',
+          tasks: [],
+        };
+        await setDoc(userDocRef, userData);
+
+        this.router.navigate(['/main']);
+      })
       .catch((error) => {
         console.error('Ошибка регистрации:', error);
         throw error;
