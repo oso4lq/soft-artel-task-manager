@@ -1,0 +1,37 @@
+<!-- task-block.component.html -->
+
+<div class="tasks-block flex-col" [ngClass]="blockClass">
+
+    <!-- Block header -->
+    <div class="tasks-block__title flex-row center-row"
+        [ngClass]="{'tasks-block__title_in-progress': blockClass === 'tasks-block_in-progress'}" (click)="onToggle()">
+        <span class="collapse-icon" [ngClass]="{'collapsed': isCollapsed}" *ngIf="isCollapsible">
+            <app-icon iconId="icon-misc-chevron-down" width="16" height="16" color="#B0B0B0"></app-icon>
+        </span>
+        {{ title }}: {{ count }}
+    </div>
+
+    <!-- Block body: display if not collapsed -->
+    <div class="tasks-block__body flex-col" [ngClass]="{'tasks-block__body_filled': blockClass === ('')}" *ngIf="!isCollapsed || !isCollapsible">
+
+        <!-- Check if user exists -->
+        <ng-container *ngIf="!(requiresAuth && !userLoggedIn); else showLoginMessage">
+
+            <!-- Check if the user has tasks -->
+            <ng-container *ngIf="tasks.length > 0; else showNoTasksMessage">
+                <app-task-card *ngFor="let t of tasks" [task]="t"
+                    [isInProgress]="blockClass === 'tasks-block_in-progress'"></app-task-card>
+            </ng-container>
+
+            <!-- Message when no tasks -- -->
+            <ng-template #showNoTasksMessage>
+                <p>{{ noTasksMessage }}</p>
+            </ng-template>
+        </ng-container>
+
+        <!-- Message for anonymous user -->
+        <ng-template #showLoginMessage>
+            <p>{{ noUserMessage }}</p>
+        </ng-template>
+    </div>
+</div>

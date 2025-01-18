@@ -12,6 +12,10 @@ import { TimeService } from '../../core/services/time.service';
 import { IconComponent } from '../../shared/icon/icon/icon.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { MobileService } from '../../core/services/mobile.service';
+import { ProductDropdownComponent } from '../../shared/components/product-dropdown/product-dropdown.component';
+import { CategoryDropdownComponent } from '../../shared/components/category-dropdown/category-dropdown.component';
+import { StatusFiltersComponent } from '../../shared/components/status-filters/status-filters.component';
+import { TaskBlockComponent } from '../../shared/components/task-block/task-block.component';
 
 @Component({
   selector: 'app-main-page',
@@ -19,9 +23,15 @@ import { MobileService } from '../../core/services/mobile.service';
   imports: [
     CommonModule,
     FormsModule,
+
+    DropdownModule,
+    
+    ProductDropdownComponent,
+    CategoryDropdownComponent,
+    StatusFiltersComponent,
+    TaskBlockComponent,
     TaskCardComponent,
     IconComponent,
-    DropdownModule,
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']

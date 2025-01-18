@@ -71,6 +71,7 @@ form {
     flex-grow: 1;
 }
 
+
 // Login, Register, NewTask, EditTask
 input,
 select,
@@ -137,6 +138,7 @@ textarea.custom-textarea {
     }
 }
 
+
 // Buttons
 button {
     gap: 4px;
@@ -175,6 +177,7 @@ button {
         background: rgba($text-secondary, 0.1) !important;
     }
 }
+
 
 // Errors
 .error-message {
@@ -226,6 +229,107 @@ button {
     }
 }
 
+
+// Dropdowns
+.dropdown-filters {
+    justify-content: flex-start;
+    gap: 12px;
+    height: 32px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+
+    &__select {
+        height: 100%;
+        background-color: $bg-menu !important;
+        color: $text-text;
+        cursor: pointer;
+
+        border-radius: 4px !important;
+        padding: 0 12px;
+        gap: 2px;
+
+        border: 1px solid $bg-border !important;
+        box-shadow: 0 2px 5px $shdw-menu-1 !important;
+
+        &_active {
+            color: $active-blue !important;
+            border: 1px solid $active-blue !important;
+            background: rgba($active-blue, 0.1) !important;
+        }
+    }
+}
+
+
+// Tasks block
+.tasks-block {
+    border-radius: 8px;
+    gap: 8px;
+
+    &__title {
+        justify-content: flex-start;
+        gap: 12px;
+
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        color: $text-text;
+
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+
+        &_in-progress {
+            color: $active-blue;
+        }
+    }
+
+    .collapse-icon {
+        transform: rotate(180deg);
+        transition: transform 0.3s ease;
+        display: inline-block;
+
+        &.collapsed {
+            transform: rotate(0deg);
+        }
+    }
+
+    &__body {
+        gap: 8px;
+
+        &_filled {
+            background-color: $bg-blocks;
+            border: 1px solid $bg-border;
+            box-shadow: 0 2px 5px $shdw-menu-1;
+            border-radius: 8px;
+            padding: 12px;
+        }
+    }
+
+    p {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        color: $text-text;
+    }
+
+    &_in-progress {
+        background-color: $bg-blue;
+        padding: 12px;
+    }
+
+    &_paused {
+        background-color: none;
+    }
+}
+
+.no-task-block {
+    background-color: $bg-blocks;
+    border: 1px solid $bg-border;
+    box-shadow: 0 2px 5px $shdw-menu-1;
+    border-radius: 8px;
+    padding: 12px;
+    gap: 8px;
+}
 
 
 @media (max-width: 768px) {
