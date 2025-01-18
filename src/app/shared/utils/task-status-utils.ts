@@ -28,6 +28,6 @@ export function getNextTaskStatus(task: TaskCard): TaskStatus | null {
     if (currentIndex >= 0 && currentIndex < task.taskStatuses.length - 1) {
         return task.taskStatuses[currentIndex + 1];
     }
-    console.log('no statuses left');
+    // console.log('no statuses left');
     return null; // No statuses left
 }

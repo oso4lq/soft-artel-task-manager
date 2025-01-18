@@ -13,40 +13,40 @@ export class IndexedDbService {
 
     // TASK methods
     async getAllTasks(): Promise<TaskCard[]> {
-        console.log('getAllTasks');
+        // console.log('getAllTasks');
         return this.db.tasks.toArray();
     }
 
     async putTask(task: TaskCard) {
-        console.log('putTask', task);
+        // console.log('putTask', task);
         await this.db.tasks.put(task);
     }
 
     async bulkPutTasks(tasks: TaskCard[]): Promise<any> {
-        console.log('bulkPutTasks', tasks);
+        // console.log('bulkPutTasks', tasks);
         return this.db.tasks.bulkPut(tasks);
     }
 
     // TASK methods
     async getAllUsers(): Promise<UserData[]> {
-        console.log('getAllUsers');
+        // console.log('getAllUsers');
         return this.db.userDatas.toArray();
     }
 
     async putUser(user: UserData) {
-        console.log('putUser', user);
+        // console.log('putUser', user);
         await this.db.userDatas.put(user);
     }
 
     async bulkPutUsers(users: UserData[]): Promise<any> {
-        console.log('bulkPutUsers', users);
+        // console.log('bulkPutUsers', users);
         return this.db.userDatas.bulkPut(users);
     }
 
     // AUTH methods
     // Save user in a frozen key 'currentUser'
     async saveAuthUser(user: User | null): Promise<void> {
-        console.log('saveAuthUser', user);
+        // console.log('saveAuthUser', user);
 
         // Transform User into a simple object for Dexie
         const currentUser = user ?
@@ -69,14 +69,14 @@ export class IndexedDbService {
 
     async getAuthUser(): Promise<User | null> {
 
-        console.log('getAuthUser');
+        // console.log('getAuthUser');
         const data = await this.db.auth.get('currentUser');
 
         if (!data) {
-            console.log('no data');
+            // console.log('no data');
             return null;
         }
-        console.log(data);
+        // console.log(data);
 
         // Transform currentUser into the User-like object.
         // It's a bit redundant but may be used later.

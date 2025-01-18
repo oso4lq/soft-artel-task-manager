@@ -47,7 +47,7 @@ export class AuthService {
             .getUserById(firebaseUser.uid)
             .subscribe(userData => {
               this.currentUserDataSig.set(userData);
-              console.log('User data fetched: ', this.currentUserDataSig());
+              // console.log('User data fetched: ', this.currentUserDataSig());
             });
         }
         // If no authenticated user, set to null user and userData
@@ -70,7 +70,7 @@ export class AuthService {
 
   // email/password sign up
   register(email: string, username: string, password: string): Observable<void> {
-    console.log('register user');
+    // console.log('register user');
     const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password)
       .then(async (response) => {
         await updateProfile(response.user, { displayName: username });
@@ -117,7 +117,7 @@ export class AuthService {
 
   // Sign out
   logout(): Observable<void> {
-    console.log('logout, signOut');
+    // console.log('logout, signOut');
     const promise = signOut(this.firebaseAuth)
       .then(() => {
         this.setUserDataNull();
@@ -136,7 +136,7 @@ export class AuthService {
 
   // Sign in anonymously
   signInAnonymouslyUser(): Promise<void> {
-    console.log('signInAnonymouslyUser', this.auth);
+    // console.log('signInAnonymouslyUser', this.auth);
     return signInAnonymously(this.auth)
       .then(() => { })
       .catch((error) => {
