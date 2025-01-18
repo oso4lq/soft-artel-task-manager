@@ -2,8 +2,13 @@
 
 <div class="wrapper">
 
-    <!-- Header menu -->
-    <app-header></app-header>
+    <!-- Desktop header menu -->
+    <app-header *ngIf="!(mobileService.isMobile$ | async)"></app-header>
+
+    <!-- Mobile menu -->
+    <app-mobile-menu *ngIf="mobileService.isMobile$ | async"></app-mobile-menu>
+
+    <!-- Pages -->
     <router-outlet></router-outlet>
 
     <!-- Global modal -->

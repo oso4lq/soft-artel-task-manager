@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { switchMap, map, catchError, of, tap } from 'rxjs';
+import { switchMap, map, tap } from 'rxjs';
 import * as AuthActions from './auth.actions';
 import { IndexedDbService } from '../../services/indexed-db.service';
 import { AuthService } from '../../services/auth.service';
@@ -42,7 +42,7 @@ export class AuthEffects {
                     const userData = user
                         ? {
                             uid: user.uid,
-                            email: user.email,
+                            // email: user.email,
                             isAnonymous: user.isAnonymous,
                         }
                         : null;

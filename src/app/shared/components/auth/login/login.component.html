@@ -4,12 +4,12 @@
 <form class="flex-col" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
     <div class="form-block h-100 flex-row center-row">
-        <label for="email">Email:</label>
+        <label class="form-label" for="email">Email:</label>
         <input class="flex-grow" id="email" formControlName="email" type="email" required />
     </div>
 
     <div class="form-block h-100 flex-row center-row">
-        <label for="password">Пароль:</label>
+        <label class="form-label" for="password">Пароль:</label>
         <input class="flex-grow" id="password" formControlName="password" type="password" required />
     </div>
 
@@ -20,15 +20,16 @@
     <div class="error-message form-block h-100 flex-row center-row">
         <span>{{ errorMessage }}</span>
     </div>
+
 </form>
 
-<div class="flex-col">
+<div class="routes flex-col">
     <div class="form-block h-100 flex-row center-row">
-        <label>Нет аккаунта?</label>
+        <label class="form-label">Нет аккаунта?</label>
         <button class="flex-grow" (click)="goToRegister()">Зарегистрироваться</button>
     </div>
     <div class="form-block h-100 flex-row center-row">
-        <label>Или</label>
+        <label class="form-label">Или</label>
         <button class="btn-anon flex-grow" (click)="signInAnonymously()">Продолжить без учётной записи</button>
     </div>
 </div>

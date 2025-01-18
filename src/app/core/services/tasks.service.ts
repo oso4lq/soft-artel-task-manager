@@ -4,6 +4,7 @@ import { computed, Injectable, signal } from '@angular/core';
 import { CounterDoc, TaskCard, TaskStatus, TaskType } from '../../shared/models/task.models';
 import { doc, DocumentReference, Firestore, runTransaction } from '@angular/fire/firestore';
 import { TasksFirebaseService } from './tasks-firebase.service';
+import { SyncService } from './sync.service';
 
 @Injectable({
     providedIn: 'root',
@@ -61,6 +62,7 @@ export class TasksService {
     constructor(
         private tasksFirebaseService: TasksFirebaseService,
         private firestore: Firestore,
+        private syncService: SyncService,
     ) { }
 
     // Fetch the tasks from Firebase and set them in the signal
@@ -140,6 +142,14 @@ export class TasksService {
 
     // Generate a unique taskKey based on TaskType. Returns a Promise with a generated taskKey
     async generateTaskKey(taskType: TaskType): Promise<string> {
+
+        // Offline: OFF-123
+        if (!this.syncService.isOnline()) {
+            const random3digits = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `OFF-${random3digits}`;
+        }
+
+        // Online
         const prefix = this.taskTypePrefixMap[taskType];
         if (!prefix) {
             throw new Error(`Неизвестный TaskType: ${taskType}`);

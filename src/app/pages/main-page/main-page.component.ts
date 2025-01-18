@@ -11,6 +11,11 @@ import { UserData } from '../../shared/models/users.model';
 import { TimeService } from '../../core/services/time.service';
 import { IconComponent } from '../../shared/icon/icon/icon.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { MobileService } from '../../core/services/mobile.service';
+import { ProductDropdownComponent } from '../../shared/components/product-dropdown/product-dropdown.component';
+import { CategoryDropdownComponent } from '../../shared/components/category-dropdown/category-dropdown.component';
+import { StatusFiltersComponent } from '../../shared/components/status-filters/status-filters.component';
+import { TaskBlockComponent } from '../../shared/components/task-block/task-block.component';
 
 @Component({
   selector: 'app-main-page',
@@ -18,9 +23,15 @@ import { DropdownModule } from 'primeng/dropdown';
   imports: [
     CommonModule,
     FormsModule,
+
+    DropdownModule,
+    
+    ProductDropdownComponent,
+    CategoryDropdownComponent,
+    StatusFiltersComponent,
+    TaskBlockComponent,
     TaskCardComponent,
     IconComponent,
-    DropdownModule,
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
@@ -84,6 +95,7 @@ export class MainPageComponent implements OnInit {
     private tasksService: TasksService,
     private authService: AuthService,
     private timeService: TimeService,
+    public mobileService: MobileService,
   ) {
     // Effect to watch for changes in currentUserData
     effect(() => {
@@ -214,9 +226,7 @@ export class MainPageComponent implements OnInit {
   // If the user is anonymous, do not check performerId
   private isCurrentUser(task: TaskCard): boolean {
     const userData = this.authService.currentUserDataSig();
-    console.log('userData.id:', userData?.id);
     if (!userData) return false;
-    console.log('userData.id:', userData.id);
     return task.performerId === userData.id;
   }
 

@@ -1,0 +1,33 @@
+<div class="status-filters flex-row center-row">
+    <div class="status-filters__wrapper flex-row center-row">
+
+        <label class="status-filters__item h-100 flex-row center-row"
+            [ngClass]="{'status-filters__item_active': selectedStatus === TaskStatus.Approval}">
+            <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Approval" [ngModel]="selectedStatus"
+                (ngModelChange)="onStatusChange($event)" />
+            На согласование: {{ approvalCount }}
+        </label>
+
+        <label class="status-filters__item h-100 flex-row center-row"
+            [ngClass]="{'status-filters__item_active': selectedStatus === TaskStatus.Review}">
+            <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Review" [ngModel]="selectedStatus"
+                (ngModelChange)="onStatusChange($event)" />
+            На ревью: {{ reviewCount }}
+        </label>
+
+        <label class="status-filters__item h-100 flex-row center-row"
+            [ngClass]="{'status-filters__item_active': selectedStatus === TaskStatus.Execution}">
+            <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Execution" [ngModel]="selectedStatus"
+                (ngModelChange)="onStatusChange($event)" />
+            Для работы: {{ executionCount }}
+        </label>
+
+        <label class="status-filters__item h-100 flex-row center-row"
+            [ngClass]="{'status-filters__item_active': selectedStatus === TaskStatus.Draft}">
+            <input type="radio" name="leftColumnStatus" [value]="TaskStatus.Draft" [ngModel]="selectedStatus"
+                (ngModelChange)="onStatusChange($event)" />
+            Черновики: {{ draftCount }}
+        </label>
+
+    </div>
+</div>

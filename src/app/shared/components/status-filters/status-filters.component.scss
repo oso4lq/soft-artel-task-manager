@@ -1,0 +1,62 @@
+@import '../../../../styles/variables.scss';
+
+.status-filters {
+    border-bottom: 1px solid $divider;
+    position: relative;
+    height: 36px;
+
+    &__wrapper {
+        position: absolute;
+        top: 0;
+        justify-content: flex-start;
+        gap: 20px;
+        height: 36px;
+    }
+
+    &__item {
+        padding: 8px 4px;
+        cursor: pointer;
+        color: $text-text;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        background-color: none;
+        border-bottom: 1px solid transparent;
+        transition: all 0.3s;
+
+        input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        &_active {
+            color: $active-blue;
+            border-bottom: 1px solid $active-blue;
+        }
+
+        &:hover {
+            color: $active-blue;
+            border-bottom: 1px solid $active-blue;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .status-filters {
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        &__item {
+            padding: 0 4px;
+            white-space: nowrap;
+
+        }
+    }
+}

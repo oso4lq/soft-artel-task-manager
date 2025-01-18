@@ -3,7 +3,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Auth, signInAnonymously, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, User, user, updateProfile } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { BehaviorSubject, from, Observable, Subscription } from 'rxjs';
+import { from, Observable, Subscription } from 'rxjs';
 import { UserData } from '../../shared/models/users.model';
 import { UsersFirebaseService } from './users-firebase.service';
 
@@ -19,10 +19,7 @@ export class AuthService {
   private userDataSubscription: Subscription | null = null;  // Store the subscription to user data
 
   constructor(
-    // softartel
     private auth: Auth,
-
-    // sigma
     private usersFirebaseService: UsersFirebaseService,
     private router: Router,
   ) {

@@ -1,10 +1,10 @@
 // task-card.component.ts
 
-import { Component, computed, Input, OnInit, Signal, signal } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, Input, OnInit, Signal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { ProductType, TaskCard, TaskStatus, TaskType } from '../../models/task.models';
+import { TaskCard, TaskStatus } from '../../models/task.models';
 import { UsersService } from '../../../core/services/users.service';
 import { TasksService } from '../../../core/services/tasks.service';
 import { getNextTaskStatus } from '../../utils/task-status-utils';
@@ -13,6 +13,7 @@ import { AppComponent } from '../../../app.component';
 import { UserData } from '../../models/users.model';
 import { IconComponent } from '../../icon/icon/icon.component';
 import { productIconMap, taskStatusIconMap, taskTypeIconMap } from '../../utils/icon-utils';
+import { MobileService } from '../../../core/services/mobile.service';
 
 @Component({
   selector: 'app-task-card',
@@ -30,18 +31,39 @@ export class TaskCardComponent implements OnInit {
   @Input() task!: TaskCard;
   @Input() isInProgress: boolean = false;
 
+  // Track scrolling
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    if (this.mobileService.isMobile && (this.isPathShown() || this.isControlsShown())) {
+      this.isPathShown.set(false);
+      this.isControlsShown.set(false);
+    }
+  }
+
+  // Track clicks outside task card block
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.mobileService.isMobile && (this.isPathShown() || this.isControlsShown())) {
+      const target = event.target as HTMLElement;
+      const clickedInside = this.elementRef.nativeElement.contains(target);
+      if (!clickedInside) {
+        this.isPathShown.set(false);
+        this.isControlsShown.set(false);
+      }
+    }
+  }
+
   public TaskStatus = TaskStatus;
   placeholder = 'https://res.cloudinary.com/dxunxtt1u/image/upload/userAvatarPlaceholder_ox0tj4.png';
 
   // Signals for UI
-  hoveredTop = signal(false);
-  hoveredBottom = signal(false);
+  isPathShown = signal(false);
+  isControlsShown = signal(false);
   currentUserData: Signal<UserData | null> = computed(() => this.authService.currentUserDataSig()); // track the current user data
 
   // For debounce effect
   private hoverTopSubject = new Subject<boolean>();
   private hoverBottomSubject = new Subject<boolean>();
-
 
   // Calculate current status index. If Closed, all statuses are "passed"
   currentStatusIndex = computed(() => {
@@ -100,22 +122,27 @@ export class TaskCardComponent implements OnInit {
     private usersService: UsersService,
     private tasksService: TasksService,
     private parent: AppComponent,
+    public mobileService: MobileService,
+    private elementRef: ElementRef,
   ) { }
 
   ngOnInit(): void {
-    // Subscribe with a 300ms debounce for the Top Card Part
-    this.hoverTopSubject
-      .pipe(debounceTime(300))
-      .subscribe((value) => {
-        this.hoveredTop.set(value);
-      });
+    // Desktop
+    if (!this.mobileService.isMobile) {
+      // Subscribe with a 300ms debounce for the Top Card Part
+      this.hoverTopSubject
+        .pipe(debounceTime(300))
+        .subscribe((value) => {
+          this.isPathShown.set(value);
+        });
 
-    // Subscribe with a 800ms debounce for the Bottom Card Part
-    this.hoverBottomSubject
-      .pipe(debounceTime(300))
-      .subscribe((value) => {
-        this.hoveredBottom.set(value);
-      });
+      // Subscribe with a 800ms debounce for the Bottom Card Part
+      this.hoverBottomSubject
+        .pipe(debounceTime(300))
+        .subscribe((value) => {
+          this.isControlsShown.set(value);
+        });
+    }
   }
 
   // Get iconId for a ProductType
@@ -135,14 +162,32 @@ export class TaskCardComponent implements OnInit {
     return { iconId, color };
   }
 
-  // mouseenter / mouseleave for the Top Card Part
+  // Desktop: mouseenter / mouseleave for the Top&Bottom card parts
   onTopHover(isHover: boolean) {
-    this.hoverTopSubject.next(isHover);
+    if (!this.mobileService.isMobile) {
+      this.hoverTopSubject.next(isHover);
+    }
+  }
+  onBottomHover(isHover: boolean) {
+    if (!this.mobileService.isMobile) {
+      this.hoverBottomSubject.next(isHover);
+    }
   }
 
-  // mouseenter / mouseleave for the Bottom Card Part
-  onBottomHover(isHover: boolean) {
-    this.hoverBottomSubject.next(isHover);
+  // Mobile: Click the card parts
+  onTopClickMobile(): void {
+    if (this.mobileService.isMobile) {
+      const prev = this.isPathShown();
+      this.isPathShown.set(!prev);
+      this.isControlsShown.set(false);
+    }
+  }
+  onBottomClickMobile(): void {
+    if (this.mobileService.isMobile) {
+      const prev = this.isControlsShown();
+      this.isControlsShown.set(!prev);
+      this.isPathShown.set(false);
+    }
   }
 
   // Apply a specific CSS class for the progress bar
