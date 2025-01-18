@@ -1,6 +1,8 @@
 @import './variables.scss';
 @import './utils.scss';
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -15,6 +17,7 @@ body {
 body {
     margin: 0;
     font-family: "Inter", serif;
+    font-style: normal;
 
     // feuerfuchs
     // scrollbar-width: thin;
