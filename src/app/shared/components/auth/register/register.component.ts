@@ -50,7 +50,7 @@ export class RegisterComponent {
     const login = this.registerForm.get('email')?.value;
     const password = this.registerForm.get('password')?.value;
 
-    if (!login || !password) {
+    if (!username || !login || !password) {
       const missingFields = [];
       if (!username) missingFields.push('ваше имя');
       if (!login) missingFields.push('email');
@@ -61,10 +61,10 @@ export class RegisterComponent {
 
     if (this.registerForm.valid) {
       this.errorMessage = null;
-      this.authService.login(login, password).subscribe({
+      this.authService.register(login, username, password).subscribe({
         next: () => this.parent.closeModal(),
         error: (err) => {
-          this.showErrorMessage(err);
+          this.showErrorMessage(err.message ?? err);
         },
       });
     }

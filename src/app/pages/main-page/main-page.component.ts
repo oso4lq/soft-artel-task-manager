@@ -25,13 +25,13 @@ import { TaskBlockComponent } from '../../shared/components/task-block/task-bloc
     FormsModule,
 
     DropdownModule,
-    
+
     ProductDropdownComponent,
     CategoryDropdownComponent,
     StatusFiltersComponent,
     TaskBlockComponent,
-    TaskCardComponent,
-    IconComponent,
+    // TaskCardComponent,
+    // IconComponent,
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
@@ -127,22 +127,45 @@ export class MainPageComponent implements OnInit {
 
   // Counters for task filters
   approvalCount = computed(() => this.arrangedTasks().filter(t =>
-    t.currentTaskStatus === TaskStatus.Approval && t.inProgress === null
+    t.currentTaskStatus === TaskStatus.Approval &&
+    t.inProgress === null &&
+    (
+      t.performerId === this.userData?.id ||
+      t.performerId === null
+    )
   ).length);
 
   reviewCount = computed(() => this.arrangedTasks().filter(t =>
-    t.currentTaskStatus === TaskStatus.Review && t.inProgress === null
+    t.currentTaskStatus === TaskStatus.Review &&
+    t.inProgress === null &&
+    (
+      t.performerId === this.userData?.id ||
+      t.performerId === null
+    )
   ).length);
 
   executionCount = computed(() => this.arrangedTasks().filter(t =>
-    (t.currentTaskStatus === TaskStatus.Execution ||
+    (
+      t.currentTaskStatus === TaskStatus.Execution ||
       t.currentTaskStatus === TaskStatus.Deploy ||
-      t.currentTaskStatus === TaskStatus.Testing) && t.inProgress === null
+      t.currentTaskStatus === TaskStatus.Testing
+    ) &&
+    t.inProgress === null &&
+    (
+      t.performerId === this.userData?.id ||
+      t.performerId === null
+    )
   ).length);
 
-  draftCount = computed(() => this.arrangedTasks().filter(t =>
-    t.currentTaskStatus === TaskStatus.Draft && t.inProgress === null
-  ).length);
+  draftCount = computed(() => {
+    if (!this.userData) return 0;
+
+    return this.arrangedTasks().filter(t =>
+      t.currentTaskStatus === TaskStatus.Draft &&
+      t.inProgress === null &&
+      t.performerId === this.userData?.id
+    ).length;
+  });
 
   ngOnInit(): void { }
 
