@@ -68,14 +68,14 @@ export class TasksService {
     // Fetch the tasks from Firebase and set them in the signal
     loadTasks(): void {
         this.tasksFirebaseService.getTasks().subscribe((tasks: TaskCard[]) => {
-            console.log('loadTasks ', tasks);
+            // console.log('loadTasks ', tasks);
             this.tasksSig.set(tasks);
         })
     }
 
     // Add a new task, update the signal, and return the document reference with the auto-generated ID
     addTask(newTask: TaskCard): Promise<DocumentReference> {
-        console.log('addTask', newTask);
+        // console.log('addTask', newTask);
 
         const now = new Date().toISOString();
         newTask.createdAt = now;
@@ -96,7 +96,7 @@ export class TasksService {
 
     // Update a task (local and to Firebase)
     updateTask(updatedTask: TaskCard): void {
-        console.log('updateTask', updatedTask);
+        // console.log('updateTask', updatedTask);
 
         updatedTask.editedAt = new Date().toISOString();
 
@@ -108,7 +108,7 @@ export class TasksService {
     }
 
     deleteTask(taskId: string | number): void {
-        console.log('softDeleteTask', taskId);
+        // console.log('softDeleteTask', taskId);
 
         // Find task in tasksSig
         const foundTask = this.tasksSig().find(t => t.id === taskId);
@@ -128,13 +128,13 @@ export class TasksService {
             // Remove from tasksSig
             this.tasksSig.update((tasks) => tasks.filter((t) => t.id !== taskId));
 
-            console.log('Задача помечена как удалённая: ', taskId);
+            // console.log('Задача помечена как удалённая: ', taskId);
         });
     }
 
     // Delete a task (local and from Firebase)
     hardDeleteTask(taskId: string | number): void {
-        console.log('deleteTask', taskId);
+        // console.log('deleteTask', taskId);
         this.tasksFirebaseService.hardDeleteTask(taskId).then(() => {
             this.tasksSig.update((tasks) => tasks.filter((t) => t.id !== taskId));
         });

@@ -44,7 +44,7 @@ export class LoginComponent {
   onSubmit() {
     const login = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
-    console.log(login, password);
+    // console.log(login, password);
 
     if (!login || !password) {
       const missingFields = [];
