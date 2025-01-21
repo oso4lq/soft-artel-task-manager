@@ -87,6 +87,8 @@ export class EditTaskComponent implements OnInit {
     this.task = JSON.parse(JSON.stringify(this.taskInput)) as TaskCard;
 
     this.initStatusesCheckbox();
+
+    console.log(this.task.currentTaskStatus);
   }
 
   // Initiate checkboxes for this task statuses
@@ -103,6 +105,14 @@ export class EditTaskComponent implements OnInit {
         this.statusesCheckbox[st] = true;
       }
     });
+  }
+
+  onSubmit(): void {
+    if (this.task.currentTaskStatus === TaskStatus.Draft) {
+      this.createTaskFromDraft();
+    } else {
+      this.saveChanges();
+    }
   }
 
   // Update task in Firestore
@@ -129,6 +139,43 @@ export class EditTaskComponent implements OnInit {
       // CAUTION: binding [(ngModel)]="task.currentTaskStatus"
       this.tasksService.updateTask(this.task);
       console.log('Задача успешно обновлена:', this.task.id);
+    } catch (error) {
+      console.error('Ошибка при обновлении задачи:', error);
+    }
+
+    // 4 - Close
+    this.parent.closeModal();
+  }
+
+  // Update task in Firestore but user sees it as he creates a task from a draft
+  private async createTaskFromDraft() {
+    // 1 - Validation
+    const missingFields = this.checkMissingFields();
+    if (missingFields.length > 0) {
+      const msg = 'Пожалуйста, укажите ' + missingFields.join(', ');
+      this.showErrorMessage(msg);
+      return;
+    }
+
+    // 2 - Collect selected statuses and sort them
+    const selectedStatuses: TaskStatus[] = [];
+    for (const [statusKey, checked] of Object.entries(this.statusesCheckbox)) {
+      if (checked) {
+        selectedStatuses.push(statusKey as TaskStatus);
+      }
+    }
+    this.task.taskStatuses = sortTaskStatuses(selectedStatuses);
+
+    // 3 - Define currentTaskStatus
+    if (this.task.taskStatuses.length > 0) {
+      this.task.currentTaskStatus = this.task.taskStatuses[0];
+    }
+
+    // 3 - Send updated task to Firestore
+    try {
+      // CAUTION: binding [(ngModel)]="task.currentTaskStatus"
+      this.tasksService.updateTask(this.task);
+      console.log('Задача создана из черновика:', this.task.id);
     } catch (error) {
       console.error('Ошибка при обновлении задачи:', error);
     }
@@ -181,11 +228,8 @@ export class EditTaskComponent implements OnInit {
     if (selectedStatusesCount < 1) {
       missing.push('хотя бы 1 статус');
     }
-    if (!this.task.currentTaskStatus) {
+    if (this.task.currentTaskStatus !== this.TaskStatus.Draft && !this.task.currentTaskStatus) {
       missing.push('текущий статус');
-    }
-    if (!this.task.performerId) {
-      missing.push('исполнителя (если нет, укажите себя)');
     }
     if (!this.task.taskTime.spent.trim()) {
       missing.push('затраченное на задачу время');
@@ -214,5 +258,17 @@ export class EditTaskComponent implements OnInit {
     }
     this.task.taskStatuses = sortTaskStatuses(selected);
   }
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
