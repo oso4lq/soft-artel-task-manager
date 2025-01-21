@@ -181,6 +181,12 @@ export class EditTaskComponent implements OnInit {
     if (selectedStatusesCount < 1) {
       missing.push('хотя бы 1 статус');
     }
+    if (!this.task.currentTaskStatus) {
+      missing.push('текущий статус');
+    }
+    if (!this.task.performerId) {
+      missing.push('исполнителя (если нет, укажите себя)');
+    }
     if (!this.task.taskTime.spent.trim()) {
       missing.push('затраченное на задачу время');
     }
