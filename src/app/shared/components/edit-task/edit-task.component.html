@@ -1,7 +1,13 @@
 <!-- edit-task.component.html -->
 
-<h2>Редактировать задачу</h2>
-<form class="flex-col" (ngSubmit)="saveChanges()">
+<ng-container *ngIf="task.currentTaskStatus !== TaskStatus.Draft; else editDraft">
+    <h2>Редактировать задачу</h2>
+</ng-container>
+<ng-template #editDraft>
+    <h2>Редактировать черновик</h2>
+</ng-template>
+
+<form class="flex-col" (ngSubmit)="onSubmit()">
 
     <!-- taskName -->
     <div class="form-block h-100 flex-row center-row">
@@ -86,7 +92,7 @@
     </div>
 
     <!-- currentStatus -->
-    <div class="form-block h-100 flex-row center-row">
+    <div *ngIf="task.currentTaskStatus !== TaskStatus.Draft" class="form-block h-100 flex-row center-row">
         <label class="form-label" for="currentStatus">Выберите текущий статус задачи:</label>
         <select class="flex-grow " id="currentStatus" [(ngModel)]="task.currentTaskStatus" name="currentStatus">
             <option *ngFor="let s of task.taskStatuses" [value]="s">
@@ -134,7 +140,17 @@
     <!-- Buttons -->
     <div class="form-block btns h-100 flex-row center-row">
         <button class="btn-delete" type="button" (click)="deleteTask()">Удалить задачу</button>
-        <button class="btn-submit" type="submit">Сохранить изменения</button>
+
+        <ng-container *ngIf="task.currentTaskStatus !== TaskStatus.Draft; else createTaskFromDraft">
+            <button class="btn-submit" type="submit">
+                Сохранить изменения
+            </button>
+        </ng-container>
+        <ng-template #createTaskFromDraft>
+            <button class="btn-submit" type="submit">
+                Создать задачу
+            </button>
+        </ng-template>
     </div>
 
 </form>
